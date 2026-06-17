@@ -25,10 +25,10 @@ website:
         text: Presentations
     right:
       - icon: github
-        href: https://github.com/
+        href: https://github.com/gato365
         aria-label: GitHub
       - icon: envelope
-        href: mailto:youremail@calpoly.edu
+        href: mailto:immanuelwilliams@gato365.com
         aria-label: Email
 
   page-footer:
