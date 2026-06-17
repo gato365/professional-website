@@ -1,0 +1,127 @@
+---
+title: "Publications"
+pagetitle: "Publications — Immanuel Williams"
+toc: false
+---
+
+::: {.intro-block}
+Peer-reviewed journal articles and reference works, listed in APA (7th edition) format. Links resolve to the publisher of record.
+:::
+
+::: {.section-head}
+::: {.section-num}
+PEER-REVIEWED
+:::
+## Journal articles
+::: {.rule}
+:::
+:::
+
+::: {.pub-list}
+
+::: {.pub}
+::: {.ref}
+Weiland, T., & Williams, I. (2024). [Culturally relevant data in teaching statistics and data science courses.]{.ptitle} [*Journal of Statistics and Data Science Education, 32*(3), 256–271.]{.venue}
+
+::: {.meta}
+<span class="badge">Education</span>
+[doi.org/10.1080/26939169.2023.2249969](https://doi.org/10.1080/26939169.2023.2249969)
+:::
+:::
+:::
+
+::: {.pub}
+::: {.ref}
+Williams, I., Sisso, D., & Bass, N. (2023). [Teaching one-way ANOVA with engaging NBA data and R Shiny within a flexdashboard.]{.ptitle} [*Teaching Statistics, 45*(2), 69–78.]{.venue}
+
+::: {.meta}
+<span class="badge">Software</span>
+[doi.org/10.1111/test.12332](https://doi.org/10.1111/test.12332)
+:::
+:::
+:::
+
+::: {.pub}
+::: {.ref}
+DeLiema, D., Kwon, Y. A., Chisholm, A., Williams, I., Dahn, M., Flood, V. J., Abrahamson, D., & Steen, F. F. (2023). [A multi-dimensional framework for documenting students' heterogeneous experiences with programming bugs.]{.ptitle} [*Cognition and Instruction, 41*(2), 158–200.]{.venue}
+
+::: {.meta}
+<span class="badge">Learning Sciences</span>
+[doi.org/10.1080/07370008.2022.2118279](https://doi.org/10.1080/07370008.2022.2118279)
+:::
+:::
+:::
+
+::: {.pub}
+::: {.ref}
+Langer-Osuna, J. M., Munson, J., Gargroetzi, E., Williams, I., & Chavez, R. (2020). ["So what are we working on?": How student authority relations shift during collaborative mathematics activity.]{.ptitle} [*Educational Studies in Mathematics, 104*, 333–349.]{.venue}
+
+::: {.meta}
+<span class="badge">Math Education</span>
+[doi.org/10.1007/s10649-020-09962-3](https://doi.org/10.1007/s10649-020-09962-3)
+:::
+:::
+:::
+
+::: {.pub}
+::: {.ref}
+Battey, D., Leyva, L. A., Williams, I., Belizario, V. A., Greco, R., & Shah, R. (2018). [Racial (mis)match in middle school mathematics classrooms: Relational interactions as a racialized mechanism.]{.ptitle} [*Harvard Educational Review, 88*(4), 455–482.]{.venue}
+
+::: {.meta}
+<span class="badge">Math Education</span>
+[doi.org/10.17763/1943-5045-88.4.455](https://doi.org/10.17763/1943-5045-88.4.455)
+:::
+:::
+:::
+
+::: {.pub}
+::: {.ref}
+Williams, I., & Williams, K. K. (2018). [Using an R Shiny to enhance the learning experience of confidence intervals.]{.ptitle} [*Teaching Statistics, 40*(1), 24–28.]{.venue}
+
+::: {.meta}
+<span class="badge">Software</span>
+[doi.org/10.1111/test.12145](https://doi.org/10.1111/test.12145)
+:::
+:::
+:::
+
+::: {.pub}
+::: {.ref}
+Williams, I., & Williams, K. K. (2016). [Understanding summary statistics and graphical techniques to compare Michael Jordan versus LeBron James.]{.ptitle} [*Teaching Statistics, 38*(3), 108–111.]{.venue}
+
+::: {.meta}
+<span class="badge">Software</span>
+[doi.org/10.1111/test.12111](https://doi.org/10.1111/test.12111)
+:::
+:::
+:::
+
+:::
+
+::: {.section-head}
+::: {.section-num}
+REFERENCE
+:::
+## Encyclopedia entries
+::: {.rule}
+:::
+:::
+
+::: {.pub-list}
+
+::: {.pub}
+::: {.ref}
+Williams, I., & Culpepper, S. A. (2018). [Gain scores, analysis of.]{.ptitle} [In B. B. Frey (Ed.), *The SAGE encyclopedia of educational research, measurement, and evaluation.* SAGE Publications.]{.venue}
+
+::: {.meta}
+<span class="badge">Reference</span>
+[doi.org/10.4135/9781506326139](https://doi.org/10.4135/9781506326139)
+:::
+:::
+:::
+
+:::
+
+::: {.callout-note}
+Replace the GitHub and email links in `_quarto.yml`, and confirm co-author name spellings and the encyclopedia editor before publishing. The Battey et al. (2018) date follows the journal's Winter 2018 issue.
+:::

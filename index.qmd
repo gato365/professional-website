@@ -1,0 +1,75 @@
+---
+title: ""
+pagetitle: "Immanuel Williams, PhD"
+toc: false
+---
+
+::: {.hero}
+::: {.hero-text}
+::: {.hero-eyebrow}
+Statistics & Data Science Education
+:::
+# Immanuel Williams, PhD
+
+::: {.lead}
+Assistant Professor of Statistics at **Cal Poly San Luis Obispo**, building culturally relevant, hands-on ways to teach statistics and data science.
+:::
+
+[View Research](research.qmd){.btn-gold}
+[Publications](publications.qmd){.btn-gold .btn-ghost}
+:::
+
+::: {.hero-portrait-wrap}
+<!-- Replace src with your photo, e.g. images/profile/immanuel.jpg -->
+<img class="hero-portrait portrait-placeholder" src="images/profile/immanuel.jpg" alt="Immanuel Williams" onerror="this.classList.add('portrait-placeholder');this.removeAttribute('src');this.innerHTML='Your photo here';">
+:::
+:::
+
+::: {.intro-block}
+I am an Assistant Professor of Statistics at California Polytechnic State University, San Luis Obispo, with affiliated faculty status in the Data Science Program. My work sits at the intersection of **statistics education**, **data science pedagogy**, and **software for teaching** — turning real, culturally relevant data into interactive tools that help students build genuine understanding.
+
+My research centers on three connected frameworks: **Culturally Relevant Data (CRD)**, the **Extraction–Transformation–Visualization (ETV)** model, and the **Library-Focused Method (LFM)**. Alongside this, I develop R packages and Shiny applications, and I serve as incoming Chair of **SIGMAA SDS-Ed**, the MAA's Special Interest Group on Statistics and Data Science Education.
+:::
+
+::: {.section-head}
+::: {.section-num}
+AT A GLANCE
+:::
+## Focus areas
+::: {.rule}
+:::
+:::
+
+::: {.grid-cards}
+::: {.card-x}
+::: {.tag}
+Pedagogy
+:::
+### Culturally Relevant Data
+Selecting and designing data that connects to students' lived experiences to support engagement and learning.
+:::
+
+::: {.card-x}
+::: {.tag}
+Method
+:::
+### ETV Model
+A workflow for teaching data science through Extraction, Transformation, and Visualization of authentic datasets.
+:::
+
+::: {.card-x}
+::: {.tag}
+Software
+:::
+### R Packages & Shiny
+Building teaching tools — including the `animate_dplyr` GIF library — that make statistical ideas visible.
+:::
+
+::: {.card-x}
+::: {.tag}
+Mentorship
+:::
+### Student Research
+Collaborating with undergraduates on software, study design, and conference presentations.
+:::
+:::

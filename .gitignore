@@ -1,0 +1,8 @@
+/.quarto/
+/_site/
+/_quarto_internal_scss_error.scss
+
+.DS_Store
+Thumbs.db
+
+**/*.quarto_ipynb

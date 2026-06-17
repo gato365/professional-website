@@ -1,0 +1,75 @@
+---
+title: "Research"
+pagetitle: "Research — Immanuel Williams"
+toc: false
+---
+
+::: {.intro-block}
+My research develops practical, evidence-based ways to teach statistics and data science using authentic data. It connects three frameworks that move from *what* data we teach with, to *how* students work with it, to *how* they build understanding over time.
+:::
+
+::: {.section-head}
+::: {.section-num}
+01
+:::
+## Culturally Relevant Data (CRD)
+::: {.rule}
+:::
+:::
+
+::: {.intro-block}
+Developed with Travis Weiland, **CRD** is a framework for selecting, creating, and using data that connects to students' lived experiences. Rather than treating datasets as neutral, CRD asks how data choices shape engagement, identity, and learning — and offers concrete guidance for instructors designing culturally responsive statistics courses.
+:::
+
+::: {.section-head}
+::: {.section-num}
+02
+:::
+## Extraction–Transformation–Visualization (ETV)
+::: {.rule}
+:::
+:::
+
+::: {.intro-block}
+The **ETV model** structures data science instruction around a real workflow: **extracting** data from authentic sources (APIs, web tables, public datasets), **transforming** it into tidy, analyzable form, and **visualizing** it to surface insight. ETV gives students a repeatable mental model that mirrors professional practice.
+:::
+
+::: {.section-head}
+::: {.section-num}
+03
+:::
+## Library-Focused Method (LFM)
+::: {.rule}
+:::
+:::
+
+::: {.intro-block}
+The **LFM** centers learning around the tools and libraries students will actually use, scaffolding fluency with packages and functions as a path to conceptual understanding — supported by the **SSVA** sequence (Summary Statistics → Visualization → Analysis).
+:::
+
+::: {.section-head}
+::: {.section-num}
+SERVICE
+:::
+## Professional service
+::: {.rule}
+:::
+:::
+
+::: {.grid-cards}
+::: {.card-x}
+::: {.tag}
+Leadership
+:::
+### SIGMAA SDS-Ed
+Incoming Chair of the MAA's Special Interest Group on Statistics and Data Science Education.
+:::
+
+::: {.card-x}
+::: {.tag}
+Teaching
+:::
+### Cal Poly SLO
+STAT 252, STAT 331, and GSB 5544 (Computing & Machine Learning for Business Analytics).
+:::
+:::

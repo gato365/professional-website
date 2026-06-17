@@ -1,0 +1,53 @@
+---
+title: "Students"
+pagetitle: "Students — Immanuel Williams"
+toc: false
+---
+
+::: {.intro-block}
+The undergraduate researchers I have the privilege of working with. To add a photo, save a square image to `images/students/` (e.g. `ryan.jpg`) and point the `<img>` `src` to it — the circular crop is automatic.
+:::
+
+::: {.section-head}
+::: {.section-num}
+TEAM
+:::
+## Research students
+::: {.rule}
+:::
+:::
+
+::: {.student-grid}
+
+::: {.student}
+<div class="avatar"><img src="images/students/ryan.jpg" alt="Ryan" onerror="this.parentElement.textContent='R'"></div>
+### Ryan
+::: {.role}
+R & Sampling Lead
+:::
+Leads R development and sampling logic for the `animate_dplyr` package.
+:::
+
+::: {.student}
+<div class="avatar"><img src="images/students/sophia.jpg" alt="Sophia" onerror="this.parentElement.textContent='S'"></div>
+### Sophia
+::: {.role}
+UX & Visual Lead
+:::
+Designs the user experience and visual language of the GIF library.
+:::
+
+::: {.student}
+<div class="avatar"><img src="images/students/student3.jpg" alt="Add student" onerror="this.parentElement.textContent='+'"></div>
+### Add a student
+::: {.role}
+Role
+:::
+Duplicate this block to add another researcher.
+:::
+
+:::
+
+::: {.callout-tip}
+**Adding a student:** copy one `::: {.student} … :::` block, change the name, role, description, and the image filename. If the image is missing, the circle shows the student's initial automatically.
+:::

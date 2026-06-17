@@ -1,0 +1,56 @@
+---
+title: "Presentations"
+pagetitle: "Presentations — Immanuel Williams"
+toc: false
+---
+
+::: {.intro-block}
+Invited talks, conference sessions, and minicourses. Add or edit entries as your schedule develops.
+:::
+
+::: {.section-head}
+::: {.section-num}
+2026
+:::
+## Upcoming & recent
+::: {.rule}
+:::
+:::
+
+::: {.grid-cards}
+::: {.card-x}
+::: {.tag}
+Minicourse
+:::
+### MathFest 2026 — Boston
+Minicourse on APIs in R, plus a Contributed Paper Session on data science in mathematics departments.
+:::
+
+::: {.card-x}
+::: {.tag}
+Conference
+:::
+### JSM 2026
+Talk on culturally relevant data and the ETV/LFM hybrid model.
+:::
+
+::: {.card-x}
+::: {.tag}
+Conference
+:::
+### ICOTS-12
+International Conference on Teaching Statistics presentation.
+:::
+
+::: {.card-x}
+::: {.tag}
+Seminar
+:::
+### TALMO / RSS
+Co-presented session (with Travis) on culturally relevant data.
+:::
+:::
+
+::: {.callout-note}
+Edit this page in `presentations.qmd`. Each talk is a `.card-x` block — duplicate to add more, and group them under year headings as needed.
+:::

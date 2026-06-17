@@ -1,0 +1,49 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - "images/**"
+
+website:
+  title: "Immanuel Williams, PhD"
+  description: "Statistics & Data Science Education — Cal Poly San Luis Obispo"
+  navbar:
+    background: primary
+    pinned: true
+    left:
+      - href: index.qmd
+        text: Home
+      - href: research.qmd
+        text: Research
+      - href: publications.qmd
+        text: Publications
+      - href: projects.qmd
+        text: Projects
+      - href: students.qmd
+        text: Students
+      - href: presentations.qmd
+        text: Presentations
+    right:
+      - icon: github
+        href: https://github.com/
+        aria-label: GitHub
+      - icon: envelope
+        href: mailto:youremail@calpoly.edu
+        aria-label: Email
+
+  page-footer:
+    background: light
+    left: "© 2026 Immanuel Williams · California Polytechnic State University, San Luis Obispo"
+    right: "Built with Quarto in Positron"
+
+format:
+  html:
+    theme:
+      - cosmo
+      - styles.scss
+    toc: false
+    page-layout: full
+    grid:
+      body-width: 1100px
+    link-external-newwindow: true
+    include-in-header: _includes/fonts.html

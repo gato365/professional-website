@@ -1,0 +1,101 @@
+---
+title: "Projects"
+pagetitle: "Projects — Immanuel Williams"
+toc: false
+---
+
+::: {.intro-block}
+Active software, research, and teaching projects. Drop screenshots, GIFs, or animations into `images/projects/` and reference them in the gallery below.
+:::
+
+::: {.section-head}
+::: {.section-num}
+SOFTWARE
+:::
+## Tools & packages
+::: {.rule}
+:::
+:::
+
+::: {.grid-cards}
+::: {.card-x}
+::: {.tag}
+R Package
+:::
+### animate_dplyr
+An R package (the "GIF library") that animates `dplyr` data transformations to make tidy-data operations visible to learners. Built with students Ryan and Sophia.
+
+::: {.status}
+In development · JOSS / JSDSE / R Journal targets
+:::
+:::
+
+::: {.card-x}
+::: {.tag}
+Shiny App
+:::
+### Plots for Shots
+An NBA "GOAT" dataset and Shiny app (Jordan, Kobe, LeBron) for teaching CRD-based introductory statistics.
+
+::: {.status}
+Manuscript in prep · Teaching Statistics
+:::
+:::
+
+::: {.card-x}
+::: {.tag}
+Methods
+:::
+### Data Extraction Plan (DEP)
+Case studies in authentic data extraction: Wikipedia population tables, Basketball Reference, and the Spotify API.
+
+::: {.status}
+Submitted · Journal of Data Science
+:::
+:::
+
+::: {.card-x}
+::: {.tag}
+Study
+:::
+### AI Prompting in Statistics
+A multi-condition experiment on how prompting structure affects students' learning of one-way ANOVA.
+
+::: {.status}
+Active · IRB #2026-053
+:::
+:::
+:::
+
+::: {.section-head}
+::: {.section-num}
+GALLERY
+:::
+## Animations & demos
+::: {.rule}
+:::
+:::
+
+::: {.intro-block}
+Showcase your `animate_dplyr` output and Shiny demos here. To add one, save a `.gif` or image to `images/projects/` and swap the placeholder `<div>` for an `<img>`.
+:::
+
+::: {.gallery}
+
+<figure>
+  <!-- Example: <img src="images/projects/animate-filter.gif" alt="animate_dplyr filter"> -->
+  <div class="ph">Add images/projects/your-animation.gif</div>
+  <figcaption><strong>animate_dplyr — filter()</strong><br>Replace with your animated GIF.</figcaption>
+</figure>
+
+<figure>
+  <div class="ph">Add images/projects/your-animation.gif</div>
+  <figcaption><strong>animate_dplyr — group_by() + summarise()</strong><br>Replace with your animated GIF.</figcaption>
+</figure>
+
+<figure>
+  <div class="ph">Add images/projects/shiny-demo.png</div>
+  <figcaption><strong>Plots for Shots — Shiny app</strong><br>Replace with a screenshot or screen recording.</figcaption>
+</figure>
+
+:::
