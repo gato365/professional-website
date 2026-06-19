@@ -1,0 +1,284 @@
+---
+title: "ETV Cycle 2 — Who Is the Real GOAT? Reading Multiple Excel Sheets"
+format: html
+editor: visual
+---
+
+## Description
+
+NBA career statistics for Michael Jordan (MJ), LeBron James (LJ), and Kobe Bryant (KB) are stored in a single Excel workbook with one sheet per player. We will extract each sheet, combine the players, and compare their scoring careers.
+
+Each **row** represents one season. Each **column** represents a season-level statistic.
+
+------------------------------------------------------------------------
+
+### Motivating Questions
+
+**Subtask 1** — How does career average points-per-game compare across MJ, LJ, and KB?
+
+**Subtask 2** — How does each player's scoring compare across career stages (Novice, Intermediate, Veteran)?
+
+------------------------------------------------------------------------
+
+## Learning Moment 1 — Libraries
+
+```{r}
+library(____)   ## Data Extraction  — file paths
+library(____)   ## Data Extraction  — reading Excel (.xlsx) files
+library(____)   ## Data Transformation — bind_rows, mutate, group_by, summarize
+library(____)   ## Data Transformation — string manipulation
+library(____)   ## Data Visualization
+library(____)   ## Data Visualization — reordering factor levels in plots
+```
+
+**Side Q1.** Why is `readxl` kept separate from `readr` rather than merged into one package?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Extraction (E)
+
+#### Learning Moment 2 — `read_excel()` with `sheet`
+
+The `sheet` argument accepts two forms — **by position** (integer) or **by name** (string):
+
+| Form | Example | Trade-off |
+|------------------|-------------------------|-----------------------------|
+| Integer | `sheet = 1` | Reads the sheet at that slot; breaks silently if tabs are reordered |
+| String | `sheet = "MJ"` | Reads by tab name; self-documenting and survives reordering |
+
+```{r}
+## Read each player's sheet from the same workbook
+path_to_goat <- here("data", "nba_goat.xlsx") 
+mj_df <- read_excel(____, sheet = ____)
+lj_df <- read_excel(____, sheet = ____)
+kb_df <- read_excel(____, sheet = ____)
+```
+
+**Q1.** What does the `sheet` argument in `read_excel()` specify?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q2.** How would you list all sheet names in an Excel file without opening it in Excel?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q2b.** If a colleague reorders the workbook tabs so "KB" is now the first sheet, which call breaks — `sheet = 3` or `sheet = "KB"`? Why?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Transformation (T)
+
+#### Learning Moment 3 — Adding an Identifier Column and `bind_rows()`
+
+**`mutate()` key idea:** Adds or overwrites columns while keeping all existing columns intact. Each expression is computed row-by-row. Assigning a constant string (e.g., `"Michael Jordan"`) works because R recycles it to fill every row — a concise way to stamp an identifier onto an entire data frame.
+
+```{r}
+## Tag each data frame with the player name
+mj_df <- mj_df |> mutate(player = ____)
+lj_df <- lj_df |> mutate(player = ____)
+kb_df <- kb_df |> mutate(player = ____)
+
+## Stack all three into one data frame
+nba_df <- ____(mj_df, lj_df, kb_df)
+
+glimpse(nba_df)
+```
+
+**Q2.** What does `bind_rows()` do, and why do we add a `player` column first?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q3.** What happens if the column names do not match perfectly when using `bind_rows()`?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 4 — Selecting and Renaming Columns
+
+We keep **only the columns needed for Subtask 2**: the player, the season, and points per game.
+
+```{r}
+nba_clean_df <- nba_df |>
+  select(____, ____, ____) |>
+  rename(points_pg = ____)
+
+nba_clean_df
+```
+
+**Q3.** What does `rename()` do, and does it modify the data values?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 5 — Career Stages with `stringr` and `case_when()`
+
+Each player's `Season` is stored as text like `"1984-85"`. We extract the starting year with `str_extract()`, order each player's seasons, and label career stages: seasons **1–5 = Novice**, **6–10 = Intermediate**, **11+ = Veteran**.
+
+```{r}
+## Label each season with the player's career stage
+nba_clean_df <- nba_clean_df |>
+  mutate(
+    season_num = as.integer(str_extract(Season, "\\d+")),
+    experience = case_when(
+      season_num <= ____ ~ ____,
+      season_nun <= ____ ~ ____,
+      TRUE                 ~ ____
+    ),
+    experience = factor(experience,
+                        levels = c(____, ____, ____))
+  ) |>
+  ungroup()
+
+nba_clean_df
+```
+
+**Q4.** What does `case_when()` do, and why does the order of the conditions matter?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q4.** Why do we wrap the new `experience` column in `factor()` with explicit `levels`?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 6 — `group_by()` and `summarize()` for Player Comparison
+
+```{r}
+avg_ppg_df <- nba_clean_df |>
+  group_by(____) |>
+  summarize(
+    career_avg_ppg = mean(____, na.rm = TRUE),
+    sd_ppg         = ____(____, na.rm = TRUE),
+    seasons_played = ____(),
+    .groups = "drop"
+  ) |>
+  arrange(desc(____))
+
+avg_ppg_df
+```
+
+**Q5.** What does `arrange(desc(career_avg_ppg))` do?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q5.** Why do we use `na.rm = TRUE` inside `mean()` and `sd()`?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Visualization (V)
+
+**Style rule:** always pipe the data frame into the plot — `df |> ggplot(aes(...))`. **Never** write `ggplot(df, ...)`.
+
+#### Learning Moment 7 — Bar Chart with Points and Error Bars
+
+```{r}
+____ |>
+  ggplot(aes(x = fct_reorder(____, ____), y = ____,
+             fill = ____)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = ____ - ____,
+                    ymax = ____ + ____),
+                width = 0.2) +
+  coord_flip() +
+  labs(
+    title = "Career Average PPG — MJ, LJ, KB",
+    x     = "Player",
+    y     = "Career Avg Points Per Game"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = ____))
+```
+
+**Q6.** What does `fct_reorder(player, career_avg_ppg)` do to the bars?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q6.** What does `coord_flip()` do, and when is a horizontal bar chart preferable?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 8 — Points and Error Bars Across Career Stages
+
+We now answer Subtask 2 using the career-stage labels from Learning Moment 5: summarize each player's scoring within each stage, then display the **mean as a point** and the **spread as an error bar** (mean ± 1 SD).
+
+```{r}
+## Average and spread of PPG per player, per career stage
+exp_ppg_df <- nba_clean_df |>
+  group_by(____, ____) |>
+  summarize(
+    avg_ppg = mean(____, na.rm = TRUE),
+    sd_ppg  = ____(____, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+____ |>
+  ggplot(aes(x = ____, y = ____, color = ____)) +
+  geom_point(size = 3, position = position_dodge(width = 0.5)) +
+  geom_errorbar(aes(ymin = ____ - ____,
+                    ymax = ____ + ____),
+                width = 0.2, position = position_dodge(width = 0.5)) +
+  labs(
+    title = "Points Per Game by Career Stage — MJ, LJ, KB",
+    x     = "Career Stage",
+    y     = "Average Points Per Game",
+    color = "Player"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = ____))
+```
+
+**Q7.** What do the error bars represent in this plot, and why are they useful when comparing players?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 3 — Student-Generated Comparison
+
+Propose a question comparing MJ, LJ, and KB on a statistic other than points (e.g., rebounds, assists). Your instructor will select one for class exploration.
+
+Remember the style rule: `df |> ggplot(aes(...))` — never `ggplot(df, ...)`.
+
+```{r}
+## Your code here
+
+```

@@ -1,0 +1,322 @@
+---
+title: "ETV Cycle 2 — Who Is the Real GOAT? Reading Multiple Excel Sheets (SOLUTIONS)"
+format: docx
+editor: visual
+---
+
+## Description
+
+NBA career statistics for Michael Jordan (MJ), LeBron James (LJ), and Kobe Bryant (KB) are stored in a single Excel workbook with one sheet per player. Reading multi-sheet Excel files is a core real-world skill: organizations routinely store separate-but-related data in the same workbook. We will extract each sheet, combine the players, and compare their scoring careers.
+
+Each **row** represents one season. Each **column** represents a season-level statistic.
+
+------------------------------------------------------------------------
+
+### Motivating Questions
+
+**Subtask 1** — How does career average points-per-game compare across MJ, LJ, and KB?
+
+**Subtask 2** — How does each player's scoring compare across career stages (Novice, Intermediate, Veteran)?
+
+------------------------------------------------------------------------
+
+## Learning Moment 1 — Libraries
+
+```{r}
+#| message: false
+#| warning: false
+library(here)      ## Data Extraction  — file paths
+library(readxl)    ## Data Extraction  — reading Excel (.xlsx) files
+library(dplyr)     ## Data Transformation — bind_rows, mutate, group_by, summarize
+library(stringr)   ## Data Transformation - String manipulation
+library(ggplot2)   ## Data Visualization
+library(forcats)   ## Data Visualization — reordering factor levels in plots
+```
+
+**Side Q1.** Why is `readxl` kept separate from `readr` rather than merged into one package?
+
+<!-- [Place Answer - Begin] -->
+
+`readr` is optimized for plain-text flat files (CSV, TSV). Excel files (`.xlsx`, `.xls`) are binary formats with additional complexity — multiple sheets, cell formatting, merged cells, named ranges. `readxl` is a dedicated package that handles this binary format correctly. Keeping them separate keeps each package focused and lightweight.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Extraction (E)
+
+#### Learning Moment 2 — `read_excel()` with `sheet_name`
+
+`read_excel()` reads one sheet at a time. The `sheet` argument accepts a sheet name (as a string) or a position (integer).
+
+**Sheet number vs. sheet name:**
+
+| Form | Example | Trade-off |
+|------------------|-------------------------|-----------------------------|
+| Integer | `sheet = 1` | Reads the sheet at that position; breaks silently if tabs are reordered |
+| String | `sheet = "MJ"` | Reads by tab name; self-documenting and survives reordering |
+
+**Best practice:** use sheet names in production code. Use integers only for quick exploration when you do not yet know the tab names.
+
+```{r}
+## Read each player's sheet from the same workbook
+path_to_goats <- here("ETV", "Data", "nba_goats.xlsx")
+
+mj_df <- read_excel(path_to_goats, sheet = "MJ")
+lj_df <- read_excel(path_to_goats, sheet = "LJ")
+kb_df <- read_excel(path_to_goats, sheet = "KB")
+```
+
+**Q1.** What does the `sheet` argument in `read_excel()` specify?
+
+<!-- [Place Answer - Begin] -->
+
+`sheet` specifies which tab within the Excel workbook to read. Without it, `read_excel()` reads the first sheet by default. You can pass a quoted name (e.g., `"MJ"`) or an integer index (e.g., `1` for the first sheet).
+
+<!-- [Place Answer - End] -->
+
+**Side Q2.** How would you list all sheet names in an Excel file without opening it in Excel?
+
+<!-- [Place Answer - Begin] -->
+
+Use `readxl::excel_sheets(here("data", "nba_goat.xlsx"))`. This returns a character vector of all sheet tab names in the workbook, which is useful when you don't know the structure of a file in advance.
+
+<!-- [Place Answer - End] -->
+
+**Side Q2b.** If a colleague reorders the workbook tabs so "KB" is now the first sheet, which call breaks — `sheet = 3` or `sheet = "KB"`? Why?
+
+<!-- [Place Answer - Begin] -->
+
+`sheet = 3` breaks. It reads whichever sheet is now in the third position — which may no longer be "KB" after the reorder. `sheet = "KB"` continues to work correctly because it looks up the sheet by its tab name, regardless of tab order.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Transformation (T)
+
+#### Learning Moment 3 — Adding an Identifier Column and `bind_rows()`
+
+Before stacking the three data frames, we add a `player` column to each so rows remain identifiable after combining.
+
+**`mutate()` key idea:** `mutate()` adds or overwrites columns while preserving all existing columns. Each expression is evaluated row-by-row. When you assign a constant string (e.g., `"Michael Jordan"`), R recycles it to fill every row — a concise way to stamp an identifier onto an entire data frame.
+
+```{r}
+## Tag each data frame with the player name
+mj_df <- mj_df |> mutate(player = "Michael Jordan")
+lj_df <- lj_df |> mutate(player = "LeBron James")
+kb_df <- kb_df |> mutate(player = "Kobe Bryant")
+
+## Stack all three into one data frame
+nba_df <- bind_rows(mj_df, lj_df, kb_df)
+
+glimpse(nba_df)
+```
+
+**Q2.** What does `bind_rows()` do, and why do we add a `player` column first?
+
+<!-- [Place Answer - Begin] -->
+
+`bind_rows()` stacks data frames **vertically** — appending the rows of the second and third data frames below the first. We add `player` first because once the rows are combined, there is no other way to tell which player a given season row belongs to. Without it, we'd lose all provenance information.
+
+<!-- [Place Answer - End] -->
+
+**Side Q3.** What happens if the column names do not match perfectly when using `bind_rows()`?
+
+<!-- [Place Answer - Begin] -->
+
+`bind_rows()` performs a **union of all columns**. If a column exists in one data frame but not another, the missing entries are filled with `NA`. For example, if `mj_df` has a `rings` column that `lj_df` lacks, all of LeBron's rows will show `NA` for `rings` in the combined data frame.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 4 — Selecting and Renaming Columns
+
+We keep **only the columns needed for Subtask 2**: the player, the season, and points per game.
+
+```{r}
+## Keep only relevant columns and rename for clarity
+nba_clean_df <- nba_df |>
+  select(player, Season, PTS) |>
+  rename(points_pg = PTS)
+
+nba_clean_df
+```
+
+**Q3.** What does `rename()` do, and does it modify the data values?
+
+<!-- [Place Answer - Begin] -->
+
+`rename()` changes only the **column labels** — the names by which you reference the columns in code. It does not alter any data values. The syntax is `rename(new_name = old_name)`.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 5 — Career Stages with `stringr` and `case_when()`
+
+Each player's `Season` is stored as text like `season_1"`, `"season_2"`, ..., `"season_1"`. We extract the season number with `str_extract()` and label career stages: seasons **1–5 = Novice**, **6–10 = Intermediate**, **11–15 = Veteran**.
+
+```{r}
+## Label each season with the player's career stage
+nba_clean_df <- nba_clean_df |>
+  mutate(
+    season_num = as.integer(str_extract(Season, "\\d+")),
+    experience = case_when(
+      season_num <= 5  ~ "Novice",
+      season_num <= 10 ~ "Intermediate",
+      TRUE             ~ "Veteran"
+    ),
+    experience = factor(experience,
+                        levels = c("Novice", "Intermediate", "Veteran"))
+  )
+
+nba_clean_df
+```
+
+**Q4.** What does `case_when()` do, and why does the order of the conditions matter?
+
+<!-- [Place Answer - Begin] -->
+
+`case_when()` evaluates a sequence of logical conditions **in order** and returns the value attached to the **first condition that is `TRUE`** for each row. Order matters because the conditions overlap: a season with `season_num = 3` satisfies both `<= 5` and `<= 10`, but it is labeled `"Novice"` because that condition is checked first. The final `TRUE ~ "Veteran"` acts as a catch-all for every remaining row (seasons 11–15). Reversing the order would mislabel early seasons.
+
+<!-- [Place Answer - End] -->
+
+**Side Q4.** Why do we wrap the new `experience` column in `factor()` with explicit `levels`?
+
+<!-- [Place Answer - Begin] -->
+
+By default, character vectors plot in **alphabetical order** — Intermediate, Novice, Veteran — which scrambles the career timeline. Setting `levels = c("Novice", "Intermediate", "Veteran")` forces R to treat the stages in their natural career order, so tables and plots display them in the order a career actually unfolds.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 6 — `group_by()` and `summarize()` for Player Comparison
+
+```{r}
+## Career average PPG (and spread) per player
+avg_ppg_df <- nba_clean_df |>
+  group_by(player) |>
+  summarize(
+    career_avg_ppg = mean(points_pg, na.rm = TRUE),
+    sd_ppg         = sd(points_pg, na.rm = TRUE),
+    seasons_played = n(),
+    .groups = "drop"
+  ) |>
+  arrange(desc(career_avg_ppg))
+
+avg_ppg_df
+```
+
+**Q5.** What does `arrange(desc(career_avg_ppg))` do?
+
+<!-- [Place Answer - Begin] -->
+
+`arrange()` sorts the rows of the data frame by one or more columns. Wrapping the column in `desc()` sorts in **descending order** (highest first). Without `desc()`, rows would be sorted ascending (lowest first, which is the default).
+
+<!-- [Place Answer - End] -->
+
+**Side Q5.** Why do we use `na.rm = TRUE` inside `mean()` and `sd()`?
+
+<!-- [Place Answer - Begin] -->
+
+If any season has a missing value (`NA`) for `points_pg` — which happens with partial seasons, injuries, or data gaps — `mean()` and `sd()` will return `NA` by default rather than computing on the available values. `na.rm = TRUE` tells R to **ignore NA values** and calculate on the remaining observations.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Visualization (V)
+
+**Style rule:** always pipe the data frame into the plot — `df |> ggplot(aes(...))`. **Never** write `ggplot(df, ...)`.
+
+#### Learning Moment 7 — Bar Chart with Points and Error Bars
+
+```{r}
+avg_ppg_df |>
+  ggplot(aes(x = fct_reorder(player, career_avg_ppg), y = career_avg_ppg,
+             fill = player)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = career_avg_ppg - sd_ppg,
+                    ymax = career_avg_ppg + sd_ppg),
+                width = 0.2) +
+  coord_flip() +
+  labs(
+    title = "Career Average PPG — MJ, LJ, KB",
+    x     = "Player",
+    y     = "Career Avg Points Per Game"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+**Q6.** What does `fct_reorder(player, career_avg_ppg)` do to the bars?
+
+<!-- [Place Answer - Begin] -->
+
+`fct_reorder()` from `forcats` reorders the **factor levels** of `player` based on the values of `career_avg_ppg`. When combined with `coord_flip()`, this sorts the bars from lowest to highest (ascending) along the y-axis, making the chart easier to read at a glance.
+
+<!-- [Place Answer - End] -->
+
+**Side Q6.** What does `coord_flip()` do, and when is a horizontal bar chart preferable?
+
+<!-- [Place Answer - Begin] -->
+
+`coord_flip()` swaps the x and y axes, turning a vertical bar chart into a horizontal one. It is preferred when category labels are long strings (like player names) that would overlap or require 45° rotation on the x-axis. Horizontal labels on the y-axis remain fully legible without rotation.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 8 — Points and Error Bars Across Career Stages
+
+We now answer Subtask 2 using the career-stage labels from Learning Moment 5: summarize each player's scoring within each stage, then display the **mean as a point** and the **spread as an error bar** (mean ± 1 SD).
+
+```{r}
+## Average and spread of PPG per player, per career stage
+exp_ppg_df <- nba_clean_df |>
+  group_by(player, experience) |>
+  summarize(
+    avg_ppg = mean(points_pg, na.rm = TRUE),
+    sd_ppg  = sd(points_pg, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+exp_ppg_df |>
+  ggplot(aes(x = experience, y = avg_ppg, color = player)) +
+  geom_point(size = 3, position = position_dodge(width = 0.5)) +
+  geom_errorbar(aes(ymin = avg_ppg - sd_ppg,
+                    ymax = avg_ppg + sd_ppg),
+                width = 0.2, position = position_dodge(width = 0.5)) +
+  labs(
+    title = "Points Per Game by Career Stage — MJ, LJ, KB",
+    x     = "Career Stage",
+    y     = "Average Points Per Game",
+    color = "Player"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+**Q7.** What do the error bars represent in this plot, and why are they useful when comparing players?
+
+<!-- [Place Answer - Begin] -->
+
+Each error bar spans the player's **mean ± 1 standard deviation** of points per game within that career stage. The point shows the typical scoring level; the bar shows how much scoring **varied** from season to season within the stage. They matter because two players can have similar averages but very different consistency — a short bar means steady production, a long bar means boom-or-bust seasons. Comparing only means would hide that difference.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 3 — Student-Generated Comparison
+
+Propose a question comparing MJ, LJ, and KB on a statistic other than points (e.g., rebounds, assists). Your instructor will select one for class exploration.
+
+Remember the style rule: `df |> ggplot(aes(...))` — never `ggplot(df, ...)`.
+
+```{r}
+## Your code here
+
+```
