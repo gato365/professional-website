@@ -1,0 +1,183 @@
+---
+title: "outputs"
+format: docx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE,    # don't run code by default
+  echo = TRUE,     # still show code unless you hide with echo=FALSE
+  warning = FALSE, # suppress warnings
+  message = FALSE, # suppress messages
+  error = FALSE    # suppress errors
+)
+```
+
+Shiny outputs are the dynamic elements of your app that **show results** to the user. Think of them as the *answers* to the *questions* posed by input widgets. The core principle is a simple partnership: every output in the user interface (UI) is paired with a `render` function in the server that creates it.
+
+This connection is what makes Shiny magical. When a user changes an input (like moving a slider), the `render` function automatically re-runs, and the output it's connected to (like a plot or a number) instantly updates.
+
+\newpage
+
+## Example 1: The Multi-Faceted Data Explorer 
+
+This first example demonstrates how a single user input can simultaneously update a **plot**, a **data table**, and a **summary text**. It shows how outputs work together to create a cohesive and informative user experience. We'll use the `palmerpenguins` dataset.
+
+The goal is to let a user select a penguin species and see the corresponding data, a scatter plot of their bill dimensions, and a summary count—all at once.
+
+```{r}
+#| title: "Penguin Explorer App"
+#| viewerHeight: 800
+
+# --- Load Libraries ---
+library(shiny)
+library(ggplot2)
+library(palmerpenguins)
+library(DT)
+
+# --- Define UI ---
+ui <- fluidPage(
+  titlePanel("Palmer Penguins Explorer"),
+  sidebarLayout(
+    sidebarPanel(
+      # Input: A dropdown to select the penguin species
+      selectInput(
+        inputId = "species_select",
+        label = "Select a Penguin Species:",
+        choices = c("Adelie", "Chinstrap", "Gentoo"),
+        selected = "Adelie"
+      )
+    ),
+    mainPanel(
+      # Output 1: A dynamic summary sentence
+      h4(textOutput(outputId = "summary_text")),
+
+      # Output 2: The scatter plot
+      plotOutput(outputId = "penguin_plot"),
+
+      # Output 3: An interactive data table
+      DTOutput(outputId = "penguin_table")
+    )
+  )
+)
+
+# --- Define Server Logic ---
+server <- function(input, output) {
+
+  # Create a reactive expression to filter data based on the input
+  # This is efficient because it's calculated once and reused by all outputs
+  filtered_data <- reactive({
+    penguins[penguins$species == input$species_select, ]
+  })
+
+  # Output 1: Render the summary text
+  output$summary_text <- renderText({
+    # The text string depends on the filtered data
+    paste("Showing data for", nrow(filtered_data()), "penguins of the", input$species_select, "species.")
+  })
+
+  # Output 2: Render the scatter plot
+  output$penguin_plot <- renderPlot({
+    ggplot(filtered_data(), aes(x = bill_length_mm, y = bill_depth_mm, color = island)) +
+      geom_point(size = 4, alpha = 0.7) +
+      labs(
+        title = "Bill Length vs. Bill Depth",
+        x = "Bill Length (mm)",
+        y = "Bill Depth (mm)"
+      ) +
+      theme_minimal()
+  })
+
+  # Output 3: Render the interactive data table
+  output$penguin_table <- renderDT({
+    datatable(filtered_data())
+  })
+}
+
+# --- This is the standard way to launch a Shiny app in a .qmd file ---
+shinyApp(ui, server)
+```
+
+### Why It's Powerful
+
+  * **Reactivity in Action**: Changing the dropdown **instantly** triggers updates across three different types of outputs. The user gets immediate, comprehensive feedback.
+  * **Efficiency**: The `reactive()` expression for `filtered_data` is a key concept. The data is filtered only *once* per user change, and that result is then shared efficiently with the plot, table, and text outputs.
+  * **Different Views, One Source**: It presents the same underlying data in multiple ways (graphically, textually, and tabularly), giving the user a complete picture.
+
+\newpage
+
+## Example 2: The Interactive World Map 
+
+This example showcases a more advanced and visually impressive output: an interactive map using the `leaflet` package. It demonstrates how a simple dropdown can control a complex, web-based widget.
+
+The goal is to provide a list of cities and have the map instantly pan and zoom to the selected location, placing a marker there.
+
+```{r}
+#| title: "Interactive City Map App"
+#| viewerHeight: 700
+
+# --- Load Libraries ---
+library(shiny)
+library(leaflet)
+
+# Create a dataframe of cities and their coordinates for the dropdown
+cities_df <- data.frame(
+  name = c("San Luis Obispo", "New York", "London", "Tokyo"),
+  lat = c(35.2828, 40.7128, 51.5072, 35.6762),
+  lng = c(-120.6596, -74.0060, -0.1276, 139.6503),
+  zoom = c(11, 10, 10, 9)
+)
+
+# --- Define UI ---
+ui <- fluidPage(
+  titlePanel("Interactive City Map"),
+  sidebarLayout(
+    sidebarPanel(
+      # Input: A dropdown to select a city
+      selectInput(
+        inputId = "city_select",
+        label = "Choose a city to view:",
+        choices = cities_df$name
+      )
+    ),
+    mainPanel(
+      # Output: The Leaflet map widget
+      leafletOutput(outputId = "city_map", height = "600px")
+    )
+  )
+)
+
+# --- Define Server Logic ---
+server <- function(input, output) {
+
+  # Output: Render the Leaflet map
+  output$city_map <- renderLeaflet({
+    # Get the data for the selected city
+    selected_city <- cities_df[cities_df$name == input$city_select, ]
+
+    # Create the map. The leaflet() function starts the map,
+    # then we chain commands with the pipe (|>).
+    leaflet() |>
+      addTiles() |> # Adds the base map tiles (like from OpenStreetMap)
+      setView( # Sets the map's center and zoom level
+        lng = selected_city$lng,
+        lat = selected_city$lat,
+        zoom = selected_city$zoom
+      ) |>
+      addMarkers( # Adds a popup marker
+        lng = selected_city$lng,
+        lat = selected_city$lat,
+        popup = paste("Welcome to", selected_city$name, "!")
+      )
+  })
+}
+
+# --- Launch the app ---
+shinyApp(ui, server)
+```
+
+### Why It's Powerful
+
+  * **Integrating External Libraries**: Shiny's output system is extensible. It seamlessly integrates powerful JavaScript libraries like Leaflet, giving you access to sophisticated web widgets without writing any JavaScript yourself.
+  * **High-Impact Visuals**: A dynamic, interactive map is far more engaging than a static image. It allows users to explore spatial data intuitively.
+  * **Complex Control, Simple Input**: The user interacts with a simple dropdown, but the result is a complex change in the map's view and markers. This is the essence of a powerful user interface—hiding complexity behind simple controls.

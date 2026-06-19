@@ -1,0 +1,260 @@
+---
+title: "ETV Cycle 5 — Wikipedia Automation: `for` Loops & Conditionals"
+format: html
+editor: visual
+---
+
+## Description
+
+In Cycle 3 we scraped one Wikipedia page manually. Here we **automate** that process across multiple state pages using a `for` loop with `if / else` conditionals to handle pages that differ in structure.
+
+------------------------------------------------------------------------
+
+### Motivating Questions
+
+**Subtask 1** — Can we automatically scrape county population data for multiple US states?
+
+**Subtask 2** — How do we handle states whose Wikipedia pages have a different table structure?
+
+------------------------------------------------------------------------
+
+## Learning Moment 1 — Libraries
+
+```{r}
+library(____)   ## Data Extraction  — HTML scraping
+library(____)   ## Data Transformation
+library(____)   ## Data Transformation — string cleaning
+library(____)   ## Data Transformation — parse_number()
+library(____)   ## Data Transformation — map functions
+library(____)   ## Data Visualization
+library(____)   ## Data Visualization
+```
+
+------------------------------------------------------------------------
+
+## Learning Moment 2 — The `for` Loop
+
+```{r}
+states <- c("California", "Texas", "Florida", "New York")
+
+for (____ in ____) {
+  cat("Processing:", ____, "\n")
+}
+```
+
+**Q1.** In the loop above, what is `state` called, and what value does it hold on the third iteration?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+**Side Q1.** What is the difference between `cat()` and `print()` when printing inside a loop?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Learning Moment 3 — The `if / else if / else` Conditional
+
+```{r}
+classify_region <- function(state) {
+  if (state %in% c("California", "Oregon", "Washington")) {
+    return(____)
+  } else if (state %in% c("New York", "Massachusetts", "Connecticut")) {
+    return(____)
+  } else if (state %in% c("Texas", "Florida", "Georgia")) {
+    return(____)
+  } else {
+    return(____)
+  }
+}
+
+classify_region("California")
+classify_region("Ohio")
+```
+
+**Q2.** What is the role of `else if` in the conditional block above?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+**Side Q2.** What does `return()` do inside a function, and what happens if you omit it?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Extraction (E)
+
+#### Learning Moment 4 — Building a URL-Construction Function
+
+```{r}
+make_state_url <- function(state_name) {
+  base_url    <- "https://en.wikipedia.org/wiki/List_of_counties_in_"
+  clean_state <- state_name |>
+    ____() |>
+    str_replace_all(____, ____)
+  str_glue(base_url, clean_state)
+}
+
+make_state_url("New Mexico")
+```
+
+**Q3.** What does `str_replace_all(" ", "_")` do, and why is it needed for URLs?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 5 — The Scraping Loop with a Conditional
+
+```{r}
+states_to_scrape <- c("California", "Texas", "Florida",
+                       "New York", "Ohio", "Colorado")
+
+all_county_dfs <- ____()   ## empty list to collect results
+
+for (____ in ____) {
+
+  cat("Scraping:", state, "...\n")
+
+  url <- make_state_url(____)
+
+  result <- tryCatch({
+
+    page   <- read_html(____)
+    tables <- page |> html_table(fill = TRUE)
+
+    ## Conditional: some pages use a different table index
+    if (state %in% c("New York", "Colorado")) {
+      tbl_index <- ____
+    } else {
+      tbl_index <- ____
+    }
+
+    df <- tables[[____]] |>
+      mutate(state = ____)
+
+    cat("  Success:", nrow(df), "rows\n")
+    df
+
+  }, error = function(e) {
+    cat("  ERROR for", state, ":", conditionMessage(e), "\n")
+    ____   ## return NULL on failure
+  })
+
+  all_county_dfs[[____]] <- result
+
+  Sys.sleep(____)   ## polite pause
+}
+```
+
+**Q4.** What does `tryCatch()` do, and why is it important when scraping multiple pages in a loop?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+**Side Q3.** What does `Sys.sleep(1)` do inside the loop, and why is it considered polite?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Transformation (T)
+
+#### Learning Moment 6 — Combining Results with `bind_rows()`
+
+```{r}
+## Remove NULL entries and combine
+all_county_dfs_clean <- Filter(Negate(is.null), ____)
+
+combined_df <- ____(all_county_dfs_clean)
+
+combined_df |>
+  count(____) |>
+  arrange(desc(n))
+```
+
+**Q5.** What does `Filter(Negate(is.null), all_county_dfs)` do?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Visualization (V)
+
+#### Learning Moment 7 — Automating One Plot Per State with a `for` Loop
+
+```{r}
+for (____ in unique(combined_df$state)) {
+
+  state_df <- combined_df |>
+    filter(state == ____)
+
+  p <- ggplot(state_df, aes(y = fct_reorder(County, Population),
+                             x = Population)) +
+    geom_col(fill = "steelblue") +
+    scale_x_continuous(labels = scales::comma) +
+    labs(
+      title = paste("County Populations —", ____),
+      x     = "Population",
+      y     = "County"
+    ) +
+    theme_minimal(base_size = 8)
+
+  ____(p)
+}
+```
+
+**Q6.** Why must we call `print(p)` inside a `for` loop to display the plot?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+**Side Q4.** What does `paste()` do in `paste("County Populations —", s)`?
+
+<!-- [Place Answer - Begin] -->
+
+
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 3 — Student-Generated Extension
+
+```{r}
+## Your code here
+
+```

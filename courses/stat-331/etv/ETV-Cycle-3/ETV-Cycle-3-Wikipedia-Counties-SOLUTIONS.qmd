@@ -1,0 +1,310 @@
+---
+title: "ETV Cycle 3 — California County Populations from Wikipedia (SOLUTIONS)"
+format: docx
+editor: visual
+---
+
+## Description
+
+Wikipedia hosts a rich table of California counties and their populations on the [California counties Wikipedia page](https://en.wikipedia.org/wiki/List_of_counties_in_California). Rather than downloading a file, we will use `htmltab` to extract data directly from the California Wikipedia table, clean it, and explore how county populations are distributed within California.
+
+Each **row** represents one California county. Each **column** represents an attribute of that county.
+
+------------------------------------------------------------------------
+
+### Motivating Questions
+
+**Subtask 1** — Which California counties have the largest populations?
+
+**Subtask 2** — What does the distribution of California county populations look like?
+
+**Subtask 3** — How are California county area and population related?
+
+------------------------------------------------------------------------
+
+## Learning Moment 0 — One-Time Package Installation
+
+Run this chunk once if `htmltab` is not already installed on your machine. The package is no longer installed from CRAN in the usual way, so we use `remotes` to install it from GitHub.
+
+```{r eval=FALSE}
+# install.packages("remotes")
+# remotes::install_github("htmltab/htmltab")
+```
+
+**Setup Q1.** What does `remotes::install_github()` do that `install.packages()` does not?
+
+<!-- [Place Answer - Begin] -->
+
+`install.packages()` usually installs packages from CRAN, the standard R package repository. `remotes::install_github()` installs a package from a GitHub repository instead. That is useful when a package is not available from CRAN or when we need the version maintained on GitHub.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Learning Moment 1 — Libraries
+
+```{r}
+#| message: false
+#| warnings: false
+library(htmltab) ## Data Extraction  — scrape HTML tables with htmltab()
+library(dplyr)   ## Data Transformation — filter, mutate, arrange, slice_head
+library(tidyr)   ## Data Transformation — separate()
+library(stringr) ## Data Transformation — cleaning string columns
+library(readr)   ## Data Transformation — parse_number()
+library(ggplot2) ## Data Visualization
+library(forcats) ## Data Visualization — reordering factors
+```
+
+**Side Q1.** What is the difference between scraping a webpage and downloading a CSV file?
+
+<!-- [Place Answer - Begin] -->
+
+Downloading a CSV gives you a static data file with a predictable rectangular structure. Scraping a webpage extracts data from HTML, which is the structure used to display content in a browser. Scraping is useful when the data is published on a page instead of as a downloadable file, but it can be more fragile because webpage layouts can change.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Extraction (E)
+
+#### Learning Moment 2 — Scraping an HTML Table with `htmltab`
+
+`htmltab()` reads a table directly from a webpage. The `which` argument tells R which table on the page to import.
+
+```{r}
+url <- "https://en.wikipedia.org/wiki/List_of_counties_in_California"
+
+ca_df <- htmltab::htmltab(
+  url,
+  which = 2,
+  rm_nodata_cols = FALSE
+)
+
+glimpse(ca_df)
+```
+
+```{r}
+county_df <- ca_df
+names(county_df)
+```
+
+**Q1.** What does the argument `which = 2` tell `htmltab()` to do?
+
+<!-- [Place Answer - Begin] -->
+
+`which = 2` tells `htmltab()` to import the second HTML table on the webpage. Wikipedia pages often contain more than one table, so the index tells R which table we want.
+
+<!-- [Place Answer - End] -->
+
+**Side Q2.** Why might a Wikipedia page have more than one HTML table?
+
+<!-- [Place Answer - Begin] -->
+
+Wikipedia pages often include infoboxes, navigation boxes, summary tables, data tables, and reference-related tables. The county data table is only one table among several possible HTML table elements on the page.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Transformation (T)
+
+#### Learning Moment 3 — Cleaning Column Names
+
+```{r}
+## Rename columns to clean lowercase names
+county_df <- county_df |>
+  rename(
+    county     = County,
+    population = `Population(2025)`,
+    area       = Area
+  )
+
+## Strip citation footnotes like [1]
+county_df <- county_df |>
+  mutate(across(where(is.character), ~ str_remove_all(.x, "\\[.*?\\]")))
+```
+
+**Q2.** What does `across(where(is.character), ...)` do inside `mutate()`?
+
+<!-- [Place Answer - Begin] -->
+
+`across()` applies a function to multiple columns at once. `where(is.character)` selects only the columns that contain character strings. Here, the string-cleaning function is applied to every text column, so we can remove Wikipedia citation markers without writing a separate line for each column.
+
+<!-- [Place Answer - End] -->
+
+**Side Q3.** What does the regex pattern `"\\[.*?\\]"` match?
+
+<!-- [Place Answer - Begin] -->
+
+`\\[` matches a literal opening bracket `[`. `.*?` matches any characters in a non-greedy way, meaning as few as possible. `\\]` matches a literal closing bracket `]`. Together, the pattern matches citation markers like `[1]`, `[2]`, or `[note]`.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 4 — Converting Population to Numeric
+
+```{r}
+county_df <- county_df |>
+  mutate(population = parse_number(population))
+
+glimpse(county_df)
+```
+
+**Q3.** Why do we use `parse_number()` rather than `as.numeric()`?
+
+<!-- [Place Answer - Begin] -->
+
+`parse_number()` can pull the number out of a string that contains commas or other non-numeric text. For example, it converts `"9,694,934"` to `9694934`. `as.numeric()` expects the string to already look like a plain number, so values with commas often become `NA`.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 5 — Splitting Area into Two Numeric Columns
+
+The `area` column stores two measurements inside one text value:
+
+```{r}
+county_df |>
+  select(county, area) |>
+  slice_head(n = 2)
+```
+
+We want to turn values like `"738 sq mi(1,911 km)"` into two separate numeric columns: `area_sq_mi` and `area_sq_km`.
+
+```{r}
+county_df <- county_df |>
+  separate(
+    area,
+    into = c("area_sq_mi_text", "area_sq_km_text"),
+    sep = "\\(",
+    remove = FALSE
+  )
+
+county_df <- county_df |>
+  mutate(
+    area_sq_mi = parse_number(area_sq_mi_text),
+    area_sq_km = parse_number(area_sq_km_text)
+  ) |>
+  select(-area_sq_mi_text, -area_sq_km_text)
+
+glimpse(county_df)
+```
+
+**Q4.** What does `separate()` do to the `area` column in this example?
+
+<!-- [Place Answer - Begin] -->
+
+`separate()` splits one column into multiple columns using a pattern. Here, it splits the original `area` text at the opening parenthesis. The first piece contains the square-mile value, and the second piece contains the square-kilometer value.
+
+<!-- [Place Answer - End] -->
+
+**Side Q4.** Why do we use `parse_number()` again after separating the area text?
+
+<!-- [Place Answer - Begin] -->
+
+After separating, the new columns still contain text such as `"738 sq mi"` and `"1,911 km)"`. `parse_number()` extracts the numeric parts, giving us usable numeric columns for sorting, plotting, or calculating with area.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Visualization (V)
+
+#### Horizontal Bar Chart
+
+```{r}
+top_county_df <- county_df |>
+  arrange(desc(population)) |>
+  slice_head(n = 15)
+
+ggplot(top_county_df,
+       aes(x = population, y = fct_reorder(county, population))) +
+  geom_col(fill = "steelblue") +
+  scale_x_continuous(labels = scales::comma) +
+  labs(
+    title = "Top 15 California Counties by Population",
+    x     = "Population",
+    y     = "County"
+  ) +
+  theme_minimal()
+```
+
+**Q5.** What does `scales::comma` do inside `scale_x_continuous(labels = ...)`?
+
+<!-- [Place Answer - Begin] -->
+
+`scales::comma` formats large numbers with thousands-separator commas. For example, `9694934` displays as `9,694,934`, which is easier to read on an axis.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Histogram with a Log Scale
+
+```{r}
+ggplot(county_df |> filter(!is.na(population)),
+       aes(x = population)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  scale_x_log10(labels = scales::comma) +
+  labs(
+    title = "Distribution of California County Populations (Log10 Scale)",
+    x     = "Population (log scale)",
+    y     = "Number of Counties"
+  ) +
+  theme_minimal()
+```
+
+**Q6.** Why is a log scale useful for county population data?
+
+<!-- [Place Answer - Begin] -->
+
+County populations are strongly right-skewed: a few counties, especially Los Angeles County, have very large populations, while many counties are much smaller. A log scale compresses the largest values and spreads out smaller values, making the overall distribution easier to see.
+
+<!-- [Place Answer - End] -->
+
+**Side Q5.** Why do we use `filter(!is.na(population))` before plotting?
+
+<!-- [Place Answer - Begin] -->
+
+`geom_histogram()` cannot plot missing numeric values. Filtering with `!is.na(population)` removes missing population values before plotting, making the omission intentional and avoiding a warning.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 3 — Area and Population Scatter Plot
+
+```{r}
+ggplot(county_df |> filter(!is.na(area_sq_mi), !is.na(population)),
+       aes(x = area_sq_mi, y = population)) +
+  geom_point(color = "steelblue", alpha = 0.75, size = 2) +
+  scale_x_continuous(labels = scales::comma) +
+  scale_y_log10(labels = scales::comma) +
+  labs(
+    title = "California County Population by Area",
+    x     = "Area (square miles)",
+    y     = "Population (log scale)"
+  ) +
+  theme_minimal()
+```
+
+**Q7.** What does this scatter plot help us compare?
+
+<!-- [Place Answer - Begin] -->
+
+This scatter plot compares each county's physical size with its population. It helps us see whether larger counties also tend to have larger populations, and it highlights counties that are unusually dense or unusually sparse for their land area.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 4 — Student-Generated Question
+
+Propose a question comparing California counties by population, square miles, square kilometers, or another variable in the Wikipedia table. Your instructor will select one for class exploration.
+
+```{r}
+## Your code here
+
+```

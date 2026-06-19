@@ -1,0 +1,133 @@
+---
+title: "Video 6"
+format: html
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+### **Video 6) `forcats`: Working with Factors**
+
+#### **Video Notes**
+
+This video covers the `forcats` package, which is designed for working with factors. Factors are R's way of handling categorical variables, and `forcats` provides tools to solve common problems, like changing the order of levels or re-grouping them.
+
+***#Fill in the blank***
+
+```{r}
+## Load the forcats package
+# library(____)
+
+## Create a sample factor representing survey responses
+# responses <- factor(c("Agree", "Disagree", "Agree", "Neutral", "Disagree", "Agree"))
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`fct_relevel()`: Manually Reorder Levels**
+
+By default, factor levels are ordered alphabetically. `fct_relevel()` lets you move specific levels to the front, changing their order for plots and tables.
+
+***#Fill in the blank***
+
+```{r}
+##The original order is alphabetical: "Agree", "Disagree", "Neutral"
+# levels(responses)
+
+## Move "Neutral" to be the second level, after "Agree"
+# fct_relevel(____, "Neutral", after = ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`fct_infreq()`: Reorder by Frequency**
+
+`fct_infreq()` is a useful shortcut to reorder factor levels so that the most common level appears first.
+
+***#Fill in the blank***
+
+```{r}
+## Reorder the levels based on how many times each one appears
+# fct_infreq(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`fct_rev()`: Reverse Level Order**
+
+`fct_rev()` simply reverses the current order of the levels.
+
+***#Fill in the blank***
+
+```{r}
+## Reverse the order of the levels in our responses factor
+# fct_rev(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`fct_recode()`: Change Level Values**
+
+`fct_recode()` allows you to manually change the name of each level.
+
+***#Fill in the blank***
+
+```{r}
+## Change the names of the levels to something shorter
+# fct_recode(____,
+#   "A" = ____,
+#   "D" = ____,
+#   "N" = ____
+# )
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`fct_collapse()`: Collapse Multiple Levels into One**
+
+`fct_collapse()` is useful for grouping several old levels into a single new level.
+
+***#Fill in the blank***
+
+```{r}
+## Group "Agree" and "Disagree" into a new level called "Opinion"
+# fct_collapse(____,
+#   Opinion = c(____, ____),
+#   No_Opinion = ____
+# )
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`fct_lump_n()`: Lump Least Common Levels**
+
+`fct_lump_*` functions are for collapsing the least/most common levels into a new "Other" level. `fct_lump_n()` keeps the `n` most frequent levels and lumps the rest.
+
+***#Fill in the blank***
+
+```{r}
+# Create a more complex factor
+complex_factor <- factor(c("A", "B", "A", "C", "A", "B", "D", "E"))
+
+# Keep the 2 most frequent levels ("A" and "B"), and lump the rest into "Other"
+# fct_lump_n(____, n = ____)
+```
+
+------------------------------------------------------------------------
+
+## \[END\] Video 6
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+::: {style="height: 300px; background-color: white;"}
+:::

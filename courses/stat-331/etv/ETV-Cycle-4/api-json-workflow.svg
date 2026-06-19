@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="260" viewBox="0 0 960 260" role="img" aria-labelledby="title desc">
+  <title id="title">API request response JSON workflow</title>
+  <desc id="desc">A left-to-right workflow showing R code making an HTTP GET request to an API, receiving JSON, parsing with fromJSON, and converting to a data frame.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#4f5d75"/>
+    </marker>
+    <style>
+      .box { fill: #f8fafc; stroke: #4f5d75; stroke-width: 2; rx: 10; }
+      .accent { fill: #e0f2fe; stroke: #0369a1; stroke-width: 2; rx: 10; }
+      .text { font-family: Arial, sans-serif; font-size: 18px; fill: #1f2937; }
+      .small { font-family: Arial, sans-serif; font-size: 14px; fill: #4b5563; }
+      .arrow { stroke: #4f5d75; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect x="25" y="75" width="150" height="95" class="box"/>
+  <text x="100" y="112" text-anchor="middle" class="text">R code</text>
+  <text x="100" y="140" text-anchor="middle" class="small">request()</text>
+  <line x1="180" y1="122" x2="255" y2="122" class="arrow"/>
+  <rect x="265" y="75" width="150" height="95" class="accent"/>
+  <text x="340" y="112" text-anchor="middle" class="text">HTTP GET</text>
+  <text x="340" y="140" text-anchor="middle" class="small">query URL</text>
+  <line x1="420" y1="122" x2="495" y2="122" class="arrow"/>
+  <rect x="505" y="75" width="150" height="95" class="box"/>
+  <text x="580" y="112" text-anchor="middle" class="text">API</text>
+  <text x="580" y="140" text-anchor="middle" class="small">Open-Meteo</text>
+  <line x1="660" y1="122" x2="735" y2="122" class="arrow"/>
+  <rect x="745" y="45" width="185" height="65" class="accent"/>
+  <text x="837" y="72" text-anchor="middle" class="text">JSON response</text>
+  <text x="837" y="94" text-anchor="middle" class="small">resp_body_string()</text>
+  <line x1="837" y1="115" x2="837" y2="155" class="arrow"/>
+  <rect x="745" y="165" width="185" height="65" class="box"/>
+  <text x="837" y="192" text-anchor="middle" class="text">R data frame</text>
+  <text x="837" y="214" text-anchor="middle" class="small">fromJSON() + clean</text>
+</svg>

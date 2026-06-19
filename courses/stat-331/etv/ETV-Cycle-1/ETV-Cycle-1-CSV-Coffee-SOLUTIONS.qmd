@@ -1,0 +1,380 @@
+---
+title: "ETV Cycle 1 — Extracting and Exploring Coffee Purchase Data (SOLUTIONS)"
+format: docx
+editor: visual
+---
+
+## Description
+
+This dataset contains coffee purchases recorded over several years, beginning in 2018. Each row represents a single transaction capturing the date, amount, and location of the purchase. Coffee spending is a concrete, personal example that makes patterns in time and money immediately meaningful. We will use R to extract this data from a CSV file, transform it into an analysis-ready form, and visualize spending patterns over time.
+
+Each **row** represents a single purchase. Each **column** represents an attribute of that purchase.
+
+------------------------------------------------------------------------
+
+### Motivating Questions
+
+**Subtask 1** — In which months is the most money spent on coffee?
+
+**Subtask 2** — Does this monthly pattern remain consistent across different years?
+
+------------------------------------------------------------------------
+
+## Learning Moment 1 — Packages and Libraries
+
+**Packages** are collections of R functions bundled together to extend R's base capabilities.
+
+**Libraries** are packages that have been loaded into your current R session with `library()`.
+
+We load only the packages we need, rather than the entire tidyverse, so you can clearly see which library each function comes from.
+
+###### **Task 1:** Load Libraries
+
+```{r}
+library(here)       ## Data Extraction  — file path management
+library(readr)      ## Data Extraction  — reading CSV files
+library(dplyr)      ## Data Transformation — mutate, filter, select, group_by, summarize
+library(lubridate)  ## Data Transformation — working with dates
+library(forcats)    ## Data Transformation — reordering factor levels
+library(ggplot2)    ## Data Visualization  — building plots
+```
+
+**Side Q1.** Why do we use `library(dplyr)` instead of `library(tidyverse)` in this course?
+
+<!-- [Place Answer - Begin] -->
+
+Loading individual libraries (e.g., `library(dplyr)`) forces you to be aware of which package each function belongs to. Loading the full tidyverse loads eight packages at once, masking where functions like `mutate()` or `select()` actually live. Individual loading builds better mental models early in the course.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Extraction (E)
+
+**Extraction** is the process of bringing data into R from an external source. Raw data lives in files, databases, or online services — R cannot analyze it until it is loaded into your session.
+
+**Q1.** Define Data Extraction in your own words.
+
+<!-- [Place Answer - Begin] -->
+
+Data extraction is the process of importing or retrieving data from an external source — such as a CSV file, database, or API — into R so that it can be inspected and analyzed.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 2 — Reading a CSV with `read_csv()`
+
+`read_csv()` from the `readr` package reads a comma-separated values file and returns a **tibble** (a modern data frame).
+
+```{r}
+## Read the coffee purchase CSV into R
+coffee_df <- read_csv(here("ETV", "Data", "coffee_purchases.csv"))
+```
+
+Notice the naming convention `coffee_df` — the `_df` suffix signals this object is a data frame.
+
+**Q2.** What does the `<-` operator do in R?
+
+<!-- [Place Answer - Begin] -->
+
+`<-` is the **assignment operator**. It stores the object on the right-hand side into the variable name on the left-hand side. After this line runs, `coffee_df` refers to the loaded data frame throughout the session.
+
+<!-- [Place Answer - End] -->
+
+**Side Q2.** What is the difference between `read_csv()` from `readr` and `read.csv()` from base R?
+
+<!-- [Place Answer - Begin] -->
+
+`read_csv()` (readr) returns a **tibble**, reads faster, never converts strings to factors by default, and provides more informative column-type messages. `read.csv()` (base R) returns a classic `data.frame` and converts character columns to factors by default unless `stringsAsFactors = FALSE` is set.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 3 — Inspecting the Data
+
+Before transforming any data, always inspect it first to understand its structure, dimensions, and variable types.
+
+###### **Task 2:** Run each of the following inspection functions.
+
+```{r}
+## Open a spreadsheet-style viewer
+# View(coffee_df)
+```
+
+```{r}
+## Check dimensions: rows × columns
+dim(coffee_df)
+```
+
+```{r}
+## Print column names and data types
+glimpse(coffee_df)
+```
+
+**Q3.** What is a data frame (or tibble) in R?
+
+<!-- [Place Answer - Begin] -->
+
+A data frame is a two-dimensional, table-like structure in which each **column** is a variable and each **row** is one observation. Every column can hold a different data type (numeric, character, logical), but all columns must have the same length. A tibble is a modern, enhanced version of a data frame from the tidyverse.
+
+<!-- [Place Answer - End] -->
+
+**Side Q3.** After running `glimpse(coffee_df)`, what does the `<dbl>` type next to the `amount` column tell you?
+
+<!-- [Place Answer - Begin] -->
+
+`<dbl>` stands for **double-precision floating-point number** — R's standard numeric type for decimal values. It tells you the `amount` column stores numbers with decimal places (e.g., 4.75), which is appropriate for dollar amounts.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Transformation (T)
+
+**Transformation** is the process of cleaning, reshaping, and enriching raw data so it is ready for analysis and visualization.
+
+**Q4.** Define Data Transformation in your own words.
+
+<!-- [Place Answer - Begin] -->
+
+Data transformation is the process of cleaning, reshaping, and modifying a raw dataset — fixing data types, creating new variables, filtering unwanted rows — to produce a tidy, analysis-ready form.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 4 — Fixing Dates with `mutate()` and `lubridate`
+
+The `date` column likely arrived as a character string rather than a true date. We use `mutate()` from `dplyr` to overwrite it with the correct type using `as_date()` from `lubridate`.
+
+```{r}
+## Convert date column from character to Date class
+mod_1_coffee_df <- coffee_df |>
+  mutate(date  = as_date(date),
+         month = month(date, label = TRUE),   ## abbreviated month name (Jan–Dec)
+         year  = year(date))
+```
+
+**Q5.** What does `mutate()` do?
+
+<!-- [Place Answer - Begin] -->
+
+`mutate()` adds new columns or modifies existing ones **without removing any other columns**. Here it overwrites `date` with a proper Date object and creates two new columns: `month` and `year`, both extracted from `date`.
+
+<!-- [Place Answer - End] -->
+
+**Side Q4.** Why does `month(date, label = TRUE)` return `"Jan"`, `"Feb"`, etc. instead of `1`, `2`?
+
+<!-- [Place Answer - Begin] -->
+
+Setting `label = TRUE` tells lubridate to return an **ordered factor** of abbreviated month names instead of the integer (1–12). Ordered factors preserve calendar order in plots and summaries automatically, so January always appears before February even if the data is unsorted.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 5 — The Pipe Operator `|>`
+
+The native pipe `|>` passes the left-hand result directly into the first argument of the right-hand function, allowing operations to be chained in readable, top-to-bottom order.
+
+```{r}
+## Using the pipe to chain: select relevant columns
+coffee_selected_df <- mod_1_coffee_df |>
+  select(date, month, year, amount, description)
+
+coffee_selected_df
+```
+
+**Q6.** What is the benefit of using `|>` over nesting function calls?
+
+<!-- [Place Answer - Begin] -->
+
+The pipe produces code that reads like a recipe — each step is on its own line, in the order it executes. Nested calls like `select(mutate(coffee_df, ...), ...)` must be read from the inside out, which is harder to follow and debug.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 6 — `filter()`
+
+`filter()` keeps only the rows where a specified condition is `TRUE`.
+
+```{r}
+## Keep only purchases of $5 or more
+coffee_above5_df <- mod_1_coffee_df |>
+  filter(amount >= 5)
+```
+
+```{r}
+## Keep only weekend purchases
+coffee_weekend_df <- mod_1_coffee_df |>
+  filter(day_of_week %in% c("Saturday", "Sunday"))
+```
+
+**Q7.** What does `%in%` do in the second filter example?
+
+<!-- [Place Answer - Begin] -->
+
+`%in%` is a membership operator. `day_of_week %in% c("Saturday", "Sunday")` returns `TRUE` for any row where `day_of_week` matches either `"Saturday"` or `"Sunday"`, and `FALSE` otherwise. It is a concise alternative to writing `day_of_week == "Saturday" | day_of_week == "Sunday"`.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 7 — `group_by()` and `summarize()`
+
+`group_by()` splits the data into groups; `summarize()` collapses each group into one summary row.
+
+```{r}
+## Total and average spending per month
+monthly_spending_df <- mod_1_coffee_df |>
+  group_by(month) |>
+  summarize(
+    total_spending = sum(amount),
+    avg_spending   = mean(amount),
+    n_purchases    = n(),
+    .groups        = "drop"
+  )
+
+monthly_spending_df
+```
+
+**Q8.** What does `n()` return inside `summarize()`?
+
+<!-- [Place Answer - Begin] -->
+
+`n()` counts the **number of rows** in each group. Here it tells us how many coffee purchases were made in each month, giving context to the total and average spending figures.
+
+<!-- [Place Answer - End] -->
+
+**Side Q5.** What does `.groups = "drop"` do at the end of `summarize()`?
+
+<!-- [Place Answer - Begin] -->
+
+After `summarize()`, dplyr retains the grouping structure by default (minus the last grouping variable). `.groups = "drop"` explicitly removes all grouping from the resulting data frame, returning a plain tibble. This prevents unexpected behavior in any subsequent operations that happen to depend on group structure.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Visualization (V)
+
+**Visualization** is the process of creating graphical representations of data to reveal patterns and communicate insights.
+
+**Q9.** Define Data Visualization in your own words.
+
+<!-- [Place Answer - Begin] -->
+
+Data visualization is the use of charts, graphs, and other graphical displays to communicate patterns and relationships in data in a way that is faster and more intuitive than reading raw numbers.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 8 — Bar Chart with `ggplot2`
+
+`ggplot2` builds visualizations in layers using the `+` operator. Each layer adds a visual element to the plot.
+
+```{r}
+ggplot(monthly_spending_df, aes(x = month, y = total_spending)) +
+  geom_col(fill = "steelblue") +
+  labs(
+    title   = "Total Coffee Spending by Month",
+    x       = "Month",
+    y       = "Total Spent ($)"
+  ) +
+  theme_minimal()
+```
+
+**Q10.** What is the role of `aes()` inside `ggplot()`?
+
+<!-- [Place Answer - Begin] -->
+
+`aes()` (aesthetics) maps variables in the data frame to visual properties of the plot. Here `x = month` places month on the horizontal axis and `y = total_spending` controls bar height. Everything inside `aes()` is data-driven; fixed visual properties (like `fill = "steelblue"`) go outside `aes()`.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 1 — Which months have the highest average coffee spending?
+
+```{r}
+ggplot(monthly_spending_df, aes(x = month, y = avg_spending)) +
+  geom_col(fill = "darkorange") +
+  labs(
+    title = "Average Coffee Spending by Month",
+    x     = "Month",
+    y     = "Avg Amount Spent ($)"
+  ) +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+### Subtask 2 — Does monthly spending stay consistent across years?
+
+#### Learning Moment 9 — `facet_wrap()`
+
+`facet_wrap()` creates a separate subplot for each level of a grouping variable — here, each year gets its own panel.
+
+```{r}
+## Year-over-year monthly spending using facets
+yearly_monthly_df <- mod_1_coffee_df |>
+  group_by(year, month) |>
+  summarize(total_spending = sum(amount), .groups = "drop")
+
+p1 <- ggplot(yearly_monthly_df, aes(x = month, y = total_spending)) +
+  geom_col(fill = "steelblue") +
+  facet_wrap(~ year) +
+  labs(
+    title = "Monthly Coffee Spending by Year",
+    x     = "Month",
+    y     = "Total Spent ($)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p1
+```
+
+**Q11.** What does `facet_wrap(~ year)` do to the plot?
+
+<!-- [Place Answer - Begin] -->
+
+`facet_wrap(~ year)` splits the visualization into one panel per unique value of `year`. Each panel shows the same type of chart (monthly spending bars) but for a single year, making it easy to compare whether the monthly pattern is stable or shifts across years.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 10 — Customizing with `theme()`
+
+```{r}
+p1 +
+  theme(
+    axis.title.x = element_text(size = 12, face = "bold"),
+    axis.title.y = element_text(size = 12, face = "bold"),
+    plot.title   = element_text(size = 15, face = "bold", hjust = 0.5)
+  )
+```
+
+**Q12.** What does `hjust = 0.5` do to the plot title?
+
+<!-- [Place Answer - Begin] -->
+
+`hjust` controls **horizontal justification**. A value of `0.5` centers the title over the plot area. `hjust = 0` aligns the title to the left; `hjust = 1` aligns it to the right.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 3 — Student-Generated Question
+
+Propose a question involving both the `description` variable and a time component (month, year, or day of week). Your instructor will select one to explore as a class.
+
+```{r}
+## Your code here
+
+```

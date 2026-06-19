@@ -1,0 +1,246 @@
+---
+title: "Video 7"
+format: html
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+
+### **Video 7) `ggplot2` - 2: Advanced Visualization with Data Transformation**
+
+
+We'll start with messy, wide-format data, use tidyr and dplyr to clean and combine it, and then use advanced ggplot2 and forcats functions to create a powerful, multi-faceted visualization. We will then explore several other enhancement functions using the mtcars dataset.#Fill in the blank# Load all necessary packages
+
+```{r}
+library(____)
+library(____)
+library(____)
+library(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+
+
+Student Quiz Data
+
+Step 1: The "Raw" Data Imagine we have two separate datasets. One has student quiz scores in a "wide" format, and another has student demographic information.Setup: Create the two data frames.
+
+```{r}
+student_scores_wide <- tribble(
+  ~name, ~Quiz_1, ~Quiz_2,
+  "Ana",       85,      90,
+  "Ben",       92,      88,
+  "Charlie",   78,      85
+)
+
+student_demographics <- tribble(
+  ~name,      ~major,
+  "Ana",   "Statistics",
+  "Ben",      "Biology",
+  "Charlie",  "Statistics"
+)
+```
+
+Step 2: Transformation with `pivot_longer` and `left_join`
+
+
+To plot this data effectively, we first need to make the scores data "long" using `pivot_longer`. Then, we'll add the major information using a left_join.
+
+
+```{r}
+# First, pivot the scores data to a long format
+scores_long <- student_scores_wide %>%
+  pivot_longer(
+    cols = c(____, ____),
+    names_to = "quiz",
+    values_to = "score"
+  )
+```
+
+
+
+```{r}
+# Now, join the demographic data to the long scores data
+full_student_data <- left_join(____, ____, by = "name")
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+Step 3: Visualization with `forcats` and ggplot2
+
+Now that our data is tidy, we can create an advanced plot. Let's make a bar chart showing the average score for each major, ordered from highest to lowest. 
+
+`fct_reorder()`: Making Plots Better
+
+`fct_reorder()` allows us to reorder the levels of a factor (like major) based on another variable (like the average score). This makes our plots much easier to interpret.
+
+
+
+```{r}
+# First, calculate the average score per major
+avg_scores_by_major <- full_student_data %>%
+  group_by(____) %>%
+  summarize(avg_score = mean(score))
+```
+
+```{r}
+# Create the bar plot, using fct_reorder to sort the y-axis
+ggplot(avg_scores_by_major, aes(x = avg_score, y = fct_reorder(major, ____))) +
+  geom_col(fill = "steelblue") +
+  labs(
+    title = "Average Quiz Scores by Major",
+    x = "Average Score",
+    y = "Major"
+  )
+``` 
+  
+
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+`facet_wrap()`: Creating Subplots
+
+Now let's go back to our `full_student_data` and create a more detailed visualization: a bar chart for each student, faceted by their major.
+
+
+
+
+
+```{r}
+# Create a separate plot for each major
+ggplot(full_student_data, aes(x = quiz, y = score, fill = name)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~ ____) +
+  labs(
+    title = "Quiz Scores by Student and Major",
+    x = "Quiz",
+    y = "Score"
+  )
+``` 
+  
+  
+::: {style="height: 300px; background-color: white;"}
+:::
+
+
+
+
+
+
+
+Techniques Showcase: Additional ggplot2 Enhancements with mtcars
+
+Now we'll explore some other useful ggplot2 functions using the mtcars dataset.
+
+Setup: Create a base plot for the mtcars examples.
+
+
+```{r}
+# We'll use this base plot for the following examples
+base_plot <- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
+  geom_point()
+```
+
+`coord_flip()`: Flipping Axes
+
+`coord_flip()` swaps the x and y axes. This can be very useful for making horizontal boxplots or bar charts, which are often easier to read if you have long category labels.
+
+
+
+```{r}
+# Create a boxplot and then flip the coordinates
+ggplot(mtcars, aes(x = factor(cyl), y = hp)) +
+  geom_boxplot() +
+  ____()
+```  
+  
+  
+::: {style="height: 300px; background-color: white;"}
+:::
+
+`scale_color_manual()`: Customizing Colors
+
+This function gives you manual control over the colors used in your plot. You can specify the exact color for each level of your aesthetic mapping.
+
+```{r}
+# Start with our base plot and add manual colors
+base_plot +
+  scale_color_manual(values = c("4" = ____, "6" = ____, "8" = ____))
+```
+  
+  
+::: {style="height: 300px; background-color: white;"}
+:::
+
+`theme()`: Customizing Plot Appearance
+
+The `theme()` function is incredibly powerful and lets you customize almost any non-data element of your plot. Here, we'll use it to move the legend to the bottom of the plot.
+
+
+```{r}
+# Start with our base plot and move the legend
+base_plot +
+  theme(legend.position = ____)
+```
+  
+::: {style="height: 300px; background-color: white;"}
+:::
+
+
+`geom_text()`: Adding Text Labels
+
+This geom adds text annotations directly onto the plot. It requires `x`, `y`, and `label` aesthetics. It's often used with a filtered dataset to avoid cluttering the plot.
+
+
+
+```{r}
+# Create a subset of data for labeling
+label_data <- mtcars %>%
+  rownames_to_column("car") %>%
+  filter(hp > 250)
+```
+
+
+```{r}
+# Add car names to the points for very high horsepower cars
+base_plot +
+  geom_text(data = ____, aes(label = car), vjust = -1)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+`ggsave()`: Saving Your Plot
+
+After you've created the perfect plot, `ggsave()` allows you to save it to a file, like a PNG or PDF, with control over the size and resolution.
+
+
+```{r}
+#Create the final plot object
+final_plot <- base_plot +
+  facet_wrap(~ factor(cyl)) +
+  labs(title = "MPG vs. Weight by Cylinder")
+```
+
+```{r}
+# Save the plot to a file named "my_car_plot.png"
+ggsave(____, plot = ____, width = 8, height = 5)
+```
+
+
+
+## \[END\] Video 7
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+::: {style="height: 300px; background-color: white;"}
+:::

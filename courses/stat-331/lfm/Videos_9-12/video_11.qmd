@@ -1,0 +1,145 @@
+---
+title: "video_11"
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+## **Video** 11) Functions: Defining and Using
+
+Functions are reusable blocks of code that perform a specific task.
+
+### **Basic function structure**:
+
+Defines a simple function that takes inputs (arguments) and provides an output (`return` value).
+
+```{r}
+# Create a function to convert weight from (lbs/1000) to kilograms
+convert_wt_to_kg <- function(weight_in_tons) {
+kg <- weight_in_tons * 1000 * 0.453592
+return(kg)
+}
+
+# Use the function on the 'Datsun 710'
+datsun_kg <- convert_wt_to_kg(mtcars["Datsun 710", "wt"])
+print(datsun_kg)
+```
+
+#### Question 1
+
+Write a custom R function named `add_numbers` that accepts two arguments, `x` and `y`. Inside the function, calculate their sum and use the `return()` statement to output the result. After defining the function, test it by calling it with the numbers `5` and `10`, and then print the final result to the console.
+
+```{r}
+##----------
+## EMPTY
+##----------
+# Create a function that adds two numbers
+add_numbers <- function(____, ____) {
+result <- ____ + ____
+return(____)
+}
+
+# Use the function
+sum_result <- add_numbers(____, ____)
+print(____)
+
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+### **Function with default arguments**:
+
+Assigns a default value to an argument, which is used if no value is provided by the user.
+
+```{r}
+# Function to get the top 'n' cars based on a column
+get_top_cars <- function(n = 3, column = "hp") {
+# Order the data frame by the specified column in descending order
+sorted_cars <- mtcars[order(mtcars[[column]], decreasing = TRUE), ]
+# Return the top 'n' rows
+return(head(sorted_cars, n))
+}
+
+# Call with default arguments (top 3 by horsepower)
+get_top_cars()
+```
+
+#### Question 2
+
+Write a custom R function named `greet` that takes a single argument, `name`. Set a default value for `name` to be "Guest". The function should combine the string "Hello, " with the provided name and an exclamation mark. After defining the function, test it twice: first by calling it with no arguments to see the default behavior, and a second time by providing the name "Ana".
+
+```{r}
+##----------
+## EMPTY
+##----------
+
+# A function to create a greeting message
+greet <- function(name = ____) {
+paste("Hello,", ____, "!")
+}
+
+# Call with the default argument
+greet(____)
+# Call with a provided argument
+greet(____)
+
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+### **Multiple outputs (as a list)**:
+
+A function can return multiple values by packaging them into a list.
+
+```{r}
+# Function to get key stats for a column
+get_stats <- function(column_vector) {
+list(
+average = mean(column_vector),
+median_val = median(column_vector),
+std_dev = sd(column_vector)
+)
+}
+
+# Get stats for the mpg column
+mpg_stats <- get_stats(mtcars$mpg)
+print(mpg_stats$average)
+```
+
+#### Question 3
+
+Write a custom R function named `get_vector_stats` that accepts a single argument, a numeric vector. Inside the function, calculate both the `mean` and the `sum` of the vector and store them as a named `list`. The function should then `return` this list. After defining the function, test it by calling it with the vector `c(10, 20, 30)` and printing only the `average` from the resulting list.
+
+```{r}
+##----------
+## EMPTY
+##----------
+
+# Function to get key stats for a numeric vector
+get_vector_stats <- function(____) {
+stat_list <- list(
+average = ____(____),
+total_sum = ____(____)
+)
+return(____)
+}
+
+# Get stats for a simple vector
+stats <- get_vector_stats(c(____, ____, ____))
+print(____$____)
+
+```
+
+## \[END\] Video 11
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+::: {style="height: 300px; background-color: white;"}
+:::
+

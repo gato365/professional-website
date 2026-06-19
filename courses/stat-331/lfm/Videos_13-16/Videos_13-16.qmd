@@ -1,0 +1,270 @@
+---
+title: "Videos 13 - 16 (EMPTY)"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+## 13) Iterations – 2: Advanced Functional Programming with `{purrr}`
+
+#### **Video Notes**
+
+This video builds on our `{purrr}` skills. We'll learn how to work with functions that require more than one argument and how to iterate over multiple inputs simultaneously.
+
+***#Fill in the blank***
+
+``` r
+# Load the purrr package
+library(____)
+```
+
+#### **Passing Additional Arguments to `map()`**
+
+You can pass extra, fixed arguments to the function you are mapping. These arguments will be passed to every function call.
+
+***#Fill in the blank***
+
+``` r
+# Let's create a function to add a fixed bonus to a score
+add_bonus <- function(score, bonus_points) {
+  score + bonus_points
+}
+
+# Create a list of student scores
+scores <- list(student_A = 85, student_B = 92, student_C = 78)
+
+# Use map_dbl() to add a 5-point bonus to every student's score
+# The 'bonus_points' argument is passed through map() to our function.
+map_dbl(____, ____, bonus_points = ____)
+```
+
+#### **`pmap()`: Iterate Over Multiple Inputs in Parallel**
+
+`pmap()` is the most general mapper. It takes a list of arguments and applies a function to the corresponding elements of each list item. This is perfect when each function call needs a unique set of arguments.
+
+***#Fill in the blank***
+
+``` r
+# Let's define a function to describe a student's performance
+describe_performance <- function(name, midterm, final) {
+  paste0(name, " has an average score of ", (midterm + final) / 2)
+}
+
+# Create a list where each element contains the arguments for one call
+student_list <- list(
+  name = c("Ana", "Ben", "Charlie"),
+  midterm = c(85, 92, 78),
+  final = c(90, 88, 85)
+)
+
+# Use pmap_chr() to apply the function to our list of arguments
+# The first call will be describe_performance("Ana", 85, 90), the second will be for "Ben", etc.
+pmap_chr(____, ____)
+```
+
+------------------------------------------------------------------------
+
+## 14) Statistical Analysis I: Group Comparisons 📊
+
+#### **Video Notes**
+
+In this video, we'll perform common statistical tests to compare groups using the `mtcars` dataset. We'll explore differences in fuel efficiency and look for associations between categorical variables.
+
+***#Fill in the blank***
+
+``` r
+# Load necessary packages
+library(dplyr)
+```
+
+#### **Two-Sample Inference: `t.test()`**
+
+A two-sample t-test is used to determine if there is a significant difference between the means of two groups. Here, we'll compare the miles-per-gallon (`mpg`) of automatic vs. manual cars (`am`).
+
+***#Fill in the blank***
+
+``` r
+# am is 0 for automatic, 1 for manual
+t.test(mpg ~ ____, data = ____)
+```
+
+#### **Chi-Square Inference: `chisq.test()`**
+
+A Chi-square test checks if there is a significant association between two categorical variables. We'll test if the number of cylinders (`cyl`) is associated with the number of gears (`gear`).
+
+***#Fill in the blank***
+
+``` r
+# First, create a contingency table of the two variables
+contingency_table <- table(mtcars$____, mtcars$____)
+
+# Now, run the Chi-square test on the table
+chisq.test(____)
+```
+
+#### **One-Way & Two-Way ANOVA: `aov()`**
+
+Analysis of Variance (ANOVA) is used to compare the means of three or more groups.
+
+-   **One-Way ANOVA** uses one categorical predictor.
+-   **Two-Way ANOVA** uses two categorical predictors.
+
+***#Fill in the blank***
+
+``` r
+# One-Way ANOVA: Does mpg differ by the number of cylinders?
+one_way_model <- aov(mpg ~ factor(____), data = ____)
+summary(one_way_model)
+
+# Two-Way ANOVA: Does mpg differ by cylinders, gears, or their interaction?
+two_way_model <- aov(mpg ~ factor(____) * factor(____), data = ____)
+summary(two_way_model)
+```
+
+#### **ANCOVA**
+
+Analysis of Covariance (ANCOVA) extends ANOVA by including a continuous variable (a "covariate") to account for some of the variance.
+
+***#Fill in the blank***
+
+``` r
+# Does mpg differ by cylinder count, after accounting for the car's weight?
+ancova_model <- aov(mpg ~ ____ + factor(____), data = ____)
+summary(ancova_model)
+```
+
+------------------------------------------------------------------------
+
+## 15) Statistical Analysis II: Modeling & Prediction 📈
+
+#### **Video Notes**
+
+This video introduces several modeling techniques. We'll build models to predict outcomes, check their assumptions, and explore both classic and machine learning approaches using `mtcars`.
+
+***#Fill in the blank***
+
+``` r
+# Load necessary packages
+library(dplyr)
+library(rpart) # For decision trees
+```
+
+#### **Linear Regression: `lm()`**
+
+Linear regression models the relationship between a continuous outcome variable and one or more predictor variables. Here, we'll model `mpg` as a function of weight (`wt`).
+
+***#Fill in the blank***
+
+``` r
+# Fit the linear model
+regression_model <- lm(mpg ~ ____, data = ____)
+
+# View the model summary (coefficients, R-squared, etc.)
+summary(____)
+```
+
+#### **Regression Assumptions**
+
+It's crucial to check the assumptions of your regression model. The `plot()` function, when used on a model object, automatically generates standard diagnostic plots.
+
+***#Fill in the blank***
+
+``` r
+# Set up a 2x2 grid for the plots
+par(mfrow = c(2, 2))
+
+# Generate the four default diagnostic plots
+plot(____)
+
+# Reset plotting window
+par(mfrow = c(1, 1))
+```
+
+#### **Decision Trees: `rpart()`**
+
+Decision trees are a machine learning method that creates a set of rules to classify or predict an outcome. Here, we'll try to predict the number of cylinders (`cyl`) based on `mpg` and `hp`.
+
+***#Fill in the blank***
+
+``` r
+# Fit the decision tree model
+tree_model <- rpart(factor(cyl) ~ ____ + ____, data = ____, method = "class")
+
+# Plot the tree to see the rules
+plot(tree_model)
+text(tree_model)
+```
+
+#### **Logistic Regression: `glm()`**
+
+Logistic regression is used when your outcome variable is binary (0 or 1). We'll model the probability of a car having a manual transmission (`am` = 1) based on its `mpg`.
+
+***#Fill in the blank***
+
+``` r
+# Fit the logistic regression model
+# The 'family = "binomial"' argument specifies that this is logistic regression.
+logistic_model <- glm(am ~ ____, data = ____, family = "binomial")
+
+summary(____)
+```
+
+------------------------------------------------------------------------
+
+## 16) Simulation: Creating Data 🎲
+
+#### **Video Notes**
+
+Simulation is a powerful tool for creating artificial data to test hypotheses, understand statistical concepts, or plan studies. We'll use functions like `rnorm()` and `rbinom()` to generate two different datasets.
+
+#### **Student GPA Simulation: `rnorm()`**
+
+`rnorm()` generates random numbers from a normal (bell-shaped) distribution, given a mean and standard deviation. Let's simulate data for 100 university students.
+
+***#Fill in the blank***
+
+``` r
+# Set the number of students to simulate
+n_students <- 100
+
+# Generate the data using rnorm()
+student_gpa <- rnorm(n = ____, mean = 3.2, sd = 0.5)
+study_hours <- rnorm(n = ____, mean = 15, sd = 5)
+work_hours <- rnorm(n = ____, mean = 10, sd = 8)
+social_media_hours <- rnorm(n = ____, mean = 20, sd = 7)
+
+# Combine into a data frame
+simulated_student_data <- data.frame(
+  gpa = ____,
+  study_hrs = ____,
+  work_hrs = ____,
+  social_hrs = ____
+)
+
+head(simulated_student_data)
+```
+
+#### **Basketball All-Star Simulation: `rbinom()`**
+
+`rbinom()` generates random numbers from a binomial distribution, which is perfect for modeling a series of success/failure trials (like making or missing a shot).
+
+***#Fill in the blank***
+
+``` r
+# Simulate shots made in a single game
+# Player takes 20 shots with a 45% chance of making each one.
+shots_made_in_game <- rbinom(n = 1, size = ____, prob = ____)
+print(paste("Made", shots_made_in_game, "shots in one game."))
+
+
+# Simulate performance over a full season (82 games)
+# 'n = 82' simulates 82 different games at once.
+shots_made_per_game_season <- rbinom(n = ____, size = 20, prob = 0.45)
+
+# Calculate the total points for the season (assuming 2 points per shot)
+total_season_points <- sum(____) * 2
+print(paste("Scored", total_season_points, "points in the season."))
+```

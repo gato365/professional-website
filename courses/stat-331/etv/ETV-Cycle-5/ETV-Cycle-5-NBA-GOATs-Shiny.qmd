@@ -1,0 +1,215 @@
+---
+title: "ETV Cycle 5 - NBA GOATs Shiny App"
+format: docx
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Goal
+
+In the main Cycle 5 lesson, we built a joined data frame by reading multiple Excel sheets, binding the player sheets, and joining division information. In this extension, we turn that workflow into a Shiny app.
+
+The app is designed to answer several kinds of analytical questions:
+
+- **Comparison questions:** Which player or team has the highest average points, assists, rebounds, or Game Score?
+- **Distribution questions:** How spread out are player game statistics?
+- **Relationship questions:** Are points and assists related, and does the pattern differ by player or conference?
+- **Filtering questions:** How do conclusions change when we focus on selected players, conferences, teams, or game outcomes?
+
+The finished app is saved in this folder as `app.R`.
+
+------------------------------------------------------------------------
+
+## Step 1 - Load Libraries
+
+```{r}
+library(shiny)
+library(readxl)
+library(purrr)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(forcats)
+library(scales)
+```
+
+------------------------------------------------------------------------
+
+## Step 2 - Create a Data-Loading Function
+
+The app should build the same joined data set every time it opens. We use a function so that the extraction and transformation workflow is contained in one place.
+
+```{r}
+find_workbook <- function() {
+  candidates <- c(
+    file.path("ETV", "Data", "nba_goats.xlsx"),
+    file.path("..", "Data", "nba_goats.xlsx"),
+    file.path("..", "..", "ETV", "Data", "nba_goats.xlsx")
+  )
+
+  existing <- candidates[file.exists(candidates)]
+
+  if (length(existing) == 0) {
+    stop("Could not find ETV/Data/nba_goats.xlsx from the app working directory.")
+  }
+
+  normalizePath(existing[[1]])
+}
+```
+
+```{r}
+load_nba_data <- function() {
+  path_to_goats <- find_workbook()
+  player_sheets <- c("KB", "LJ", "MJ")
+
+  division_df <- read_excel(path_to_goats, sheet = "divisions") |>
+    rename(
+      team = Abbreviation,
+      team_name = `Full Team Name`,
+      division = Division,
+      conference = Conference
+    )
+
+  player_df <- player_sheets |>
+    map_dfr(\(sheet_name) {
+      read_excel(path_to_goats, sheet = sheet_name) |>
+        mutate(
+          source_sheet = sheet_name,
+          player = recode(
+            Name,
+            KB = "Kobe Bryant",
+            LJ = "LeBron James",
+            MJ = "Michael Jordan"
+          ),
+          .before = 1
+        )
+    })
+
+  player_df |>
+    left_join(division_df, by = c("Tm" = "team")) |>
+    mutate(
+      season_num = as.integer(str_extract(Season, "\\d+")),
+      outcome = if_else(Game_Outcome == "W", "Win", "Loss"),
+      home_away = Game_Location
+    )
+}
+```
+
+**Q1.** Why is the data-loading workflow wrapped in a function?
+
+> Your answer:
+
+------------------------------------------------------------------------
+
+## Step 3 - Plan the Inputs
+
+The app uses widgets to let the user change the analytical question without editing code.
+
+```{r}
+checkboxGroupInput("players", "Players", choices = player_choices)
+selectInput("conference", "Conference", choices = conference_choices)
+selectInput("stat", "Statistic", choices = stat_choices)
+selectInput("group_var", "Compare by", choices = group_choices)
+sliderInput("min_games", "Minimum games per group", min = 1, max = 400, value = 25)
+```
+
+**Q2.** Which input would you change to compare divisions instead of conferences?
+
+> Your answer:
+
+------------------------------------------------------------------------
+
+## Step 4 - Plan the Outputs
+
+The app has four main outputs:
+
+- a summary bar chart,
+- a distribution plot,
+- a relationship plot,
+- and a filtered data table.
+
+In Shiny, each output has two parts:
+
+```{r}
+plotOutput("summary_plot")
+
+output$summary_plot <- renderPlot({
+  # code that creates the plot
+})
+```
+
+**Q3.** Why must the output id `"summary_plot"` match in both places?
+
+> Your answer:
+
+------------------------------------------------------------------------
+
+## Step 5 - Use a Reactive Filter
+
+A reactive expression stores a result that updates when inputs change. We filter once, then reuse the filtered data in several outputs.
+
+```{r}
+filtered_data <- reactive({
+  req(input$players)
+
+  nba_analysis_df |>
+    filter(
+      player %in% input$players,
+      input$conference == "All" | conference == input$conference,
+      input$outcome == "All" | outcome == input$outcome
+    )
+})
+```
+
+**Q4.** Why is `filtered_data()` written with parentheses inside `renderPlot()`?
+
+> Your answer:
+
+------------------------------------------------------------------------
+
+## Step 6 - Run the Finished App
+
+The finished app is in `ETV/ETV-Cycle-5/app.R`.
+
+From the project root, run:
+
+```{r}
+shiny::runApp("ETV/ETV-Cycle-5")
+```
+
+From inside the `ETV/ETV-Cycle-5` folder, run:
+
+```{r}
+shiny::runApp()
+```
+
+------------------------------------------------------------------------
+
+## Extension Questions
+
+Use the app to answer at least two questions.
+
+**Question A.** Which player-team or player-division group has the highest average Game Score?
+
+> Your answer:
+
+**Question B.** Does the points-versus-assists relationship look similar for all three players?
+
+> Your answer:
+
+**Question C.** How does the answer change when filtering to wins only?
+
+> Your answer:
+
+**Question D.** Create your own app-based question and answer it using one plot and one table output.
+
+> Your answer:
+

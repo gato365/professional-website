@@ -1,0 +1,529 @@
+---
+title: "Videos 5 - 8 (FILLED)"
+format: docx
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+### **Video 5) `stringr`: Working with Text Data**
+
+#### **Video Notes**
+
+In this video, we'll explore the `stringr` package, which provides a consistent and easy-to-use set of tools for working with character strings. We'll load the `stringr` package and create a sample vector of text to work with for our examples.
+
+***#Fill in the blank***
+
+```{r}
+# Load the stringr package
+library(stringr)
+
+# Create a vector of sample sentences
+sentences <- c(
+  "The quick brown fox jumps over the lazy dog.",
+  "R is a language for statistical computing.",
+  "The year is 2025, and the sky is blue.",
+  "Another sentence with the word dog."
+)
+```
+
+\newpage
+
+#### **`str_detect()`: Detect a Pattern**
+
+`str_detect()` returns a logical (TRUE/FALSE) vector indicating whether a pattern is found in each string.
+
+***#Fill in the blank***
+
+```{r}
+# Detect which sentences contain the word "dog"
+str_detect(sentences, pattern = "dog")
+```
+
+\newpage
+
+#### **`str_replace_all()`: Replace Patterns**
+
+`str_replace_all()` finds all matches of a pattern and replaces them with a new string.
+
+***#Fill in the blank***
+
+```{r}
+# Replace all instances of the word "dog" with "cat"
+str_replace_all(sentences, pattern = "dog", replacement = "cat")
+```
+
+\newpage
+
+#### **`str_to_upper()`: Change Case**
+
+Functions like `str_to_upper()`, `str_to_lower()`, and `str_to_title()` change the case of your strings.
+
+***#Fill in the blank***
+
+```{r}
+# Convert the first sentence to all uppercase
+str_to_upper(sentences[1])
+```
+
+\newpage
+
+#### **`str_subset()`: Keep Strings with a Pattern**
+
+`str_subset()` is a useful shortcut that returns only the strings from your vector that contain a match for the pattern.
+
+***#Fill in the blank***
+
+```{r}
+# Keep only the sentences that contain the word "dog"
+str_subset(sentences, pattern = "dog")
+```
+
+\newpage
+
+#### **`str_extract()`: Extract a Pattern**
+
+`str_extract()` pulls out the first occurrence of a pattern. This is powerful when combined with regular expressions to find specific types of text, like numbers. The pattern `\\d+` matches one or more digits.
+
+***#Fill in the blank***
+
+```{r}
+# Extract the number from our sentences vector
+str_extract(sentences, pattern = "\\d+")
+```
+
+\newpage
+
+#### **`str_split()`: Split a String**
+
+`str_split()` breaks a string into a list of smaller pieces based on a delimiter pattern.
+
+***#Fill in the blank***
+
+```{r}
+# Split the first sentence into a vector of individual words
+# The pattern " " splits the string at each space
+str_split(sentences[1], pattern = " ")
+```
+
+------------------------------------------------------------------------
+
+## \[END\] Video 5
+
+\newpage
+
+\newpage
+
+### **Video 6) `forcats`: Working with Factors**
+
+#### **Video Notes**
+
+This video covers the `forcats` package, which is designed for working with factors. Factors are R's way of handling categorical variables, and `forcats` provides tools to solve common problems, like changing the order of levels or re-grouping them.
+
+***#Fill in the blank***
+
+```{r}
+# Load the forcats package
+library(forcats)
+
+# Create a sample factor representing survey responses
+responses <- factor(c("Agree", "Disagree", "Agree", "Neutral", "Disagree", "Agree"))
+```
+
+\newpage
+
+#### **`fct_relevel()`: Manually Reorder Levels**
+
+By default, factor levels are ordered alphabetically. `fct_relevel()` lets you move specific levels to the front, changing their order for plots and tables.
+
+***#Fill in the blank***
+
+```{r}
+# The original order is alphabetical: "Agree", "Disagree", "Neutral"
+levels(responses)
+
+# Move "Neutral" to be the second level, after "Agree"
+fct_relevel(responses, "Neutral", after = 1)
+```
+
+\newpage
+
+#### **`fct_infreq()`: Reorder by Frequency**
+
+`fct_infreq()` is a useful shortcut to reorder factor levels so that the most common level appears first.
+
+***#Fill in the blank***
+
+```{r}
+# Reorder the levels based on how many times each one appears
+fct_infreq(responses)
+```
+
+\newpage
+
+#### **`fct_rev()`: Reverse Level Order**
+
+`fct_rev()` simply reverses the current order of the levels.
+
+***#Fill in the blank***
+
+```{r}
+# Reverse the order of the levels in our responses factor
+fct_rev(responses)
+```
+
+\newpage
+
+#### **`fct_recode()`: Change Level Values**
+
+`fct_recode()` allows you to manually change the name of each level.
+
+***#Fill in the blank***
+
+```{r}
+# Change the names of the levels to something shorter
+fct_recode(responses,
+  "A" = "Agree",
+  "D" = "Disagree",
+  "N" = "Neutral"
+)
+```
+
+\newpage
+
+#### **`fct_collapse()`: Collapse Multiple Levels into One**
+
+`fct_collapse()` is useful for grouping several old levels into a single new level.
+
+***#Fill in the blank***
+
+```{r}
+# Group "Agree" and "Disagree" into a new level called "Opinion"
+fct_collapse(responses,
+  Opinion = c("Agree", "Disagree"),
+  No_Opinion = "Neutral"
+)
+```
+
+\newpage
+
+#### **`fct_lump_n()`: Lump Least Common Levels**
+
+`fct_lump_*` functions are for collapsing the least/most common levels into a new "Other" level. `fct_lump_n()` keeps the `n` most frequent levels and lumps the rest.
+
+***#Fill in the blank***
+
+```{r}
+# Create a more complex factor
+complex_factor <- factor(c("A", "B", "A", "C", "A", "B", "D", "E"))
+
+# Keep the 2 most frequent levels ("A" and "B"), and lump the rest into "Other"
+fct_lump_n(complex_factor, n = 2)
+```
+
+------------------------------------------------------------------------
+
+## \[END\] Video 6
+
+\newpage
+
+\newpage
+
+
+
+
+### **Video 7) `ggplot2` - 2: Advanced Visualization with Data Transformation**
+
+We'll start with messy, wide-format data, use tidyr and dplyr to clean and combine it, and then use advanced ggplot2 and forcats functions to create a powerful, multi-faceted visualization. We will then explore several other enhancement functions using the mtcars dataset.#Fill in the blank# Load all necessary packages
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(forcats)
+```
+
+\newpage
+
+Student Quiz Data
+
+Step 1: The "Raw" Data Imagine we have two separate datasets. One has student quiz scores in a "wide" format, and another has student demographic information.Setup: Create the two data frames.
+
+```{r}
+student_scores_wide <- tribble(
+  ~name, ~Quiz_1, ~Quiz_2,
+  "Ana",       85,      90,
+  "Ben",       92,      88,
+  "Charlie",   78,      85
+)
+
+student_demographics <- tribble(
+  ~name,      ~major,
+  "Ana",   "Statistics",
+  "Ben",      "Biology",
+  "Charlie",  "Statistics"
+)
+```
+
+Step 2: Transformation with `pivot_longer` and `left_join`
+
+To plot this data effectively, we first need to make the scores data "long" using `pivot_longer`. Then, we'll add the major information using a left_join.
+
+#Fill in the blank
+
+```{r}
+# First, pivot the scores data to a long format
+scores_long <- student_scores_wide %>%
+  pivot_longer(
+    cols = c(Quiz_1, Quiz_2),
+    names_to = "quiz",
+    values_to = "score"
+  )
+# Now, join the demographic data to the long scores data
+full_student_data <- left_join(scores_long, student_demographics, by = "name")
+```
+
+\newpage
+
+Step 3: Visualization with `forcats` and ggplot2
+
+Now that our data is tidy, we can create an advanced plot. Let's make a bar chart showing the average score for each major, ordered from highest to lowest.
+
+`fct_reorder()`: Making Plots Better
+
+`fct_reorder()` allows us to reorder the levels of a factor (like major) based on another variable (like the average score). This makes our plots much easier to interpret.
+
+```{r}
+# First, calculate the average score per major
+avg_scores_by_major <- full_student_data %>%
+  group_by(major) %>%
+  summarize(avg_score = mean(score))
+# Create the bar plot, using fct_reorder to sort the y-axis
+ggplot(avg_scores_by_major, aes(x = avg_score, y = fct_reorder(major, avg_score))) +
+  geom_col(fill = "steelblue") +
+  labs(
+    title = "Average Quiz Scores by Major",
+    x = "Average Score",
+    y = "Major"
+  )
+```
+
+\newpage
+
+`facet_wrap()`: Creating Subplots
+
+Now let's go back to our `full_student_data` and create a more detailed visualization: a bar chart for each student, faceted by their major.
+
+```{r}
+# Create a separate plot for each major
+ggplot(full_student_data, aes(x = quiz, y = score, fill = name)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~ major) +
+  labs(
+    title = "Quiz Scores by Student and Major",
+    x = "Quiz",
+    y = "Score"
+  )
+```
+
+\newpage
+
+Techniques Showcase: Additional ggplot2 Enhancements with mtcars
+
+Now we'll explore some other useful ggplot2 functions using the mtcars dataset.
+
+Setup: Create a base plot for the mtcars examples.
+
+```{r}
+# We'll use this base plot for the following examples
+base_plot <- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
+  geom_point()
+```
+
+`coord_flip()`: Flipping Axes
+
+`coord_flip()` swaps the x and y axes. This can be very useful for making horizontal boxplots or bar charts, which are often easier to read if you have long category labels.
+
+```{r}
+# Create a boxplot and then flip the coordinates
+ggplot(mtcars, aes(x = factor(cyl), y = hp)) +
+  geom_boxplot() +
+  coord_flip()
+```
+
+\newpage
+
+`scale_color_manual()`: Customizing Colors
+
+This function gives you manual control over the colors used in your plot. You can specify the exact color for each level of your aesthetic mapping.
+
+```{r}
+# Start with our base plot and add manual colors
+base_plot +
+  scale_color_manual(values = c("4" = "blue", "6" = "orange", "8" = "red"))
+```
+
+\newpage
+
+`theme()`: Customizing Plot Appearance
+
+The `theme()` function is incredibly powerful and lets you customize almost any non-data element of your plot. Here, we'll use it to move the legend to the bottom of the plot.
+
+```{r}
+# Start with our base plot and move the legend
+base_plot +
+  theme(legend.position = "bottom")
+```
+
+\newpage
+
+`geom_text()`: Adding Text Labels
+
+This geom adds text annotations directly onto the plot. It requires `x`, `y`, and `label` aesthetics. It's often used with a filtered dataset to avoid cluttering the plot.
+
+```{r}
+# Create a subset of data for labeling
+label_data <- mtcars %>%
+  rownames_to_column("car") %>%
+  filter(hp > 250)
+```
+
+```{r}
+# Add car names to the points for very high horsepower cars
+base_plot +
+  geom_text(data = label_data, aes(label = car), vjust = -1)
+```
+
+\newpage
+
+`ggsave()`: Saving Your Plot
+
+After you've created the perfect plot, `ggsave()` allows you to save it to a file, like a PNG or PDF, with control over the size and resolution.
+
+```{r}
+#Create the final plot object
+final_plot <- base_plot +
+  facet_wrap(~ factor(cyl)) +
+  labs(title = "MPG vs. Weight by Cylinder")
+# Save the plot to a file named "my_car_plot.png"
+ggsave("my_car_plot.png", plot = final_plot, width = 8, height = 5)
+```
+
+## \[END\] Video 7
+
+\newpage
+
+\newpage
+
+### **Video 8) `lubridate`: Working with Dates and Times**
+
+#### **Video Notes**
+
+Working with dates and times can be tricky. The `lubridate` package makes it much simpler by providing functions to parse, manipulate, and extract information from date-time objects. We will create a sample data frame to demonstrate its most useful functions.
+
+***#Fill in the blank***
+
+```{r}
+# Load the lubridate package
+library(lubridate)
+library(dplyr)
+
+# Create a data frame with dates and times stored as character strings
+event_log <- data.frame(
+  event_name = c("Project Start", "Midterm Review", "Final Deadline"),
+  start_date = c("2025-01-20", "2025-03-10", "2025-05-02"),
+  start_time = c("01/20/2025 09:00:00", "03/10/2025 14:30:00", "05/02/2025 17:00:00")
+)
+```
+
+\newpage
+
+#### **1. `ymd()`: Parsing Dates**
+
+Lubridate's parsing functions like `ymd()`, `mdy()`, `dmy()`, etc., automatically figure out and convert character strings into proper date objects. The function name corresponds to the order of the year, month, and day in your string.
+
+***#Fill in the blank***
+
+```{r}
+# Parse the 'start_date' column, which is in Year-Month-Day format
+event_log %>%
+  mutate(date_parsed = ymd(start_date))
+```
+
+\newpage
+
+#### **2. `mdy_hms()`: Parsing Datetimes**
+
+Similarly, functions like `mdy_hms()` parse strings that contain both date and time components.
+
+***#Fill in the blank***
+
+```{r}
+# Parse the 'start_time' column, which is in Month-Day-Year Hour:Minute:Second format
+event_log %>%
+  mutate(datetime_parsed = mdy_hms(start_time))
+```
+
+\newpage
+
+#### **3 & 4. `wday()` & `month()`: Extracting Components**
+
+Once you have a date-time object, you can easily pull out individual components like the day of the week, month, year, or hour.
+
+***#Fill in the blank***
+
+```{r}
+# Create a parsed date column first
+parsed_log <- event_log %>% mutate(date_parsed = ymd(start_date))
+
+# Extract the day of the week and the month
+parsed_log %>%
+  mutate(
+    day_of_week = wday(date_parsed, label = TRUE),
+    event_month = month(date_parsed, label = TRUE)
+  )
+```
+
+\newpage
+
+#### **5. `duration()`: Measuring Time Spans**
+
+Duration objects represent an exact number of seconds. You can create them with functions like `ddays()`, `dweeks()`, or by subtracting two date-time objects.
+
+***#Fill in the blank***
+
+```{r}
+# Create two date objects
+date1 <- ymd("2025-07-10")
+date2 <- ymd("2025-08-25")
+
+# Find the duration between the two dates
+time_span <- duration(date2 - date1)
+
+# Create a duration of 3 days
+three_days <- ddays(3)
+```
+
+\newpage
+
+#### **6. `now()`: Getting the Current Time**
+
+The `now()` function returns the current system date and time.
+
+***#Fill in the blank***
+
+```{r}
+# Get the current date and time
+current_moment <- now()
+print(current_moment)
+```
+
+------------------------------------------------------------------------
+
+## \[END\] Video 8
+
+\newpage
+
+\newpage

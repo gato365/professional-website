@@ -1,0 +1,232 @@
+---
+title: "what_is_shiny"
+format: docx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE,    # don't run code by default
+  echo = TRUE,     # still show code unless you hide with echo=FALSE
+  warning = FALSE, # suppress warnings
+  message = FALSE, # suppress messages
+  error = FALSE    # suppress errors
+)
+```
+
+# Build your first Shiny app in Positron
+
+## 0) Setup (30s)
+
+> “Open Positron. Create or open a folder for the project, e.g., `shiny-starter`. Open a terminal inside Positron. I’m going to check R works and install Shiny.”
+
+```{r}
+R.version.string
+install.packages("shiny")
+```
+
+## 1) Positron specifics (60s)
+
+> “Positron is like VS Code: no ‘Run App’ button (yet). Use the terminal. If preview doesn’t appear, it’ll open in your browser. Use `launch.browser = TRUE` to force it. If packages won’t install, check you’re in the R terminal (not bash) and that your R path is detected. If a port is busy, set `port = 5050` (or another). For larger apps, split into modules under `R/` and static assets under `www/`.”
+
+Recommended layout:
+
+```         
+app_name_app/
+├─ R/               # (optional) modules, helpers
+├─ www/             # (optional) CSS, images
+└─ app.R
+```
+
+\newpage
+
+## 2) Create Shiny I
+
+**Step 1:** Create a directory named `geyser_app `
+
+**Step 2:** Create an R file name `app.R`,  save the below information in the file
+
+```{r}
+library(shiny)
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Old Faithful Geyser Data"),
+
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 50,
+                        value = 30)
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+           plotOutput("distPlot")
+        )
+    )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+    output$distPlot <- renderPlot({
+     geom_histogram(
+      binwidth = diff(range(x)) / input$bins,
+      fill = "darkgray",
+      color = "white"
+    )
+    })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+```
+
+**Step 3:** In R Console, run this line `shiny::runApp("geyser_app")`
+
+\newpage
+
+## 3) Create Shiny II
+
+> “Now I’ll create `app.R` with a tiny UI + server. This runs anywhere and shows a reactive histogram.”
+
+Create `app.R` and paste:
+
+```{r}
+# app.R — minimal Shiny in Positron
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Hello, Positron + Shiny"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("n", "How many points?", 10, 1000, 200, step = 10)
+    ),
+    mainPanel(
+      plotOutput("hist"),
+      verbatimTextOutput("stats")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  x <- reactive(rnorm(input$n))
+
+  output$hist <- renderPlot({
+    hist(x(), main = "", xlab = "Value")
+  })
+
+  output$stats <- renderPrint({
+    summary(x())
+  })
+}
+
+shinyApp(ui, server)
+```
+
+\newpage
+
+> “In Positron, I run the app from the terminal. Positron will show a preview panel or open my browser.”
+
+```{r}
+shiny::runApp()                 # add launch.browser = TRUE if you prefer the browser
+# shiny::runApp(port = 5050)    # pick a port if needed
+```
+
+You should see a histogram that updates as you move the slider.
+
+\newpage
+
+## 4) Make it a bit nicer
+
+> “Let’s add a theme and a data table—useful for teaching demos.”
+
+```{r}
+install.packages(c("bslib","DT"))
+```
+
+Replace `app.R` with:
+
+```{r}
+library(shiny)
+library(ggplot2)
+library(bslib)
+library(DT)
+
+ui <- page_fluid(
+  theme = bs_theme(version = 5, bootswatch = "flatly"),
+  layout_sidebar(
+    sidebar = sidebar(
+      sliderInput("bins", "Bins", 5, 60, 20),
+      checkboxInput("show_tbl", "Show table", TRUE)
+    ),
+    card(
+      card_header(h4("Reactive Histogram")),
+      plotOutput("hist", height = 300),
+      verbatimTextOutput("stats"),
+      conditionalPanel("input.show_tbl", DTOutput("tbl"))
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  x <- reactive(rnorm(300))
+
+output$hist <- renderPlot({
+  
+  ggplot(data.frame(x = x()), aes(x)) +
+    geom_histogram(bins = input$bins, fill = "skyblue", color = "white") +
+    labs(x = "Value", y = "Count", title = NULL) +
+    theme_minimal(base_size = 14)
+})
+
+  output$stats <- renderPrint(summary(x()))
+
+  output$tbl <- renderDT(datatable(data.frame(x = x()), options = list(pageLength = 8)))
+}
+
+shinyApp(ui, server)
+```
+
+Run again:
+
+```{r}
+shiny::runApp()
+```
+
+\newpage
+
+## 5) ETV-style tabs for class demos
+
+> “Quick ETV framing: three tabs for Extraction, Transformation, Visualization.”
+
+Replace UI’s main area with:
+
+```{r}
+navset_card_pill(
+  nav_panel("Extract", verbatimTextOutput("head")),
+  nav_panel("Transform", verbatimTextOutput("summary")),
+  nav_panel("Visualize", plotOutput("hist2", height = 280))
+)
+```
+
+…and in server:
+
+```{r}
+d <- reactive(iris)
+
+output$head <- renderPrint(head(d()))
+output$summary <- renderPrint(summary(d()))
+output$hist2 <- renderPlot({
+  ggplot(data = d(), aes(x = Sepal.Length)) +
+    geom_histogram(binwidth = 0.3, fill = "steelblue", color = "black") +
+    labs(x = "Sepal.Length", y = "Frequency")
+})
+```
+

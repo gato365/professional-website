@@ -1,0 +1,126 @@
+---
+title: "Video 5"
+format: html
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+### **Video 5) `stringr`: Working with Text Data**
+
+#### **Video Notes**
+
+In this video, we'll explore the `stringr` package, which provides a consistent and easy-to-use set of tools for working with character strings. We'll load the `stringr` package and create a sample vector of text to work with for our examples.
+
+***#Fill in the blank***
+
+```{r}
+# Load the stringr package
+# library(____)
+# 
+# # Create a vector of sample sentences
+# sentences <- c(
+#   "The quick brown fox jumps over the lazy dog.",
+#   "R is a language for statistical computing.",
+#   "The year is 2025, and the sky is blue.",
+#   "Another sentence with the word dog."
+# )
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`str_detect()`: Detect a Pattern**
+
+`str_detect()` returns a logical (TRUE/FALSE) vector indicating whether a pattern is found in each string.
+
+***#Fill in the blank***
+
+```{r}
+## Detect which sentences contain the word "dog"
+# str_detect(____, pattern = ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`str_replace_all()`: Replace Patterns**
+
+`str_replace_all()` finds all matches of a pattern and replaces them with a new string.
+
+***#Fill in the blank***
+
+```{r}
+## Replace all instances of the word "dog" with "cat"
+# str_replace_all(____, pattern = ____, replacement = ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`str_to_upper()`: Change Case**
+
+Functions like `str_to_upper()`, `str_to_lower()`, and `str_to_title()` change the case of your strings.
+
+***#Fill in the blank***
+
+```{r}
+## Convert the first sentence to all uppercase
+# str_to_upper(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`str_subset()`: Keep Strings with a Pattern**
+
+`str_subset()` is a useful shortcut that returns only the strings from your vector that contain a match for the pattern.
+
+***#Fill in the blank***
+
+```{r}
+## Keep only the sentences that contain the word "dog"
+# str_subset(____, pattern = ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`str_extract()`: Extract a Pattern**
+
+`str_extract()` pulls out the first occurrence of a pattern. This is powerful when combined with regular expressions to find specific types of text, like numbers. The pattern `\\d+` matches one or more digits.
+
+***#Fill in the blank***
+
+```{r}
+## Extract the number from our sentences vector
+# str_extract(____, pattern = "\\d+")
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`str_split()`: Split a String**
+
+`str_split()` breaks a string into a list of smaller pieces based on a delimiter pattern.
+
+***#Fill in the blank***
+
+```{r}
+## Split the first sentence into a vector of individual words
+## The pattern " " splits the string at each space
+# str_split(____, pattern = ____)
+```
+
+------------------------------------------------------------------------
+
+## \[END\] Video 5
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+::: {style="height: 300px; background-color: white;"}
+:::

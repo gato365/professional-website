@@ -1,0 +1,282 @@
+[
+  {
+    "objectID": "presentations.html",
+    "href": "presentations.html",
+    "title": "Presentations",
+    "section": "",
+    "text": "Invited talks, conference sessions, and minicourses. Add or edit entries as your schedule develops."
+  },
+  {
+    "objectID": "presentations.html#upcoming-recent",
+    "href": "presentations.html#upcoming-recent",
+    "title": "Presentations",
+    "section": "Upcoming & recent",
+    "text": "Upcoming & recent"
+  },
+  {
+    "objectID": "courses/stat-331/index.html",
+    "href": "courses/stat-331/index.html",
+    "title": "Data Science: ETV & LFM",
+    "section": "",
+    "text": "Cal Poly SLO · Statistics 331\n\n\n\n\nA hands-on course combining Learn From Me (LFM) video modules with Extraction–Transformation–Visualization (ETV) cycles. Each week pairs curated instructional videos with a real-data ETV activity.\nEach week follows the same structure: watch the LFM videos first, then complete the ETV activity with real data."
+  },
+  {
+    "objectID": "courses/stat-331/index.html#weekly-modules",
+    "href": "courses/stat-331/index.html#weekly-modules",
+    "title": "Data Science: ETV & LFM",
+    "section": "Weekly modules",
+    "text": "Weekly modules"
+  },
+  {
+    "objectID": "courses/stat-331/index.html#how-the-course-works",
+    "href": "courses/stat-331/index.html#how-the-course-works",
+    "title": "Data Science: ETV & LFM",
+    "section": "How the course works",
+    "text": "How the course works"
+  },
+  {
+    "objectID": "courses/stat-331/week-1.html",
+    "href": "courses/stat-331/week-1.html",
+    "title": "Introduction to Data",
+    "section": "",
+    "text": "STAT 331 · Week 1\n\n\n\n\nGet up and running with R and the tidyverse. Read a CSV, explore the data frame, and build your first ggplot2 visualization using coffee purchase data.\n← Back to STAT 331"
+  },
+  {
+    "objectID": "courses/stat-331/week-1.html#videos-14",
+    "href": "courses/stat-331/week-1.html#videos-14",
+    "title": "Introduction to Data",
+    "section": "Videos 1–4",
+    "text": "Videos 1–4"
+  },
+  {
+    "objectID": "courses/stat-331/week-1.html#csv-coffee-data",
+    "href": "courses/stat-331/week-1.html#csv-coffee-data",
+    "title": "Introduction to Data",
+    "section": "CSV Coffee Data",
+    "text": "CSV Coffee Data"
+  },
+  {
+    "objectID": "courses/stat-331/week-1.html#what-to-expect",
+    "href": "courses/stat-331/week-1.html#what-to-expect",
+    "title": "Introduction to Data",
+    "section": "What to expect",
+    "text": "What to expect"
+  },
+  {
+    "objectID": "courses/stat-331/week-5.html",
+    "href": "courses/stat-331/week-5.html",
+    "title": "Interactive Apps",
+    "section": "",
+    "text": "STAT 331 · Week 5\n\n\n\n\nBuild your first Shiny application. Combine the ETV pipeline with reactive inputs and outputs to let users explore NBA GOAT data interactively — no page reload required.\n← Back to STAT 331"
+  },
+  {
+    "objectID": "courses/stat-331/week-5.html#videos-1719",
+    "href": "courses/stat-331/week-5.html#videos-1719",
+    "title": "Interactive Apps",
+    "section": "Videos 17–19",
+    "text": "Videos 17–19"
+  },
+  {
+    "objectID": "courses/stat-331/week-5.html#nba-goats-shiny",
+    "href": "courses/stat-331/week-5.html#nba-goats-shiny",
+    "title": "Interactive Apps",
+    "section": "NBA GOATs + Shiny",
+    "text": "NBA GOATs + Shiny"
+  },
+  {
+    "objectID": "courses/stat-331/week-5.html#what-to-expect",
+    "href": "courses/stat-331/week-5.html#what-to-expect",
+    "title": "Interactive Apps",
+    "section": "What to expect",
+    "text": "What to expect"
+  },
+  {
+    "objectID": "students.html",
+    "href": "students.html",
+    "title": "Students",
+    "section": "",
+    "text": "The undergraduate researchers I have the privilege of working with. To add a photo, save a square image to images/students/ (e.g. ryan.jpg) and point the &lt;img&gt; src to it — the circular crop is automatic."
+  },
+  {
+    "objectID": "students.html#research-students",
+    "href": "students.html#research-students",
+    "title": "Students",
+    "section": "Research students",
+    "text": "Research students"
+  },
+  {
+    "objectID": "projects.html",
+    "href": "projects.html",
+    "title": "Projects",
+    "section": "",
+    "text": "Active software, research, and teaching projects. Drop screenshots, GIFs, or animations into images/projects/ and reference them in the gallery below."
+  },
+  {
+    "objectID": "projects.html#tools-packages",
+    "href": "projects.html#tools-packages",
+    "title": "Projects",
+    "section": "Tools & packages",
+    "text": "Tools & packages"
+  },
+  {
+    "objectID": "projects.html#animations-demos",
+    "href": "projects.html#animations-demos",
+    "title": "Projects",
+    "section": "Animations & demos",
+    "text": "Animations & demos"
+  },
+  {
+    "objectID": "research.html",
+    "href": "research.html",
+    "title": "Research",
+    "section": "",
+    "text": "My research develops practical, evidence-based ways to teach statistics and data science using authentic data. It connects three frameworks that move from what data we teach with, to how students work with it, to how they build understanding over time."
+  },
+  {
+    "objectID": "research.html#culturally-relevant-data-crd",
+    "href": "research.html#culturally-relevant-data-crd",
+    "title": "Research",
+    "section": "Culturally Relevant Data (CRD)",
+    "text": "Culturally Relevant Data (CRD)"
+  },
+  {
+    "objectID": "research.html#extractiontransformationvisualization-etv",
+    "href": "research.html#extractiontransformationvisualization-etv",
+    "title": "Research",
+    "section": "Extraction–Transformation–Visualization (ETV)",
+    "text": "Extraction–Transformation–Visualization (ETV)"
+  },
+  {
+    "objectID": "research.html#library-focused-method-lfm",
+    "href": "research.html#library-focused-method-lfm",
+    "title": "Research",
+    "section": "Library-Focused Method (LFM)",
+    "text": "Library-Focused Method (LFM)"
+  },
+  {
+    "objectID": "research.html#professional-service",
+    "href": "research.html#professional-service",
+    "title": "Research",
+    "section": "Professional service",
+    "text": "Professional service"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Immanuel Williams, PhD",
+    "section": "",
+    "text": "Statistics & Data Science Education\n\n\n\n\nAssistant Professor of Statistics at Cal Poly San Luis Obispo, building culturally relevant, hands-on ways to teach statistics and data science.\n\nView Research Publications"
+  },
+  {
+    "objectID": "index.html#focus-areas",
+    "href": "index.html#focus-areas",
+    "title": "Immanuel Williams, PhD",
+    "section": "Focus areas",
+    "text": "Focus areas"
+  },
+  {
+    "objectID": "publications.html",
+    "href": "publications.html",
+    "title": "Publications",
+    "section": "",
+    "text": "Peer-reviewed journal articles and reference works, listed in APA (7th edition) format. Links resolve to the publisher of record."
+  },
+  {
+    "objectID": "publications.html#journal-articles",
+    "href": "publications.html#journal-articles",
+    "title": "Publications",
+    "section": "Journal articles",
+    "text": "Journal articles"
+  },
+  {
+    "objectID": "publications.html#encyclopedia-entries",
+    "href": "publications.html#encyclopedia-entries",
+    "title": "Publications",
+    "section": "Encyclopedia entries",
+    "text": "Encyclopedia entries"
+  },
+  {
+    "objectID": "courses/stat-331/week-4.html",
+    "href": "courses/stat-331/week-4.html",
+    "title": "APIs & Live Data",
+    "section": "",
+    "text": "STAT 331 · Week 4\n\n\n\n\nConnect to a live REST API, parse JSON responses, and visualize real-time weather data. Learn how authentication, endpoints, and rate limits work in practice.\n← Back to STAT 331"
+  },
+  {
+    "objectID": "courses/stat-331/week-4.html#videos-1316",
+    "href": "courses/stat-331/week-4.html#videos-1316",
+    "title": "APIs & Live Data",
+    "section": "Videos 13–16",
+    "text": "Videos 13–16"
+  },
+  {
+    "objectID": "courses/stat-331/week-4.html#weather-api",
+    "href": "courses/stat-331/week-4.html#weather-api",
+    "title": "APIs & Live Data",
+    "section": "Weather API",
+    "text": "Weather API"
+  },
+  {
+    "objectID": "courses/stat-331/week-4.html#what-to-expect",
+    "href": "courses/stat-331/week-4.html#what-to-expect",
+    "title": "APIs & Live Data",
+    "section": "What to expect",
+    "text": "What to expect"
+  },
+  {
+    "objectID": "courses/stat-331/week-3.html",
+    "href": "courses/stat-331/week-3.html",
+    "title": "Web Scraping",
+    "section": "",
+    "text": "STAT 331 · Week 3\n\n\n\n\nExtract data directly from the web using rvest. Scrape Wikipedia population tables, clean the result, and map county-level data with ggplot2.\n← Back to STAT 331"
+  },
+  {
+    "objectID": "courses/stat-331/week-3.html#videos-912",
+    "href": "courses/stat-331/week-3.html#videos-912",
+    "title": "Web Scraping",
+    "section": "Videos 9–12",
+    "text": "Videos 9–12"
+  },
+  {
+    "objectID": "courses/stat-331/week-3.html#wikipedia-counties",
+    "href": "courses/stat-331/week-3.html#wikipedia-counties",
+    "title": "Web Scraping",
+    "section": "Wikipedia Counties",
+    "text": "Wikipedia Counties"
+  },
+  {
+    "objectID": "courses/stat-331/week-3.html#what-to-expect",
+    "href": "courses/stat-331/week-3.html#what-to-expect",
+    "title": "Web Scraping",
+    "section": "What to expect",
+    "text": "What to expect"
+  },
+  {
+    "objectID": "courses/stat-331/week-2.html",
+    "href": "courses/stat-331/week-2.html",
+    "title": "Excel & Sports Data",
+    "section": "",
+    "text": "STAT 331 · Week 2\n\n\n\n\nMove beyond CSVs into Excel files and multi-sheet workbooks. Apply the full ETV cycle to NBA statistics using readxl and ggplot2.\n← Back to STAT 331"
+  },
+  {
+    "objectID": "courses/stat-331/week-2.html#videos-58",
+    "href": "courses/stat-331/week-2.html#videos-58",
+    "title": "Excel & Sports Data",
+    "section": "Videos 5–8",
+    "text": "Videos 5–8"
+  },
+  {
+    "objectID": "courses/stat-331/week-2.html#nba-excel-data",
+    "href": "courses/stat-331/week-2.html#nba-excel-data",
+    "title": "Excel & Sports Data",
+    "section": "NBA Excel Data",
+    "text": "NBA Excel Data"
+  },
+  {
+    "objectID": "courses/stat-331/week-2.html#what-to-expect",
+    "href": "courses/stat-331/week-2.html#what-to-expect",
+    "title": "Excel & Sports Data",
+    "section": "What to expect",
+    "text": "What to expect"
+  }
+]

@@ -1,0 +1,182 @@
+---
+title: "video_12"
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+## **Video** 12) Iterations – 2: Functional Programming with `{purrr}`
+
+In this video, we'll focus on functional programming, a powerful alternative to writing loops. We will use the **`{purrr}`** package, which provides a consistent set of tools for iterating over lists and vectors. The main idea is to apply a function to each element of an object. This often results in code that is more concise and easier to read than a `for` loop.
+
+***#Fill in the blank***
+
+```{r}
+##----------
+## EMPTY
+##----------
+# Load the purrr package
+____(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+### **`map()`: Apply a function to each element**
+
+The `map()` function is the foundation of `{purrr}`. It takes a vector or list as input, applies a function to each of its elements, and **always returns a list**.
+
+***#Fill in the blank***
+
+```{r}
+##----------
+## EMPTY
+##----------
+# Let's create a simple function to square a number
+square_a_number <- function(____) {
+return(____^____)
+}
+
+# Now, use map() to apply this function to each number in our vector
+numbers_to_square <- c(____, ____, ____, ____)
+
+# map() will return a list of the results
+squared_list <- map(____, ____)
+
+print(____)
+```
+
+### **Type-Specific Maps: `map_dbl()` and `map_chr()`**
+
+Often, you don't want a list back; you want a simple vector. `purrr` provides variants like `map_dbl()` (returns a numeric/double vector) and `map_chr()` (returns a character vector) for this purpose.
+
+***#Fill in the blank***
+
+```{r}
+##----------
+## EMPTY
+##----------
+
+# Using map_dbl() returns a clean numeric vector instead of a list
+squared_vector <- map_dbl(____, ____)
+
+print(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+```{r}
+##----------
+## EMPTY
+##----------
+# Let's create a function that returns text
+create_greeting <- function(____) {
+paste("Hello,", ____)
+}
+
+student_names <- c(____, ____, ____)
+
+# Use map_chr() to get a character vector of greetings
+greetings <- map_chr(____, ____)
+
+print(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+### **`map2()`: Iterate over two vectors at once**
+
+The `map2()` function lets you iterate over two vectors in parallel. The function you provide must accept two arguments.
+
+***#Fill in the new blank***
+
+```{r}
+##----------
+## EMPTY
+##----------
+
+
+# Let's create a simple function to add two numbers
+add_two_numbers <- function(____, ____) {
+return(____ + ____)
+}
+
+# Create two vectors of the same length
+first_numbers <- c(____, ____, ____)
+second_numbers <- c(____, ____, ____)
+
+# Use map2_dbl() to apply the function to corresponding elements
+# The first element of 'first_numbers' is added to the first of 'second_numbers', and so on.
+sums <- map2_dbl(____, ____, ____)
+
+print(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+### **`walk()`: For functions with side effects**
+
+Sometimes you want to call a function not for what it *returns*, but for what it *does*—like printing a message or saving a file. This is called a "side effect." `walk()` works just like `map()`, but it doesn't return anything. It's used exclusively for triggering side effects.
+
+***#Fill in the blank***
+
+#### Method 1
+
+```{r}
+##----------
+## EMPTY
+##----------
+
+
+# Let's create a function that just prints a message
+print_a_summary <- function(____, ____) {
+print(paste(____, "received a grade of", ____))
+}
+
+# Create our data
+student_data <- data.frame(
+name = c("Ana", "Ben", "Charlie"),
+final_grade = c(92, 85, 88)
+)
+
+# Use walk2() to iterate over two columns and print a summary for each student
+# Note that nothing is saved to an object. The output is printed directly to the console.
+walk2(____, ____, ____)
+```
+
+#### Method 2
+
+```{r}
+##----------
+## EMPTY
+##----------
+
+
+# Function and data from before
+print_a_summary <- function(____, ____) {
+print(paste(____, "received a grade of", ____))
+}
+
+student_data <- data.frame(
+name = c("Ana", "Ben", "Charlie"),
+final_grade = c(92, 85, 88)
+)
+
+# Pipe the data frame into pwalk()
+student_data %>%
+pwalk(~print_a_summary(student = ____, grade = ____))
+```
+
+## \[END\] Video 12
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+::: {style="height: 300px; background-color: white;"}
+:::

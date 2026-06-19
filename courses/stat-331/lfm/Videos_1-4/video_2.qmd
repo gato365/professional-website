@@ -1,0 +1,100 @@
+---
+title: "video_2"
+format: html
+---
+
+## **Video 2) `dplyr` - 1: Core Data Transformations**
+
+#### **Video Notes - Pipe Operator**
+
+Here we use functions from the `dplyr` package. `dplyr` provides a "grammar" for data manipulation, making code easier to write and read. We will also introduce the **pipe operator (`%>%`)**. The pipe takes the output of the function on its left and passes it as the first argument to the function on its right. It lets you chain operations together without saving intermediate objects.
+
+***#Fill in the blank***
+
+```{r}
+# # Load the dplyr package
+# library(____)
+# library(tibble)
+# 
+# # Convert row names to a column for easier manipulation
+# mtcars_df <- mtcars %>%
+#   rownames_to_column(var = ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **1. `select()`: Choose Columns**
+
+`select()` allows you to create a new data frame containing only the columns you specify.
+
+***#Fill in the blank***
+
+```{r}
+# # Choose the car_model, mpg, hp, and wt columns
+# car_performance <- mtcars_df %>%
+#   select(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **2. `mutate()`: Create New Columns**
+
+`mutate()` adds new columns or transforms existing ones while keeping all other columns.
+
+***#Fill in the blank***
+
+```{r}
+# # Add a new column for weight in kilograms
+# car_performance_kilos <- car_performance %>%
+#   mutate(wt_kg = ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **3. `filter()`: Keep Rows**
+
+`filter()` creates a new data frame containing only the rows that meet your logical conditions.
+
+***#Fill in the blank***
+
+```{r}
+# # Find cars with more than 200 horsepower
+# powerful_cars <- car_performance %>%
+#   filter(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **4. `group_by()` & `summarize()`: Get Group Summaries**
+
+`group_by()` specifies groups, and `summarize()` collapses each group into a single-row summary.
+
+***#Fill in the blank***
+
+```{r}
+# # Find the average mpg for each cylinder count
+# avg_by_cyl <- mtcars_df %>%
+#   group_by(____) %>%
+#   summarize(avg_mpg = mean(____))
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **5. `arrange()`: Sort Rows**
+
+`arrange()` reorders the rows of a data frame based on column values. The default is ascending order; use `desc()` for descending.
+
+***#Fill in the blank***
+
+```{r}
+# Sort cars by miles-per-gallon, from highest to lowest
+# sorted_by_mpg <- car_performance %>%
+#   arrange(____)
+```
+
+------------------------------------------------------------------------

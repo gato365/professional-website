@@ -1,0 +1,113 @@
+---
+title: "Video 1"
+format: html
+editor: visual
+---
+
+## **Video 1) R & Basics with `mtcars`**
+
+#### **Video Notes - Packages & Libraries**
+
+This section covers the fundamental concepts of R. We will not load the entire `tidyverse` package; instead, we will load individual packages as needed to better understand the function of each one.
+
+First, let's inspect the `mtcars` dataset.
+
+```{r}
+# Look at the structure of the mtcars dataset
+# str(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **Video Notes - Look at structure Data**
+
+The `str()` function shows us the structure of our data. Notice the `vs` (V/S engine) and `am` (transmission) variables are listed as `num` (numeric) but only contain 0s and 1s. These are **binary** variables. To learn more about them, we can use the help function by typing `?mtcars` in the console. For our purposes, we can think of these as character or factor variables (e.g., "automatic" vs. "manual"), and we'll learn how to work with them later.
+
+To see the first few rows of the data, we use the `head()` function.
+
+***#Fill in the blank***
+
+```{r}
+# The head() function displays the first six rows of the data set
+# head(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **Video Notes - View Data**
+
+If you want to see the entire interactive data frame in a new tab, you can use the `View()` function (with a capital "V"). Running `View(mtcars)` in your console will open it.
+
+------------------------------------------------------------------------
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **Data Structures**
+
+**a) Vectors**: A vector is a one-dimensional sequence of data elements of the same type. This type can be numeric, character (string), or logical (boolean).
+
+-   **Numeric**: Numbers (e.g., 10.5, 55, -3)
+-   **Character**: Text, also known as strings (e.g., "hello", "R")
+-   **Logical**: TRUE or FALSE values, also known as booleans.
+
+***#Fill in the blank***
+
+```{r}
+# # Create a numeric vector of miles-per-gallon (mpg) values
+# mpg_vector <- ____
+# # Create a character vector of the car names
+# car_names_vector <- ____
+# # Create a boolean vector indicating if a car has more than 150 horsepower
+# powerful_boolean_vector <- ____
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+**b) Data Frames**: This is the primary structure for tabular data in R. `mtcars` is a classic example.
+
+#### **Video Notes - Tibble and Data Frames**
+
+While I primarily use data frames because that's what I'm used to, you will often see another modern data frame structure online called a **tibble**. They behave very similarly but have some friendlier printing and subsetting features.
+
+***#Fill in the blank***
+
+```{r}
+# # Check the class of the mtcars object
+# class(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+**c) Lists**: A list is a versatile R object that can contain elements of different types.
+
+#### **Video Notes - Lists**
+
+If you're familiar with programming, a **named list** in R is very similar to a **JSON** object or a **dictionary** in Python. There are many ways of extracting information from lists; here are a few common ones.
+
+***#Fill in the blank***
+
+```{r}
+# # Create a list containing a numeric vector and a data frame
+# my_list <- list(
+#   description = ____,
+#   mpg_stats = ____,
+#   sample_cars = ____
+# )
+# 
+# # Extract elements from the list
+# # Method 1: Using the $ operator
+# description <- ____
+# 
+# # Method 2: Using double square brackets [[ ]] with the name
+# mpg_summary <- ____
+# 
+# # Method 3: Using double square brackets [[ ]] with the index
+# first_two_cars <- ____
+```
+
+------------------------------------------------------------------------

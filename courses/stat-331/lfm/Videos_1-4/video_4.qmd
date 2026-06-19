@@ -1,0 +1,257 @@
+---
+title: "video_4"
+format: html
+---
+
+## **Video 4) `dplyr` - 2 & `tidyr`: Advanced Transformation**
+
+#### **Video Notes - Reshape Data**
+
+This section covers more advanced data wrangling. We'll combine data with `dplyr` joins and reshape it with `tidyr` pivots. These functions are the key to transforming messy data into the tidy format required for analysis.
+
+***#Fill in the blank***
+
+```{r}
+# Load dplyr and tidyr packages
+library(____)
+library(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **Binds: `bind_rows`**
+
+`bind_rows` stacks two or more data frames on top of each other. It's like adding more rows.
+
+**Setup:** First, create two simple data frames.
+
+```{r}
+df1 <- tibble(x = 1:2, y = c("a", "b"))
+df2 <- tibble(x = 3:4, y = c("c", "d"))
+```
+
+***#Fill in the blank***
+
+```{r}
+# bind_rows() stacks them into one data frame
+combined_rows <- bind_rows(____, ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **Binds: `bind_cols`**
+
+`bind_cols` combines two data frames side-by-side. It's like adding more columns. The data frames must have the same number of rows.
+
+**Setup:** First, create two simple data frames.
+
+```{r}
+df_a <- tibble(x = 1:3, y = c("a", "b", "c"))
+df_b <- tibble(z = 4:6)
+```
+
+***#Fill in the blank***
+
+``` r
+# bind_cols() combines them side-by-side
+combined_cols <- bind_cols(____, ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+------------------------------------------------------------------------
+
+#### **Joins: Combining Data by a Key**
+
+Joins are used to combine variables from two tables based on a matching "key" column. We'll use the classic `band_members` and `band_instruments` datasets to learn this.
+
+![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/static/png/original-dfs.png)
+
+**Setup:** Create the two data frames we will use for all join examples.
+
+```{r}
+band_members <- tribble(
+  ~name,     ~band,
+  "Mick", "Stones",
+  "John", "Beatles",
+  "Paul", "Beatles"
+)
+
+band_instruments <- tribble(
+  ~name,   ~plays,
+  "John",   "guitar",
+  "Paul",   "bass",
+  "Keith",  "guitar"
+)
+```
+
+#### **`left_join`**
+
+A `left_join` keeps **all rows** from the first (left) data frame and adds matching data from the second.
+
+![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/left-join.gif)
+
+***#Fill in the blank***
+
+```{r}
+# This keeps all members from band_members and adds their instrument if available
+left_join(____, ____, by = "name")
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`inner_join`**
+
+An `inner_join` only keeps rows where the key exists in **both** data frames.
+
+![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/inner-join.gif)
+
+***#Fill in the blank***
+
+```{r}
+# This only includes members who are in BOTH tables (John and Paul)
+inner_join(____, ____, by = "name")
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`full_join`**
+
+A `full_join` keeps **all rows** from **both** data frames, filling in missing values with `NA`.
+
+![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/full-join.gif)
+
+***#Fill in the blank***
+
+```{r}
+# This keeps every person from both tables
+full_join(____, ____, by = "name")
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`semi_join`**
+
+A `semi_join` is a **filtering join**. It keeps all rows from the left data frame that have a match in the right, but **does not add any columns**.
+
+![](https://github.com/gadenbuie/tidyexplain/raw/main/images/semi-join.gif)
+
+***#Fill in the blank***
+
+```{r}
+# This returns only the members from band_members who also have an instrument listed
+semi_join(____, ____, by = "name")
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+------------------------------------------------------------------------
+
+#### **Pivots: Reshaping Data Layout**
+
+Pivoting changes the shape of your data between "wide" and "long" formats.
+
+![](https://github.com/gadenbuie/tidyexplain/raw/main/images/static/png/original-dfs-tidy.png)
+
+#### **`pivot_longer`**
+
+`pivot_longer` makes "wide" data longer. It's useful when column names are actually values of a variable.
+
+**Setup:** We'll use `table4a`, where years are column names.
+
+```{r}
+table4a
+```
+
+***#Fill in the blank***
+
+```{r}
+# pivot_longer() makes the data "long" by gathering the year columns
+table4a %>%
+  pivot_longer(
+    cols = c(____, ____),
+    names_to = ____,
+    values_to = ____
+  )
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`pivot_wider`**
+
+`pivot_wider` is the inverse of `pivot_longer`. It makes "long" data wider.
+
+![](https://github.com/gadenbuie/tidyexplain/raw/main/images/tidyr-pivoting.gif)
+
+**Setup:** We'll use `table2`, where observations are split across rows.
+
+```{r}
+table2
+```
+
+***#Fill in the blank***
+
+```{r}
+# pivot_wider() makes the data "wide"
+# It takes the names for the new columns from the 'type' column
+# and the values for those new columns from the 'count' column.
+table2 %>%
+  pivot_wider(
+    names_from = ____,
+    values_from = ____
+  )
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`separate()` & `unite()`**
+
+These functions handle cases where multiple values are stored in one column, or one value is split across multiple columns.
+
+#### **`separate()`**
+
+`separate()` splits one column into multiple columns.
+
+**Setup:** We'll use `table3`, where `rate` contains two values.
+
+```{r}
+table3
+```
+
+***#Fill in the blank***
+
+```{r}
+# Separate the 'rate' column into 'cases' and 'population'
+table3 %>%
+  separate(rate, into = c(____, ____), sep = ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **`unite()`**
+
+`unite()` combines multiple columns into a single column.
+
+**Setup:** We'll use `table5`, where the year is split into two columns.
+
+```{r}
+table5
+```
+
+***#Fill in the blank***
+
+```{r}
+# Unite the 'century' and 'year' columns into a new 'year' column
+table5 %>%
+  unite(new_year, ____, ____, sep = "")
+```

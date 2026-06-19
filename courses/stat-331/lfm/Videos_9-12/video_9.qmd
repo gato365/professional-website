@@ -1,0 +1,115 @@
+---
+title: "video_9"
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+## **Video** 9) Iterations – 1: Looping Structures
+
+Looping structures are used to repeat a block of code multiple times.
+
+### **`for` loop**:
+
+Repeats code for each item in a sequence. This is useful when you have a known number of iterations.
+
+```{r}
+# Get the mean of a few columns in mtcars
+cols_to_summarize <- c("mpg", "hp", "wt")
+
+for (col in cols_to_summarize) {
+# Calculate the mean of the current column
+current_mean <- mean(mtcars[[col]])
+# Print the result
+print(paste("Mean of", col, ":", round(current_mean, 2)))
+}
+```
+
+#### Question 1
+
+Write a `for` loop that iterates through the sequence of numbers from 1 to 5, printing a descriptive message for each iteration.
+
+```{r}
+##----------
+## EMPTY
+##----------
+# This loop will run for each number in the sequence from 1 to 5
+for (____ in ____) {
+# The 'i' variable will hold the current number in the sequence (1, then 2, etc.)
+print(paste("This is iteration number:", ____))
+}
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+### **`while` loop**:
+
+Repeats code as long as a specified condition is **TRUE**. This is useful when the number of iterations is not known beforehand.
+
+```{r}
+# Print car names until horsepower (hp) exceeds 120
+i <- 1
+# The loop continues as long as the hp of the car at row 'i' is less than 120
+while (mtcars$hp[i] < 120) {
+print(rownames(mtcars)[i])
+i <- i + 1
+}
+```
+
+#### Question 2
+
+Using a `while` loop, write a script that counts from 1 to 5, printing a message like 'The current count is: \[number\]' at each step.
+
+```{r}
+##----------
+## EMPTY
+##----------
+# 1. Initialize a counter variable before the loop starts
+counter <- ____
+
+# 2. Set the condition. The loop will run as long as 'counter' is less than or equal to 5.
+while (____ <= ____) {
+
+# 3. This is the code that gets executed in each iteration
+print(paste("The current count is:", ____))
+
+# 4. IMPORTANT: Increment the counter. Without this, the loop would run forever.
+counter <- ____ + ____
+}
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+### **`repeat` loop**:
+
+Repeats code indefinitely until a `break` statement is executed.
+
+```{r}
+# Find the first car with 8 cylinders
+i <- 1
+repeat {
+# Check if the current car has 8 cylinders
+if (mtcars$cyl[i] == 8) {
+print(paste("First 8-cylinder car found:", rownames(mtcars)[i]))
+break # Exit the loop
+}
+i <- i + 1
+}
+```
+
+## \[END\] Video 9
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+
+
+
+

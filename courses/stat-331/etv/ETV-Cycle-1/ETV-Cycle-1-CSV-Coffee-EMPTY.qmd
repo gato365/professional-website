@@ -1,0 +1,321 @@
+---
+title: "ETV Cycle 1 — Extracting and Exploring Coffee Purchase Data"
+format: html
+editor: visual
+---
+
+## Description
+
+This dataset contains coffee purchases recorded over several years, beginning in 2018. Each row represents a single transaction capturing the date, amount, and location of the purchase. Coffee spending is a concrete, personal example that makes patterns in time and money immediately meaningful. We will use R to extract this data from a CSV file, transform it into an analysis-ready form, and visualize spending patterns over time.
+
+Each **row** represents a single purchase. Each **column** represents an attribute of that purchase.
+
+------------------------------------------------------------------------
+
+### Motivating Questions
+
+**Subtask 1** — In which months is the most money spent on coffee?
+
+**Subtask 2** — Does this monthly pattern remain consistent across different years?
+
+------------------------------------------------------------------------
+
+## Learning Moment 1 — Packages and Libraries
+
+**Packages** are collections of R functions bundled together to extend R's base capabilities.
+
+**Libraries** are packages that have been loaded into your current R session with `library()`.
+
+###### **Task 1:** Load Libraries
+
+```{r}
+library(____)   ## Data Extraction  — file path management
+library(____)   ## Data Extraction  — reading CSV files
+library(____)   ## Data Transformation — mutate, filter, select, group_by, summarize
+library(____)   ## Data Transformation — working with dates
+library(____)   ## Data Transformation — reordering factor levels
+library(____)   ## Data Visualization  — building plots
+```
+
+**Side Q1.** Why do we use `library(dplyr)` instead of `library(tidyverse)` in this course?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Extraction (E)
+
+**Extraction** is the process of bringing data into R from an external source.
+
+**Q1.** Define Data Extraction in your own words.
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 2 — Reading a CSV with `read_csv()`
+
+```{r}
+## Read the coffee purchase CSV into R
+coffee_df <- ____(here("data", "coffee_purchases.csv"))
+```
+
+**Q2.** What does the `<-` operator do in R?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q2.** What is the difference between `read_csv()` from `readr` and `read.csv()` from base R?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 3 — Inspecting the Data
+
+###### **Task 2:** Run each inspection function.
+
+```{r}
+## Open a spreadsheet-style viewer
+____(coffee_df)
+```
+
+```{r}
+## Check dimensions: rows × columns
+____(coffee_df)
+```
+
+```{r}
+## Print column names and data types
+____(coffee_df)
+```
+
+**Q3.** What is a data frame (or tibble) in R?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q3.** After running `glimpse(coffee_df)`, what does the `<dbl>` type next to the `amount` column tell you?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Transformation (T)
+
+**Transformation** is the process of cleaning, reshaping, and enriching raw data so it is ready for analysis.
+
+**Q4.** Define Data Transformation in your own words.
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 4 — Fixing Dates with `mutate()` and `lubridate`
+
+```{r}
+## Convert date column from character to Date class
+mod_1_coffee_df <- coffee_df |>
+  mutate(date  = ____(date),
+         month = month(date, label = ____),
+         year  = ____(date))
+```
+
+**Q5.** What does `mutate()` do?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q4.** Why does `month(date, label = TRUE)` return `"Jan"`, `"Feb"`, etc. instead of `1`, `2`?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 5 — The Pipe Operator `|>`
+
+```{r}
+## Select relevant columns using the pipe
+coffee_selected_df <- mod_1_coffee_df |>
+  select(____, ____, ____, ____, ____)
+
+coffee_selected_df
+```
+
+**Q6.** What is the benefit of using `|>` over nesting function calls?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 6 — `filter()`
+
+```{r}
+## Keep only purchases of $5 or more
+coffee_above5_df <- mod_1_coffee_df |>
+  filter(amount ____ 5)
+```
+
+```{r}
+## Keep only weekend purchases
+coffee_weekend_df <- mod_1_coffee_df |>
+  filter(day_of_week %in% c(____, ____))
+```
+
+**Q7.** What does `%in%` do in the second filter example?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 7 — `group_by()` and `summarize()`
+
+```{r}
+## Total and average spending per month
+monthly_spending_df <- mod_1_coffee_df |>
+  group_by(____) |>
+  summarize(
+    total_spending = ____(amount),
+    avg_spending   = ____(amount),
+    n_purchases    = ____(),
+    .groups        = "drop"
+  )
+
+monthly_spending_df
+```
+
+**Q8.** What does `n()` return inside `summarize()`?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Side Q5.** What does `.groups = "drop"` do at the end of `summarize()`?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Visualization (V)
+
+**Q9.** Define Data Visualization in your own words.
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 8 — Bar Chart with `ggplot2`
+
+```{r}
+ggplot(____, aes(x = ____, y = ____)) +
+  geom_col(fill = "steelblue") +
+  labs(
+    title = "Total Coffee Spending by Month",
+    x     = "Month",
+    y     = "Total Spent ($)"
+  ) +
+  theme_minimal()
+```
+
+**Q10.** What is the role of `aes()` inside `ggplot()`?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 1 — Which months have the highest average coffee spending?
+
+```{r}
+ggplot(monthly_spending_df, aes(x = ____, y = ____)) +
+  geom_col(fill = "darkorange") +
+  labs(
+    title = "Average Coffee Spending by Month",
+    x     = "Month",
+    y     = "Avg Amount Spent ($)"
+  ) +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+### Subtask 2 — Does monthly spending stay consistent across years?
+
+#### Learning Moment 9 — `facet_wrap()`
+
+```{r}
+yearly_monthly_df <- mod_1_coffee_df |>
+  group_by(____, ____) |>
+  summarize(total_spending = sum(amount), .groups = "drop")
+
+p1 <- ggplot(yearly_monthly_df, aes(x = ____, y = ____)) +
+  geom_col(fill = "steelblue") +
+  facet_wrap(~ ____) +
+  labs(
+    title = "Monthly Coffee Spending by Year",
+    x     = "Month",
+    y     = "Total Spent ($)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p1
+```
+
+**Q11.** What does `facet_wrap(~ year)` do to the plot?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 10 — Customizing with `theme()`
+
+```{r}
+p1 +
+  theme(
+    axis.title.x = element_text(size = ____, face = "bold"),
+    axis.title.y = element_text(size = ____, face = "bold"),
+    plot.title   = element_text(size = ____, face = "bold", hjust = 0.5)
+  )
+```
+
+**Q12.** What does `hjust = 0.5` do to the plot title?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 3 — Student-Generated Question
+
+```{r}
+## Your code here
+
+```

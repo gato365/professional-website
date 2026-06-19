@@ -1,0 +1,511 @@
+---
+title: "ETV Cycle 5 - NBA GOATs: Excel Sheets, Joins, and Advanced ggplot2 (SOLUTIONS)"
+format: docx
+editor: visual
+---
+
+## Description
+
+This is the official Cycle 5 ETV workflow. We return to the NBA GOATs Excel workbook and use the full **Extract -\> Transform -\> Visualize** structure in one cohesive analysis.
+
+> **Note:** Extraction looks different in this cycle — we use `map()` to read all sheets in a single step. The emphasis this cycle falls on **Visualization** — the plots in Part V directly answer the motivating questions using division and conference information attached during the Transformation step.
+
+The workbook has one sheet per player, plus two support sheets:
+
+-   `KB`, `LJ`, and `MJ`: game-level data for Kobe Bryant, LeBron James, and Michael Jordan.
+-   `variable_names`: a data dictionary describing the workbook columns.
+-   `divisions`: a lookup table connecting team abbreviations to team, division, and conference.
+
+Each **row** in the combined player data represents one game. Each **column** represents a game-level statistic or game descriptor.
+
+------------------------------------------------------------------------
+
+### Motivating Questions
+
+**Subtask 1** - Which player-team pairs produced the highest average Game Score, and does conference membership (East vs. West) affect that ranking?
+
+**Subtask 2** - How do we attach division and conference information to each player's game record, and how can we verify there are no mismatches before joining?
+
+**Subtask 3** - Does a player's scoring distribution look different when facing Eastern Conference opponents compared to Western Conference opponents?
+
+**Subtask 4** - Are home-game win rates different from away-game win rates, and does that pattern hold the same way for Kobe Bryant, LeBron James, and Michael Jordan?
+
+------------------------------------------------------------------------
+
+## Learning Moment 1 - Libraries
+
+```{r}
+#| message: false
+#| warning: false
+library(here)      ## Data Extraction - stable file paths
+library(readxl)    ## Data Extraction - reading Excel workbooks
+library(purrr)     ## Data Extraction/Transformation - map over sheets
+library(dplyr)     ## Data Transformation
+library(tidyr)     ## Data Transformation
+library(stringr)   ## Data Transformation - string extraction
+library(ggplot2)   ## Data Visualization
+library(forcats)   ## Data Visualization - factor ordering
+library(scales)    ## Data Visualization - axis labels
+```
+
+**Side Q1.** Why is `purrr` useful when a workbook contains several sheets with the same structure?
+
+<!-- [Place Answer - Begin] -->
+
+`purrr` lets us repeat the same import or transformation step across many sheet names without copy-pasting code. If the player sheets have the same structure, we can write one `read_excel()` workflow and map it over the sheet names.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Extraction (E)
+
+#### Learning Moment 2 - Inspecting Sheet Names
+
+Before reading data, identify the workbook structure.
+
+```{r}
+path_to_goats <- here("ETV", "Data", "nba_goats.xlsx")
+
+sheet_names <- excel_sheets(path_to_goats)
+sheet_names
+```
+
+------------------------------------------------------------------------
+
+#### Learning Moment 3 - Reading All Sheets with `map()`
+
+We can read all workbook sheets into a named **list**. Each list element is one data frame, and the names of the list preserve the original sheet names.
+
+```{r}
+all_sheets <- sheet_names |>
+  set_names() |>
+  map(\(sheet) read_excel(path_to_goats, sheet = sheet))
+
+names(all_sheets)
+```
+
+```{r}
+all_sheets[["variable_names"]] |>
+  slice_head(n = 8)
+```
+
+------------------------------------------------------------------------
+
+## Transformation (T)
+
+#### Learning Moment 4 - Binding Player Sheets Before Joining
+
+The three player sheets share the same structure, so we first bind them into one player data frame. We add a readable `player` column and keep the original sheet code in `source_sheet`.
+
+```{r}
+player_sheets <- c("KB", "LJ", "MJ")
+
+read_player_sheet <- function(sheet_name) {
+  read_excel(path_to_goats, sheet = sheet_name) |>
+    mutate(
+      source_sheet = sheet_name,
+      player = recode(
+        Name,
+        KB = "Kobe Bryant",
+        LJ = "LeBron James",
+        MJ = "Michael Jordan"
+      ),
+      .before = 1
+    )
+}
+
+nba_players_df <- player_sheets |>
+  map_dfr(read_player_sheet)
+
+glimpse(nba_players_df)
+```
+
+**Q3.** Why do we bind the three player sheets before joining to division data?
+
+<!-- [Place Answer - Begin] -->
+
+Binding first creates one consistent player data frame. Then we only need to perform the division join once instead of repeating the same join separately for Kobe, LeBron, and Jordan.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 5 - Why We Need a Join Here
+
+In this workflow, player game data and division/conference information live in separate sheets. We need a join to bring them together.
+
+**Why is the join needed?**
+
+-   Each game row records the team abbreviation (`Tm`) but not the division or conference.
+-   The `divisions` sheet is a lookup table — one row per team, with the full team name, division, and conference.
+-   A `left_join` adds division and conference to every player-game row by matching on the team abbreviation.
+-   We use `left_join` specifically because we want to keep **every** game row in the player data, even if a team abbreviation is unusual or missing from the lookup table.
+
+This is the only join in the workflow. Before running it, we verify that all team abbreviations match using `anti_join()` (see Learning Moment 6).
+
+------------------------------------------------------------------------
+
+#### Learning Moment 6 - Preparing the Division Lookup Table
+
+The `divisions` sheet is a lookup table: one row per team abbreviation and columns describing the team.
+
+```{r}
+division_df <- all_sheets[["divisions"]] |>
+  rename(
+    team = Abbreviation,
+    team_name = `Full Team Name`,
+    division = Division,
+    conference = Conference
+  )
+
+division_df |>
+  slice_head(n = 8)
+```
+
+Before joining, check whether any player team abbreviations are missing from the lookup table.
+
+```{r}
+nba_players_df |>
+  distinct(Tm) |>
+  anti_join(division_df, by = c("Tm" = "team"))
+```
+
+**Q5.** Why do we run this `anti_join()` before the real join?
+
+<!-- [Place Answer - Begin] -->
+
+This checks whether any team abbreviations in the player data are missing from the division lookup table. If rows appeared here, those games would receive missing division and conference values after the join. This diagnostic step — covered in dplyr Video 4 — helps us catch mismatches before they silently produce `NA` values downstream.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 7 - Joining Division Data to Player Data
+
+We use `left_join()` because the player game data is the main table. Our goal is to keep every player-game row and add team information when a match is available.
+
+```{r}
+nba_joined_df <- nba_players_df |>
+  left_join(division_df, by = c("Tm" = "team"))
+
+nba_joined_df |>
+  select(player, Season, Tm, team_name, division, conference, PTS, AST, TRB, Game_Outcome) |>
+  slice_head(n = 10)
+```
+
+```{r}
+nba_joined_df |>
+  count(player, team_name, division, conference, sort = TRUE)
+```
+
+**Q6.** What does `by = c("Tm" = "team")` tell `left_join()`?
+
+<!-- [Place Answer - Begin] -->
+
+It tells `left_join()` that the matching key has different names in the two data frames. The player data uses `Tm`, while the lookup table uses `team`.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 8 - Creating Analysis Variables
+
+We create a cleaner game-level data frame for analysis. This step documents the transformation workflow: import sheets, bind player rows, prepare lookup table, join divisions, then derive variables for summaries and plots.
+
+```{r}
+nba_analysis_df <- nba_joined_df |>
+  mutate(
+    season_num = as.integer(str_extract(Season, "\\d+")),
+    outcome = if_else(Game_Outcome == "W", "Win", "Loss"),
+    home_away = Game_Location,
+    points_group = case_when(
+      PTS >= 40 ~ "40+ points",
+      PTS >= 30 ~ "30-39 points",
+      PTS >= 20 ~ "20-29 points",
+      TRUE ~ "Under 20 points"
+    ),
+    points_group = factor(
+      points_group,
+      levels = c("Under 20 points", "20-29 points", "30-39 points", "40+ points")
+    )
+  )
+
+nba_analysis_df |>
+  select(player, season_num, team_name, division, conference, outcome, PTS, AST, TRB, GmSc, points_group) |>
+  slice_head(n = 8)
+```
+
+**Q7.** Why is it useful to create `season_num`, `outcome`, and `points_group` before plotting?
+
+<!-- [Place Answer - Begin] -->
+
+These columns translate raw workbook fields into analysis-ready variables. `season_num` lets us treat seasons as numbers, `outcome` uses readable labels, and `points_group` creates ordered scoring categories for summaries and plots.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Visualization (V)
+
+Prior cycles already used horizontal bar charts, error bars, histograms, log scales, scatter plots, line plots, faceting, and manual color scales. In this cycle, we focus on making visual evidence more polished and purposeful with labels, annotations, percent scales, themes, and faceted comparisons. Each subtask directly answers one of the motivating questions.
+
+**Style rule:** pipe the data frame into the plot: `df |> ggplot(aes(...))`.
+
+------------------------------------------------------------------------
+
+#### Subtask 1 - Which player-team pair produced the highest average Game Score, and does conference membership affect that ranking?
+
+Build the plot in two steps: start with a base layer, then add layers to produce the final answer.
+
+```{r}
+player_team_gmsc_df <- nba_analysis_df |>
+  group_by(player, team_name, conference) |>
+  summarize(
+    games = n(),
+    avg_game_score = mean(GmSc, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  filter(games >= 50)
+
+# Step 1 — Base bar chart
+p1_base <- player_team_gmsc_df |>
+  ggplot(aes(
+    x = fct_reorder(team_name, avg_game_score),
+    y = avg_game_score,
+    fill = conference
+  )) +
+  geom_col(width = 0.75)
+
+p1_base
+```
+
+```{r}
+# Step 2 — Add value labels, flip coordinates, and apply polish
+p1_base +
+  geom_text(
+    aes(label = number(avg_game_score, accuracy = 0.1)),
+    hjust = -0.15,
+    size = 3
+  ) +
+  coord_flip() +
+  scale_y_continuous(
+    limits = c(0, max(player_team_gmsc_df$avg_game_score) + 3),
+    breaks = breaks_width(5)
+  ) +
+  labs(
+    title = "Average Game Score by Player-Team Pair",
+    subtitle = "Only player-team pairs with at least 50 games are shown",
+    x = NULL,
+    y = "Average Game Score",
+    fill = "Conference"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    plot.title.position = "plot",
+    legend.position = "bottom"
+  )
+```
+
+**Q8.** What do `geom_text()` and `scale_y_continuous()` add to this plot?
+
+<!-- [Place Answer - Begin] -->
+
+`geom_text()` adds direct labels so the viewer can read exact average Game Score values without estimating from the axis. `scale_y_continuous()` controls the y-axis range and breaks, leaving room for labels and making the scale easier to read.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Subtask 2 - Does scoring distribution look different when facing Eastern vs. Western Conference opponents?
+
+This plot uses boxplots to compare distributions, not just averages.
+
+```{r}
+nba_analysis_df |>
+  filter(!is.na(PTS), !is.na(conference)) |>
+  ggplot(aes(x = conference, y = PTS, fill = conference)) +
+  geom_boxplot(alpha = 0.75, outlier.alpha = 0.25) +
+  facet_wrap(~ player) +
+  scale_y_continuous(breaks = breaks_width(10)) +
+  labs(
+    title = "Scoring Distribution by Conference",
+    subtitle = "Each panel shows one player",
+    x = NULL,
+    y = "Points Scored",
+    fill = "Conference"
+  ) +
+  theme_light(base_size = 12) +
+  theme(
+    legend.position = "none",
+    strip.background = element_rect(fill = "gray90", color = NA),
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle = 30, hjust = 1)
+  )
+```
+
+**Q9.** What does a boxplot show that a bar chart of averages would hide?
+
+<!-- [Place Answer - Begin] -->
+
+A boxplot shows the distribution: median, middle 50 percent, spread, and outliers. A bar chart of averages would hide whether a player's scoring was consistent or driven by unusually high-scoring games.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Subtask 3 - Are scoring and assists related differently across divisions?
+
+This plot uses color mapping, transparency, faceting, and a smooth trend line.
+
+```{r}
+nba_analysis_df |>
+  filter(!is.na(PTS), !is.na(AST), !is.na(division)) |>
+  ggplot(aes(x = AST, y = PTS, color = division)) +
+  geom_point(alpha = 0.35, size = 1.5) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  facet_wrap(~ player) +
+  annotate(
+    "text",
+    x = 14,
+    y = 55,
+    label = "High assist games can still include elite scoring",
+    hjust = 1,
+    size = 3
+  ) +
+  scale_x_continuous(breaks = breaks_width(4)) +
+  scale_y_continuous(breaks = breaks_width(10)) +
+  labs(
+    title = "Points and Assists by Player",
+    subtitle = "Color identifies the division attached to the player's team",
+    x = "Assists",
+    y = "Points",
+    color = "Division"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
+
+**Q10.** Why might `alpha = 0.35` help in this scatter plot?
+
+<!-- [Place Answer - Begin] -->
+
+The data contains many games, so points can overlap. Lowering alpha makes points semi-transparent, which helps dense areas appear darker and reduces overplotting.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+
+#### Subtask 4 - Are home-game win rates different from away-game win rates across players?
+
+Build the plot in steps: start with a base layer, then add percentage labels and per-player team colors.
+
+```{r}
+# Step 1 — Compute win/loss proportions, then build a per-player fill key
+# Each player gets their own Win/Loss palette, so we combine player and
+# outcome into a single fill variable (e.g. "Michael Jordan_Win").
+outcome_location_df <- nba_analysis_df |>
+  filter(!is.na(outcome), !is.na(home_away)) |>
+  count(player, home_away, outcome) |>
+  group_by(player, home_away) |>
+  mutate(prop = n / sum(n)) |>
+  ungroup() |>
+  mutate(fill_key = paste(player, outcome, sep = "_"))
+
+# Step 2 — Base stacked bar chart (fill on the combined key)
+p4_base <- outcome_location_df |>
+  ggplot(aes(x = home_away, y = prop, fill = fill_key)) +
+  geom_col(position = "stack", color = "white", width = 0.7)
+
+p4_base
+```
+
+```{r}
+# Step 3 — Add percentage labels, per-player team colors, facets, and polish
+p4_base +
+  geom_text(
+    aes(
+      label = percent(prop, accuracy = 1),
+      color = outcome
+    ),
+    position = position_stack(vjust = 0.5),
+    size = 3,
+    fontface = "bold",
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ player) +
+  scale_y_continuous(labels = percent_format(), breaks = breaks_width(0.25)) +
+  scale_fill_manual(
+    values = c(
+      # Michael Jordan — Bulls black / red
+      "Michael Jordan_Win"  = "#000000",
+      "Michael Jordan_Loss" = "#CE1141",
+      # LeBron James — Cavaliers wine / gold
+      "LeBron James_Win"    = "#860038",
+      "LeBron James_Loss"   = "#FDBB30",
+      # Kobe Bryant — Lakers purple / gold
+      "Kobe Bryant_Win"     = "#552583",
+      "Kobe Bryant_Loss"    = "#FDB927"
+    ),
+    guide = "none"
+  ) +
+  # Label text: white on dark Win segments, black on light Loss segments
+  scale_color_manual(values = c("Win" = "white", "Loss" = "black")) +
+  labs(
+    title = "Win/Loss Share by Game Location",
+    subtitle = "Team colors per player: Jordan (black/red), James (Cavaliers wine/gold), Bryant (Lakers purple/gold)",
+    x = NULL,
+    y = "Share of Games",
+    fill = "Outcome"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.major.x = element_blank()
+  )
+```
+
+**Q11.** Why is a percent scale useful here?
+
+<!-- [Place Answer - Begin] -->
+
+The goal is to compare win/loss shares, not raw game counts. A percent scale makes each bar interpretable as a proportion of games for that player and location.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Student-Generated Extension
+
+Create one new analytical question that uses `nba_analysis_df` and at least one visualization feature emphasized in this cycle:
+
+-   scale modification,
+-   theme customization,
+-   labels or annotations,
+-   faceting,
+-   color mapping,
+-   or another advanced `ggplot2` element.
+
+```{r}
+## Your code here
+
+```
+
+**Reflection.** What conclusion does your plot support, and what visual evidence supports that conclusion?
+
+<!-- [Place Answer - Begin] -->
+
+Answers will vary. A strong response names the pattern, references specific visual evidence, and avoids claiming more than the plot can support.
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Shiny Extension
+
+The companion file `ETV-Cycle-5-NBA-GOATs-Shiny.qmd` builds a Shiny application around this joined data workflow. The finished app is saved as `app.R` in this same folder.

@@ -1,0 +1,529 @@
+---
+title: "ETV Cycle 4 — Weather, Weather: API Requests, purrr, and Plot Types"
+format: html
+editor: visual
+---
+
+## Description
+
+An **API** (Application Programming Interface) is a structured way for one program to request data from another program or web service. In this cycle, we will use the **Open-Meteo API** to request recent weather data, parse the JSON response, repeat the request for multiple cities with `purrr`, add date features with `lubridate`, and compare a few plot types.
+
+------------------------------------------------------------------------
+
+### Motivating Questions
+
+**Subtask 1** — What do daily high and low temperature trends look like across several California cities?
+
+**Subtask 2** — How does the relationship between daily temperature range and precipitation differ across cities?
+
+**Subtask 3** — Are days with larger temperature ranges also days with more or less precipitation?
+
+------------------------------------------------------------------------
+
+## Setup — Libraries
+
+```{r}
+library(____)
+library(____)
+library(____)
+library(____)
+library(____)
+library(____)
+library(____)
+```
+
+::: callout-important
+## The Extraction Is the Heavy Hitter
+
+In this cycle, most of the intellectual work happens in **Extraction (E)**: understanding the API, building the request, checking the response, parsing JSON, and repeating the workflow for multiple cities.
+
+**Reflection.** Why is the Extraction (E) step emphasized as the most important — the "heavy hitter" — part of this ETV cycle? Answer in 2–3 sentences.
+
+> **Your answer:**
+:::
+
+------------------------------------------------------------------------
+
+## Extraction (E)
+
+#### Learning Moment 0 — What Is an API?
+
+An **API** lets us ask a service for data in a structured way. Instead of manually downloading a spreadsheet, we send a request to a URL and include arguments that describe what data we want.
+
+For this cycle, we use Open-Meteo:
+
+<https://open-meteo.com/>
+
+Open-Meteo is useful here because it does not require an API key and it can return daily weather variables for a specific latitude and longitude.
+
+**Side Q1.** Why might an API be better than manually downloading a file?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 1 — Request, Response, and JSON
+
+The basic API workflow has three pieces:
+
+1.  A **request**: what we ask the API for.
+2.  A **response**: what the API sends back.
+3.  A **JSON body**: the text format that stores the returned data.
+
+<!-- TODO: confirm image URL -->
+
+![The API request -\> response -\> JSON workflow](api-json-workflow.svg){fig-alt="Diagram showing R code making an HTTP GET request to an API, receiving JSON, and converting it into an R data frame." width="90%"}
+
+```{r}
+# (a) making request
+base_request <- ____(____)
+
+# (b) by default GET
+base_request
+```
+
+**Annotation (a).** What does `request(...)` do at this step?
+
+> **Your answer:**
+
+**Annotation (b).** Why is the default HTTP method GET here?
+
+> **Your answer:**
+
+**Q1.** What is JSON, and why is it common for API responses?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 2 — Planning the Query First
+
+Before sending a request, write down the pieces the API needs. For weather data, we need a location, variables, units, time zone, and date range.
+
+```{r}
+# (a) location information
+city_name <- ____
+latitude <- ____
+longitude <- ____
+
+# (b) requested daily weather variables
+daily_variables <- c(
+  ____,
+  ____,
+  ____
+)
+
+city_name
+daily_variables
+```
+
+**Annotation (a).** What does the `city_name` / `latitude` / `longitude` group define?
+
+> **Your answer:**
+
+**Annotation (b).** What does `daily_variables` define, and why store it separately?
+
+> **Your answer:**
+
+**Q2.** Why is it helpful to save query inputs as objects before building the request?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 3 — Doing One Query First
+
+Now we build and send one request. This step is intentionally just one city, because it is easier to debug one working request before repeating it.
+
+```{r}
+single_city_request <- base_request |>
+  req_url_query(
+    # (a) from before
+    latitude           = ____,
+    longitude          = ____,
+    daily              = ____,
+    # (b) constant information
+    temperature_unit   = ____,
+    precipitation_unit = ____,
+    timezone           = ____,
+    past_days          = ____,
+    forecast_days      = ____,
+    .multi             = ____
+  )
+
+single_city_response <- single_city_request |>
+  # (c)
+  ____()
+
+# (d)
+resp_status(single_city_response)
+```
+
+**Annotation (a).** Which earlier objects are reused inside `req_url_query()`?
+
+> **Your answer:**
+
+**Annotation (b).** Why are `temperature_unit`, `precipitation_unit`, `timezone`, `past_days`, and `forecast_days` treated as constants here?
+
+> **Your answer:**
+
+**New Q1.** Explain the difference between `request()`, `req_url_query()`, and `req_perform()`.
+
+| Function          | Your explanation |
+|-------------------|------------------|
+| `request()`       |                  |
+| `req_url_query()` |                  |
+| `req_perform()`   |                  |
+
+**Q3.** What does an HTTP status code of `200` indicate?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 4 — Arguments Needed for `req_url_query()`
+
+`req_url_query()` adds query parameters to the request URL. Each argument narrows or shapes the data returned by the API.
+
+```{r}
+# (a) JSON text -> R list
+single_city_json <- single_city_response |>
+  ____()
+
+single_city_list <- single_city_json |>
+  ____()
+
+names(single_city_list)
+```
+
+```{r}
+# (c)
+single_city_daily <- single_city_list[[____]]
+
+# (d) type and extraction: list -> data frame -> cleaned data frame
+single_city_weather_df <- as.data.frame(single_city_daily) |>
+  rename(date = ____) |>
+  mutate(
+    date = ____(date),
+    city = ____,
+    # (e)
+    .before = 1
+  )
+
+glimpse(single_city_weather_df)
+```
+
+**Annotation (a).** Explain what `single_city_list` is and how it is structured.
+
+> **Your answer:**
+
+**Annotation (b).** What is the data type at each step, and what is being extracted?
+
+> **Your answer:**
+
+**Annotation (c).** Why do we extract `daily` specifically?
+
+> **Your answer:**
+
+**Annotation (e).** Why `.before = 1`? What does it control?
+
+> **Your answer:**
+
+**Side Q2.** What do the main `req_url_query()` arguments control?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+**Meta-reflection.** Why is Side Q2 asked here, and why is it placed at this point in the workflow?
+
+> **Your answer:**
+
+------------------------------------------------------------------------
+
+#### Learning Moment 5 — A Small `map()` Moment, Then `pmap_dfr()`
+
+**Say we want multiple cities — and how `map` helps us.**
+
+Once we move from one city to several cities, we need a way to repeat the same operation without copying and pasting the same code block.
+
+> **Your answer:** In your own words, why do we need a map function once we move from one city to many?
+
+`purrr` map functions repeat the same operation over many inputs. Start small: `map_dbl()` below rounds every latitude.
+
+```{r}
+# (a)
+cities <- data.frame(
+  city      = c("San Luis Obispo", "San Francisco", "San Diego"),
+  latitude  = c(35.2828, 37.7749, 32.7157),
+  longitude = c(-120.6596, -122.4194, -117.1611)
+)
+
+```
+
+**Do this blank (i).** Complete the `map_dbl()` call that rounds each latitude to one decimal place.
+
+```{r}
+cities |>
+  mutate(latitude_rounded = ____)
+```
+
+<!-- Answer key: map_dbl(latitude, \(x) round(x, 1)) -->
+
+When a function needs more than one input at the same time, use `pmap_dfr()`. It takes each row of a data frame, sends the row values into a function, and row-binds the data frames returned by that function.
+
+```{r}
+# (ii)
+____(
+  cities,
+  # (iii)
+  \(city, latitude, longitude) {
+    data.frame(
+      city = ____,
+      location_text = paste0(____, ", ", ____)
+    )
+  }
+)
+```
+
+**Q4.** What is the difference between `map_dbl()` and `pmap_dfr()` in the examples above?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 6 — Building the Final `get_weather()` Function
+
+Now that one query works, we turn the steps into a function. The function takes one city, one latitude, and one longitude, then returns a cleaned daily weather data frame.
+
+**Do it blank — Strategy.** The major pieces of `get_weather()` are scrambled below. Reorder them before reading the full function.
+
+``` text
+(a)
+(b)
+(c)
+(d)
+(e)
+(f)
+```
+
+```{r}
+get_weather <- function(city, latitude, longitude) {  # (a)
+  # (b):
+  url <- ""
+  response <- request(____) |>
+    req_url_query(
+      latitude           = ____,
+      longitude          = ____,
+      daily              = c(____, ____, ____),
+      temperature_unit   = ____,
+      precipitation_unit = ____,
+      timezone           = ____,
+      past_days          = ____,
+      forecast_days      = ____,
+      .multi             = ____
+    ) |>
+    ____()
+
+  # (c):
+  ____(response)
+
+  # (d):
+  daily_data <- response |>
+    ____() |>
+    fromJSON() |>
+    (\(x) x[[____]])()
+
+  # (e):
+  daily_weather_df <- as.data.frame(daily_data) |>
+    rename(date = ____) |>
+    mutate(
+      date = ____(date),
+      city = city,
+      .before = 1
+    )
+
+    return(____)
+}
+
+# (f): 
+weather_df <- ____(cities, get_weather)
+
+glimpse(weather_df)
+```
+
+**Comment practice.** Add a one-line comment for each major block in the function: request build, `req_perform()`, JSON extraction, and data-frame cleaning.
+
+``` text
+# ___ 
+# ___ 
+# ___ 
+# ___ 
+# ___
+```
+
+------------------------------------------------------------------------
+
+## Transformation (T)
+
+#### Learning Moment 7 — Adding Date and Weather Features
+
+```{r}
+weather_df <- weather_df |>
+  group_by(____) |>
+  mutate(
+    weekday         = ____(date, label = TRUE, abbr = TRUE) #,
+    # week_start      = ____(date, unit = "week") #,
+    # days_from_start = as.integer(date - ____(date)) #,
+    # temp_range_f    = ____ - ____ ## We actual need this!
+  ) |>
+  ungroup()
+
+# weather_df |>
+#   select(____, ____, ____, ____, ____, ____) |>
+#   slice_head(n = ____)
+```
+
+**Q6.** What do `wday()` and `floor_date()` help us do?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 8 — Pivoting Highs and Lows for Plotting
+
+```{r}
+weather_long_df <- weather_df |>
+  pivot_longer(
+    cols      = c(____, ____),
+    names_to  = ____,
+    values_to = ____
+  ) # |>
+  # mutate(
+  #   temp_type = case_when(
+  #     ____ == ____ ~ ____,
+  #     ____ == ____ ~ ____
+  #   )
+  # )
+
+weather_long_df |>
+  select(____, ____, ____, ____) |>
+  slice_head(n = ____)
+```
+
+**Q7.** What does `pivot_longer()` do here?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+## Visualization (V)
+
+
+
+
+#### Learning Moment 9 — Line Plot: Temperature Over Time
+
+
+**Subtask 1** — What do daily high and low temperature trends look like across several California cities?
+
+```{r}
+ggplot(____, aes(x = ____, y = ____, color = ____)) +
+  geom_line(linewidth = ____) +
+  facet_wrap(~ ____, ncol = ____) +
+  scale_color_manual(values = c("Daily High" = ____, "Daily Low" = ____)) +
+  labs(
+    title = "Daily High and Low Temperatures by City",
+    x     = "Date",
+    y     = "Temperature (F)",
+    color = NULL
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = ____, hjust = ____))
+```
+
+**Q8.** What kind of question is a line plot especially good at answering?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 10 — Scatter Plot: Temperature Range and Precipitation
+
+
+**Subtask 2** — How does the relationship between daily temperature range and precipitation differ across cities?
+
+
+
+```{r}
+ggplot(____, aes(x = ____, y = ____, color = ____)) +
+  geom_point(size = ____, alpha = ____) +
+  labs(
+    title = "Daily Temperature Range vs. Precipitation",
+    x     = "Temperature Range (F)",
+    y     = "Precipitation (inches)",
+    color = "City"
+  ) +
+  theme_minimal()
+```
+
+**Q9.** What kind of question is a scatter plot especially good at answering?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+#### Learning Moment 11 — Histogram: Distribution of Temperatures
+
+
+**Subtask 3** — Are days with larger temperature ranges also days with more or less precipitation?
+
+
+```{r}
+ggplot(____, aes(x = ____, fill = ____)) +
+  geom_histogram(bins = ____, alpha = ____, position = ____, color = ____) +
+  facet_wrap(~ ____) +
+  scale_fill_manual(values = c("Daily High" = ____, "Daily Low" = ____)) +
+  labs(
+    title = "Distribution of Daily Highs and Lows",
+    x     = "Temperature (F)",
+    y     = "Number of Days",
+    fill  = NULL
+  ) +
+  theme_minimal()
+```
+
+**Side Q3.** What does a histogram show that a line plot does not show as directly?
+
+<!-- [Place Answer - Begin] -->
+
+<!-- [Place Answer - End] -->
+
+------------------------------------------------------------------------
+
+### Subtask 4 — Student-Generated Question
+
+Change the cities, extend the weather variables, or choose a new plot type. Propose a weather-related question and visualize the answer.
+
+```{r}
+## Your code here
+
+```

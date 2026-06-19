@@ -1,0 +1,750 @@
+---
+title: "ETV - Task - Pamphlet - Statistical Analysis"
+format: html
+editor: visual
+---
+
+## Description
+
+The `penguins` data frame in the `palmerpenguins` R package comprises observations of 344 penguins from three species—Adélie, Chinstrap, and Gentoo—collected on three islands in the Palmer Archipelago, Antarctica. This data frame includes eight variables: `species` (penguin species), `island` (island of observation), `bill_length_mm` (bill length in millimeters), `bill_depth_mm` (bill depth in millimeters), `flipper_length_mm` (flipper length in millimeters), `body_mass_g` (body mass in grams), `sex` (penguin sex), and `year` (year of observation). The `penguins` data frame offers a simplified and curated subset of the raw data, making it an excellent alternative to the classic `iris` data frame for data exploration and visualization.
+
+------------------------------------------------------------------------
+
+### Data Ethics:
+
+The `penguins` data frame in the `palmerpenguins` R package originates from research conducted between 2007 and 2009 by Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research (LTER) Program, part of the U.S. Long Term Ecological Research Network. The data were collected to study ecological sexual dimorphism and environmental variability within a community of Antarctic penguins. The data frame is publicly available under a CC0 ("No Rights Reserved") license, ensuring unrestricted access and promoting transparency and reproducibility in research. Users are encouraged to cite the data frame appropriately and to contact Dr. Gorman for collaboration if they intend to publish analyses based on this data. 
+
+## **Statistics**
+
+This document provides a comprehensive overview of the **tidymodels** package in R, focusing on **regression**, **ANOVA**, and **interaction** models. It includes a detailed explanation of each model type, the corresponding formula, and key assessment questions to evaluate the model's performance. Additionally, the document covers **simulation** techniques using random generation and probability functions, along with a review of **functional programming** and **data manipulation** in R.
+
+Please install the following packages `palmerpenguins` (extract penguin data), `tidymodels` (modern modeling approach in R), `infer` (statistical inference), The `tidymodels` package includes `parsnip`, `broom`, and `dials` for modeling, tidying, and tuning, respectively. The `palmerpenguins` package contains the `penguins` data frame, which we will use for the analysis. The `infer` package is used for statistical inference and hypothesis testing.
+
+```{r}
+## Install the required packages
+```
+
+```{r}
+library(palmerpenguins)  ## Data Extraction
+library(dplyr)           ## Data Transformation
+library(tidyr)           ## Data Transformation
+library(ggplot2)         ## Data Visualization
+library(tidymodels)      ## Data Analysis
+library(infer)           ## Data Analysis
+```
+
+This experience is huge on the syntax on how to implement these statistical models in R. I am going to use the `penguins` data frame from the `palmerpenguins` package to demonstrate the application of these models. The data frame contains information about penguins, including species, body mass, flipper length, and bill dimensions.
+
+We are going to approach 10 statistical models (techniques or methods) using the `penguins` data frame. We will be using two methods of analyzing the data: the old code and the tidy models or infer approach (part of `tidyverse` philosophy). The old code is the traditional way of analyzing data, while the tidy models approach is the modern way of analyzing data using the `tidymodels` package in R. The 10 statistical models we will be exploring are:
+
+1.  [One Population Mean Hypothesis Test](#onepopmean)
+2.  [One Population Proportion Hypothesis Test](#onepopprop)
+3.  [Chi-Square Goodness of Fit Test](#chisqfit)
+4.  [Chi-Square Test of Independence](#chisqindep)
+5.  [Two Independent Population Means Hypothesis Test](#twopopmean)
+6.  One-Way ANOVA
+7.  Simple Linear Regression
+8.  Multiple Linear Regression
+9.  Multiple Linear Regression (Interaction)
+10. Logistic Regression
+
+------------------------------------------------------------------------
+## Part 1
+
+### 1. One Population Mean {#onepopmean}
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Is the average body mass of penguins in the data frame equal to 4700?
+
+**Statistical Question:** Is the population mean of body mass for penguins in the data frame equal to 4700?
+
+#### b. Primary use of the statistical model:
+
+The One Population Mean test is used to determine if the population mean of a single variable is significantly different from a specified value. In this case, we are testing if the population mean of body mass for penguins is significantly different from a specified value.
+
+#### c. Summary Statistics
+
+```{r}
+## Mean, standard devaition, and sample size of body mass
+penguins %>% 
+  summarise(
+    mean = mean(body_mass_g, na.rm = TRUE),
+    sd = sd(body_mass_g, na.rm = TRUE),
+    n = n()
+  )
+```
+
+#### d. Visualizations
+
+```{r}
+
+## Create a histogram of body mass
+penguins %>% 
+  ggplot(aes(x = body_mass_g)) +
+  geom_histogram(fill = "skyblue", color = "black") +
+  geom_vline(xintercept = 4700, color = "red", linetype = "dashed") +
+  geom_text(aes(x = 4700, y = 40, label = "4700 g"), color = "red") +
+  geom_vline(xintercept = round(mean(penguins$body_mass_g, na.rm = TRUE),2), color = "blue", linetype = "dashed") +
+  geom_text(aes(x = round(mean(penguins$body_mass_g, na.rm = TRUE),2) , y = 40, 
+                label = paste0(round(mean(penguins$body_mass_g, na.rm = TRUE),2)," g" )) , color = "blue") +
+  
+  
+  labs(title = "Distribution of Penguin Body Mass",
+       x = "Body Mass (g)",
+       y = "Count") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 15))
+
+```
+
+#### e. Analysis
+
+The null and alternative hypotheses:
+
+$$ H_0: \mu = 4700 $$
+
+$$ H_1: \mu \neq 4700 $$
+
+##### e. i Old Code
+
+```{r}
+
+
+```
+
+##### e. ii Using Infer
+
+```{r}
+
+```
+
+
+
+
+
+
+------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+### 2. One Population Proportion {onepopprop}
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Is the proportion of penguins with a bill length greater than 40 mm equal to 0.65?
+
+**Statistical Question:** Is the population proportion of penguins with a bill length greater than 40 mm equal to 0.65?
+
+#### b. Primary use of the statistical model:
+
+The One Population Proportion test is used to determine if the population proportion of a categoical binary variable is significantly different from a specified value. In this case, we are testing if the population proportion of penguins with a bill length greater than 40 mm is significantly different from 0.5.
+
+```{r}
+stat_2_df <- penguins %>% 
+  filter(!is.na(bill_length_mm)) %>% 
+  mutate(bill_length_gt_40 = if_else(bill_length_mm > 40,
+                                     "Greater than 40", 
+                                     "Less than or equal 40")) %>% 
+  select(bill_length_gt_40)
+```
+
+#### c. Summary Statistics
+
+```{r}
+
+## Proportion of penguins with bill length > 40 mm
+stat_2_df %>% 
+  table()
+```
+
+#### d. Visualizations
+
+```{r}
+stat_2_df %>% 
+  ggplot(aes(x = bill_length_gt_40)) +
+  geom_bar(fill = "skyblue") +
+  geom_text(
+    aes(label = ..count.., y = ..count..),
+    stat = "count",
+    vjust = -0.5
+  ) +
+  ylim(0, 275) +
+  labs(title = "Proportion of Penguins with Bill Length > 40 mm",
+       x = "Bill Length > 40 mm",
+       y = "Count") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 15))
+```
+
+#### e. Analysis
+
+The null and alternative hypotheses:
+
+$$ H_0: p = 0.65 $$
+
+$$ H_1: p \neq 0.65 $$
+
+##### e.i Old Code
+
+```{r}
+
+```
+
+##### e.ii Using Infer
+
+```{r}
+
+```
+
+
+
+
+------------------------------------------------------------------------
+
+
+
+
+
+
+### 3. Two Independent Population Means {#twopopmean}
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Do Adelie and Chinstrap penguins have different mean body masses?
+
+**Statistical Question:** Is there a significant difference in the population mean of body mass between Adelie and Chinstrap penguins?
+
+#### b. Primary use of the statistical model:
+
+The Two Independent Population Means is used to compare the means of two independent populations. In this case, we are comparing the body masses of Adelie and Chinstrap penguins to determine if they are significantly different.
+
+```{r}
+stat_3_df <- penguins %>% 
+  filter(species %in% c("Adelie", "Chinstrap")) %>% 
+  select(species, body_mass_g)
+```
+
+#### c. Summary Statistics
+
+```{r}
+stat_3_df %>% 
+  group_by(species) %>% 
+  summarise(
+    mean = mean(body_mass_g, na.rm = TRUE),
+    sd = sd(body_mass_g, na.rm = TRUE),
+    n = n()
+  )
+```
+
+#### d. Visualizations
+
+```{r}
+ggplot(stat_3_df, aes(x = species, y = body_mass_g, fill = species)) +
+  geom_boxplot() +
+  stat_summary(
+    fun = mean, 
+    geom = "point", 
+    shape = 23, 
+    size = 3, 
+    fill = "white"
+  ) +
+  labs(
+    title = "Body Mass of Adelie and Chinstrap Penguins",
+    x = "Species",
+    y = "Body Mass (g)"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size =15))
+```
+
+#### e. Analysis
+
+The null and alternative hypotheses:
+
+$$ H_0: \mu_{\text{Adelie}} = \mu_{\text{Chinstrap}} $$
+
+$$ H_1: \mu_{\text{Adelie}} \neq \mu_{\text{Chinstrap}} $$
+
+##### e.i Old Code
+
+```{r}
+
+```
+
+##### e.ii Using Infer 
+
+```{r}
+
+```
+
+------------------------------------------------------------------------
+
+### 4. Chi-Square Goodness of Fit Test {#chisqfit}
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Is the ratio of species in the penguins data frame consistent with each species' is equally distributed?
+
+**Statistical Question:** Is the population proportion of each species in the penguins data frame equally likely to occur?
+
+#### b. Primary use of the statistical model:
+
+The Chi-Square Goodness of Fit test is used to determine if the observed frequency distribution of a categorical variable differs from the expected frequency distribution. In this case, we are testing if the observed distribution of penguin species differs from an equal distribution.
+
+```{r}
+stat_4_df <- penguins %>% 
+  select(species)
+```
+
+#### c. Summary Statistics
+
+```{r}
+species_tab <- stat_4_df %>% 
+  table()
+
+print(species_tab)
+```
+
+#### d. Visualizations
+
+```{r}
+stat_4_df %>% 
+  ggplot(aes(x = species)) +
+  ## Colors based on the species
+  
+  geom_bar(fill = "skyblue") +
+  stat_count(geom = "text", aes(label = ..count..), vjust = -0.5) +
+  labs(title = "Distribution of Penguin Species",
+       x = "Species",
+       y = "Count") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 15))
+```
+
+#### e. Analysis
+
+The null and alternative hypotheses:
+
+$$ H_0: p_{\text{Adelie}} = p_{\text{Chinstrap}} = p_{\text{Gentoo}} = 1/3 $$
+
+$$ H_1: \text{At least one population proportion is different} $$
+
+##### e.i Old Code
+
+```{r}
+
+```
+
+##### e.ii Using Infer
+
+```{r}
+
+
+```
+
+
+
+------------------------------------------------------------------------
+
+
+
+
+### 5. Chi-Square Test of Independence {#chisqindep}
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Is there a relationship between the species and sex of the penguins?
+
+**Statistical Question:** Is there a significant association between the species and sex of the penguins?
+
+#### b. Primary use of the statistical model:
+
+The Chi-Square Test of Independence is used to determine if there is a significant association between two categorical variables. In this case, we are testing if there is a relationship between the species and sex of the penguins.
+
+#### c. Summary Statistics
+
+```{r}
+
+stat_5_df <- penguins %>% 
+  select(species, sex)
+
+species_sex_tab <- stat_5_df %>%
+  table()
+
+species_sex_tab
+```
+
+#### d. Visualizations
+
+```{r}
+# Create the bar plot
+
+stat_5_df %>% 
+  drop_na() %>%  # Drop missing values
+ggplot(aes(x = species, fill = sex)) +
+  geom_bar(position = "dodge") +  # ggplot automatically counts occurrences
+  labs(title = "Gender Distribution Across Penguin Species",
+       x = "Species",
+       y = "Count",
+       fill = "Sex") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 15))
+```
+
+#### e. Analysis
+
+The null and alternative hypotheses: $$ H_0: \text{Species and Sex are independent} $$ $$ H_1: \text{Species and Sex are dependent} $$
+
+##### e. i Old Code
+
+```{r}
+
+
+```
+
+##### e. ii Using Infer
+
+```{r}
+
+```
+
+
+------------------------------------------------------------------------
+## Part 2:
+
+### 6. One-Way ANOVA
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Do different species of penguins have different average body masses?
+
+**Statistical Question:** Is there a significant difference in the population mean of body mass across the three species?
+
+#### b. Primary use of the statistical model:
+
+One-Way ANOVA is used to compare the means of **three or more** independent groups to determine if at least one group is significantly different from the others.
+
+#### c. Summary Statistics
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    mean = mean(body_mass_g, na.rm = TRUE),
+    sd = sd(body_mass_g, na.rm = TRUE),
+    n = n()
+  )
+```
+
+#### d. Visualizations
+
+```{r}
+ggplot(penguins, aes(x = species, y = body_mass_g, fill = species)) +
+  geom_violin() +
+    stat_summary(
+    fun = mean, 
+    geom = "point", 
+    shape = 23, 
+    size = 3, 
+    fill = "black"
+  ) +
+  labs(title = "Body Mass Distribution Across Penguin Species",
+       x = "Species",
+       y = "Body Mass (g)") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 15))
+```
+
+#### e. Analysis
+
+##### e. i Old Code
+
+```{r}
+
+```
+
+##### e. ii Using Infer
+
+```{r}
+
+```
+
+------------------------------------------------------------------------
+
+### 7. Simple Linear Regression
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Does a penguin’s flipper length predict its body mass?
+
+**Statistical Question:** Is there a significant linear relationship between flipper length and body mass?
+
+#### b. Primary use of the statistical model:
+
+Simple Linear Regression models the relationship between **one quantitative explanatory variable** (`flipper_length_mm`) and **one quantitative response** variable(`body_mass_g`).
+
+#### c. Summary Statistics
+
+```{r}
+penguins %>%
+  summarise(
+    mean_x = mean(flipper_length_mm, na.rm = TRUE),
+    mean_y = mean(body_mass_g, na.rm = TRUE),
+    sd_x = sd(flipper_length_mm, na.rm = TRUE),
+    sd_y = sd(body_mass_g, na.rm = TRUE),
+    sample_size = n(),
+    correlation = cor(flipper_length_mm, body_mass_g, use = "complete.obs")
+  )
+```
+
+#### d. Visualizations
+
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", color = "blue", se = FALSE) +
+  labs(title = "Relationship Between Flipper Length \nand Body Mass",
+       x = "Flipper Length (mm)",
+       y = "Body Mass (g)") +
+  theme_minimal()  +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size =15))
+  
+```
+
+#### e. Analysis
+
+##### e. i Old Code
+
+```{r}
+
+```
+
+##### e. ii Tidy Models
+
+```{r}
+
+
+```
+
+```{r}
+
+
+```
+
+### 8. Multiple Linear Regression
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Do multiple body measurements predict a penguin’s body mass?
+
+**Statistical Question:** Can we model body mass using multiple explanatory variables: flipper length, bill length, and bill depth?
+
+#### b. Primary use of the statistical model:
+
+Multiple Linear Regression allows us to examine how **multiple quantitative explanatory variables** together predict a single response variable.
+
+#### c. Summary Statistics
+
+```{r}
+penguins %>%
+  summarise(
+    correlation_flipper = cor(flipper_length_mm, body_mass_g, use = "complete.obs"),
+    correlation_bill_length = cor(bill_length_mm, body_mass_g, use = "complete.obs"),
+    correlation_bill_depth = cor(bill_depth_mm, body_mass_g, use = "complete.obs")
+  )
+```
+
+#### d. Visualizations
+
+```{r}
+penguins %>%
+  pivot_longer(cols = c(flipper_length_mm, bill_length_mm, bill_depth_mm),
+               names_to = "measurement",
+               values_to = "value") %>%
+  ggplot(aes(x = value, y = body_mass_g, color = measurement)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Relationship Between Body Mass and Penguin Measurements",
+       x = "Measurement Value",
+       y = "Body Mass (g)") +
+  facet_grid(.~measurement, scales = "free_x")+
+  theme_minimal()
+```
+
+#### e. Analysis
+
+##### e. i Old Code
+
+```{r}
+
+```
+
+##### e. ii Tidy Models
+
+```{r}
+
+
+
+```
+
+```{r}
+
+
+```
+
+### 9. Multiple Linear Regression (Interaction)
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Does the relationship between flipper length and body mass differ by species?
+
+**Statistical Question:** Is there an interaction effect between flipper length and species on body mass?
+
+#### b. Primary use of the statistical model:
+
+Interaction effects allow us to **examine whether the effect of one variable depends on another**.
+
+#### c. Summary Statistics
+
+
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    correlation = cor(flipper_length_mm, body_mass_g, use = "complete.obs")
+  )
+```
+
+#### d. Visualizations
+
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Interaction Between Flipper Length and Species on Body Mass",
+       x = "Flipper Length (mm)",
+       y = "Body Mass (g)") +
+  theme_minimal()
+```
+
+#### e. Analysis
+
+##### e.i Old Code
+
+```{r}
+
+```
+
+##### e. ii Tidy Models
+
+```{r}
+
+
+
+
+```
+
+```{r}
+
+```
+
+### 10. Logistic Regression
+
+#### a. Statistical Question:
+
+**Colloquial Question:** Can we predict the sex of a penguin based on body measurements?
+
+**Statistical Question:** Is there a significant relationship between sex (binary outcome) and body measurements?
+
+#### b. Primary use of the statistical model:
+
+Logistic Regression is used when the **response variable is binary** (e.g., Male/Female).
+
+#### c. Summary Statistics
+
+```{r}
+penguins %>%
+  drop_na(sex) %>% 
+  count(sex)
+```
+
+#### d. Visualizations
+
+```{r}
+penguins %>%
+  drop_na(sex) %>% 
+  ggplot(aes(x = flipper_length_mm, fill = sex)) +
+  geom_histogram(alpha = 0.7, position = "identity") +
+  facet_wrap(~sex) +
+  theme_minimal()
+```
+
+#### e. Analysis
+
+##### e.i Old Code
+
+```{r}
+
+```
+
+##### e. ii Tidy Models
+
+```{r}
+
+```
+
+------------------------------------------------------------------------
+
+```{r}
+
+
+```
+### **Summary of Models & Key Insights**
+
+| **Model Type**                 | **Formula**                                                        | **Key Purpose**                                       |
+|-------------------------|--------------------|---------------------------|
+| **One-Way ANOVA**              | `body_mass_g ~ species`                                            | Tests if **species** affects body mass                |
+| **Two-Way ANOVA**              | `body_mass_g ~ species + sex`                                      | Tests if **species and sex** influence body mass      |
+| **Simple Linear Regression**   | `body_mass_g ~ flipper_length_mm`                                  | Examines **one predictor's** effect on body mass      |
+| **Multiple Linear Regression** | `body_mass_g ~ flipper_length_mm + bill_length_mm + bill_depth_mm` | Uses **multiple continuous** predictors               |
+| **MLR + Interaction**          | `body_mass_g ~ flipper_length_mm * species`                        | Tests if **species modifies** flipper length’s effect |
+
+------------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+### **2. Simulation**
+
+-   **Random Generation**
+    -   `rnorm`, `rbinom`, `runif`, `rexp`, `rt`\
+-   **Probability Functions**
+    -   `pnorm`, `pt`, `pbinom`, `punif`, `pexp`, `pchisq`\
+-   **Density Functions**
+    -   `dnorm`, `dbinom`, `dpois`, `dt`, `dexp`\
+-   **Context**
+    -   Application of simulations in hypothesis testing (`replicate`, `boot`, `sample`)
+
+------------------------------------------------------------------------
+
+### **3. Review**
+
+Data Background:
+
+Data Set: Movies Data Base
+
+Data Ethics:
+
+-   **Iteration**
+    -   `for` loops, `while` loops\
+    -   `map`, `walk`, `reduce` (from `purrr`)\
+-   **Functional Programming**
+    -   `function`, `map`, `map_df`, `map_dbl`\
+-   **Data Manipulation**
+    -   `bind_rows`, `bind_cols`, `pivot_longer`, `pivot_wider`

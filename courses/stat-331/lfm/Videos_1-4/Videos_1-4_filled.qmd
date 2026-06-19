@@ -1,0 +1,612 @@
+---
+title: "Videos 1 - 4 (FILLED)"
+format: docx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+## **Video 1) R & Basics with `mtcars`**
+
+#### **Video Notes - Packages & Libraries**
+
+This section covers the fundamental concepts of R. We will not load the entire `tidyverse` package; instead, we will load individual packages as needed to better understand the function of each one.
+
+\[TODO: Explain Packages and Libraries\]
+
+First, let's inspect the `mtcars` dataset.
+
+```{r}
+# Look at the structure of the mtcars dataset
+str(mtcars)
+```
+
+\newpage
+
+#### **Video Notes - Look at structure Data**
+
+The `str()` function shows us the structure of our data. Notice the `vs` (V/S engine) and `am` (transmission) variables are listed as `num` (numeric) but only contain 0s and 1s. These are **binary** variables. To learn more about them, we can use the help function by typing `?mtcars` in the console. For our purposes, we can think of these as character or factor variables (e.g., "automatic" vs. "manual"), and we'll learn how to work with them later.
+
+To see the first few rows of the data, we use the `head()` function.
+
+***#Fill in the blank***
+
+```{r}
+# The head() function displays the first six rows of the data set
+head(mtcars)
+```
+
+\newpage
+
+#### **Video Notes - View Data**
+
+If you want to see the entire interactive data frame in a new tab, you can use the `View()` function (with a capital "V"). Running `View(mtcars)` in your console will open it.
+
+------------------------------------------------------------------------
+
+\newpage
+
+#### **Data Structures**
+
+**a) Vectors**: A vector is a one-dimensional sequence of data elements of the same type. This type can be numeric, character (string), or logical (boolean).
+
+-   **Numeric**: Numbers (e.g., 10.5, 55, -3)
+-   **Character**: Text, also known as strings (e.g., "hello", "R")
+-   **Logical**: TRUE or FALSE values, also known as booleans.
+
+***#Fill in the blank***
+
+```{r}
+# Create a numeric vector of miles-per-gallon (mpg) values
+mpg_vector <- mtcars$mpg
+# Create a character vector of the car names
+car_names_vector <- rownames(mtcars)
+# Create a boolean vector indicating if a car has more than 150 horsepower
+powerful_boolean_vector <- mtcars$hp > 150
+```
+
+\newpage
+
+**b) Data Frames**: This is the primary structure for tabular data in R. `mtcars` is a classic example.
+
+#### **Video Notes - Tibble and Data Frames**
+
+While I primarily use data frames because that's what I'm used to, you will often see another modern data frame structure online called a **tibble**. They behave very similarly but have some friendlier printing and subsetting features.
+
+***#Fill in the blank***
+
+```{r}
+# Check the class of the mtcars object
+class(mtcars)
+```
+
+\newpage
+
+**c) Lists**: A list is a versatile R object that can contain elements of different types.
+
+#### **Video Notes - Lists**
+
+If you're familiar with programming, a **named list** in R is very similar to a **JSON** object or a **dictionary** in Python. There are many ways of extracting information from lists; here are a few common ones.
+
+***#Fill in the blank***
+
+```{r}
+# Create a list containing a numeric vector and a data frame
+my_list <- list(
+  description = "Car Data",
+  mpg_stats = summary(mtcars$mpg),
+  sample_cars = head(mtcars, 2)
+)
+
+# Extract elements from the list
+# Method 1: Using the $ operator
+description <- my_list$description
+
+# Method 2: Using double square brackets [[ ]] with the name
+mpg_summary <- my_list[["mpg_stats"]]
+
+# Method 3: Using double square brackets [[ ]] with the index
+first_two_cars <- my_list[[3]]
+```
+
+------------------------------------------------------------------------
+
+## \[END\] Video 1
+
+\newpage
+
+\newpage
+
+## **Video 2) `dplyr` - 1: Core Data Transformations**
+
+#### **Video Notes - Pipe Operator**
+
+Here we use functions from the `dplyr` package. `dplyr` provides a "grammar" for data manipulation, making code easier to write and read. We will also introduce the **pipe operator (`%>%`)**. The pipe takes the output of the function on its left and passes it as the first argument to the function on its right. It lets you chain operations together without saving intermediate objects.
+
+***#Fill in the blank***
+
+```{r}
+# Load the dplyr package
+library(dplyr)
+
+# Convert row names to a column for easier manipulation
+mtcars_df <- mtcars %>%
+  rownames_to_column(var = "car_model")
+```
+
+\newpage
+
+#### **1. `select()`: Choose Columns**
+
+`select()` allows you to create a new data frame containing only the columns you specify.
+
+## \[\[TODOs: Put GIF\]\]
+
+***#Fill in the blank***
+
+```{r}
+# Choose the car_model, mpg, hp, and wt columns
+car_performance <- mtcars_df %>%
+  select(car_model, mpg, hp, wt)
+```
+
+\newpage
+
+#### **2. `mutate()`: Create New Columns**
+
+`mutate()` adds new columns or transforms existing ones while keeping all other columns.
+
+## \[\[TODOs: Put GIF\]\]
+
+***#Fill in the blank***
+
+```{r}
+# Add a new column for weight in kilograms
+car_performance_kilos <- car_performance %>%
+  mutate(wt_kg = wt * 1000 * 0.453592)
+```
+
+\newpage
+
+#### **3. `filter()`: Keep Rows**
+
+`filter()` creates a new data frame containing only the rows that meet your logical conditions.
+
+## \[\[TODOs: Put GIF\]\]
+
+***#Fill in the blank***
+
+```{r}
+# Find cars with more than 200 horsepower
+powerful_cars <- car_performance %>%
+  filter(hp > 200)
+```
+
+\newpage
+
+#### **4. `group_by()` & `summarize()`: Get Group Summaries**
+
+`group_by()` specifies groups, and `summarize()` collapses each group into a single-row summary.
+
+***#Fill in the blank***
+
+```{r}
+# Find the average mpg for each cylinder count
+avg_by_cyl <- mtcars_df %>%
+  group_by(cyl) %>%
+  summarize(avg_mpg = mean(mpg))
+```
+
+\newpage
+
+#### **5. `arrange()`: Sort Rows**
+
+`arrange()` reorders the rows of a data frame based on column values. The default is ascending order; use `desc()` for descending.
+
+***#Fill in the blank***
+
+```{r}
+# Sort cars by miles-per-gallon, from highest to lowest
+sorted_by_mpg <- car_performance %>%
+  arrange(desc(mpg))
+```
+
+------------------------------------------------------------------------
+
+## \[END\] Video 2
+
+\newpage
+
+\newpage
+
+## **Video 3) `ggplot2` - 1: The Grammar of Graphics**
+
+#### **Video Notes - `+`**
+
+This section uses the `ggplot2` package to visualize the `mtcars` data. `ggplot2` builds plots in layers. We start with the data, then map variables to aesthetics, and finally add geometric layers to draw the plot. The **plus sign (`+`)** is crucial; it's used to add new layers to the plot.
+
+***#Fill in the blank***
+
+```{r}
+# Load the ggplot2 package
+library(ggplot2)
+```
+
+\newpage
+
+#### **Plot 1: Scatter Plot**
+
+Let's build a scatter plot showing the relationship between car weight and fuel efficiency. Used to view relationship between two quantitative variables.
+
+-   **Variables Used**: `wt` (Weight) on the x-axis, `mpg` (Miles Per Gallon) on the y-axis.
+
+**Step 1: Initialize the Plot** The `ggplot()` function creates the coordinate system. The `aes()` (aesthetic) function specifies how variables from our data are mapped to visual properties of the plot, like the x and y axes. This step doesn't draw anything yet.
+
+***#Fill in the blank***
+
+```{r}
+# Initialize plot and map weight to x-axis and mpg to y-axis
+p1 <- ggplot(data = mtcars, mapping = aes(x = wt, y = mpg))
+p1
+```
+
+**Step 2: Add a Geometric Layer** Now we add a layer with a `geom_` function to actually draw something. `geom_point()` creates a scatter plot.
+
+***#Fill in the blank***
+
+```{r}
+# Add the point layer to our initialized plot
+p1 + geom_point()
+```
+
+\newpage
+
+#### **Plot 2: Histogram**
+
+A histogram shows the distribution of a single quantitative variable by dividing it into bins and counting the number of observations in each bin.
+
+-   **Variable Used**: `mpg` (Miles Per Gallon) on the x-axis.
+
+The `geom_histogram()` function requires only an `x` aesthetic. The `binwidth` argument controls how wide each bar is.
+
+***#Fill in the blank***
+
+```{r}
+# Create a histogram of the mpg variable
+ggplot(data = mtcars, mapping = aes(x = mpg)) +
+  geom_histogram(binwidth = 2)
+```
+
+\newpage
+
+#### **Plot 3: Boxplot**
+
+A boxplot is excellent for comparing the distribution of a continuous variable across different groups of a categorical variable.
+
+-   **Variables Used**: `cyl` (Number of Cylinders) as a categorical variable on the x-axis, `mpg` (Miles Per Gallon) on the y-axis as quantitative.
+
+We use `factor(cyl)` to tell `ggplot` to treat the number of cylinders as distinct groups, not a continuous number. `geom_boxplot()` creates the boxes.
+
+***#Fill in the blank***
+
+```{r}
+# Create boxplots of mpg for each cylinder group
+ggplot(data = mtcars, mapping = aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot()
+```
+
+\newpage
+
+#### **Plot 4: Enhancing a Plot Layer by Layer**
+
+Let's take our original scatter plot and improve it.
+
+-   **Variables Used**: `wt` on the x-axis, `mpg` on the y-axis.
+
+**Step 1: Base Scatter Plot**
+
+***#Fill in the blank***
+
+```{r}
+# This is our base plot from before
+base_plot <- ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) +
+  geom_point()
+```
+
+**Step 2: Add Labels** The `labs()` function lets you change the title, subtitle, caption, and axis labels.
+
+***#Fill in the blank***
+
+```{r}
+labeled_plot <- base_plot +
+  labs(
+    title = "Fuel Efficiency vs. Car Weight",
+    x = "Weight (1000 lbs)",
+    y = "Miles Per Gallon (MPG)"
+  )
+labeled_plot
+```
+
+**Step 3: Add a Theme** `theme_` functions control the non-data elements of the plot, like the background color and grid lines.
+
+***#Fill in the blank***
+
+```{r}
+themed_plot <- labeled_plot +
+  theme_minimal()
+themed_plot
+```
+
+**Step 4: Add a Trendline** `geom_smooth()` can add a smoothed conditional mean. The argument `method = "lm"` specifies a linear model trendline.
+
+***#Fill in the blank***
+
+```{r}
+final_plot <- themed_plot +
+  geom_smooth(method = "lm", se = FALSE)
+final_plot
+```
+
+------------------------------------------------------------------------
+
+## \[END\] Video 3
+
+\newpage
+
+\newpage
+
+## **Video 4) `dplyr` - 2 & `tidyr`: Advanced Transformation**
+
+#### **Video Notes - Reshape Data**
+
+This section covers more advanced data wrangling. We'll combine data with `dplyr` joins and reshape it with `tidyr` pivots. These functions are the key to transforming messy data into the tidy format required for analysis.
+
+***#Fill in the blank***
+
+```{r}
+# Load dplyr and tidyr packages
+library(dplyr)
+library(tidyr)
+```
+
+\newpage
+
+#### **Binds: `bind_rows`**
+
+`bind_rows` stacks two or more data frames on top of each other. It's like adding more rows.
+
+## \[\[TODOs: Put GIF\]\]
+
+**Setup:** First, create two simple data frames.
+
+```{r}
+df1 <- tibble(x = 1:2, y = c("a", "b"))
+df2 <- tibble(x = 3:4, y = c("c", "d"))
+```
+
+***#Fill in the blank***
+
+```{r}
+# bind_rows() stacks them into one data frame
+combined_rows <- bind_rows(df1, df2)
+```
+
+\newpage
+
+#### **Binds: `bind_cols`**
+
+`bind_cols` combines two data frames side-by-side. It's like adding more columns. The data frames must have the same number of rows.
+
+## \[\[TODOs: Put GIF\]\]
+
+**Setup:** First, create two simple data frames.
+
+```{r}
+df_a <- tibble(x = 1:3, y = c("a", "b", "c"))
+df_b <- tibble(z = 4:6)
+```
+
+***#Fill in the blank***
+
+``` r
+# bind_cols() combines them side-by-side
+combined_cols <- bind_cols(df_a, df_b)
+```
+
+\newpage
+
+------------------------------------------------------------------------
+
+#### **Joins: Combining Data by a Key**
+
+Joins are used to combine variables from two tables based on a matching "key" column. We'll use the classic `band_members` and `band_instruments` datasets to learn this.
+
+![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/static/png/original-dfs.png)
+
+**Setup:** Create the two data frames we will use for all join examples.
+
+```{r}
+band_members <- tribble(
+  ~name,     ~band,
+  "Mick", "Stones",
+  "John", "Beatles",
+  "Paul", "Beatles"
+)
+
+band_instruments <- tribble(
+  ~name,   ~plays,
+  "John",   "guitar",
+  "Paul",   "bass",
+  "Keith",  "guitar"
+)
+```
+
+#### **`left_join`**
+
+A `left_join` keeps **all rows** from the first (left) data frame and adds matching data from the second.
+
+![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/left-join.gif)
+
+***#Fill in the blank***
+
+```{r}
+# This keeps all members from band_members and adds their instrument if available
+left_join(band_members, band_instruments, by = "name")
+```
+
+\newpage
+
+#### **`inner_join`**
+
+An `inner_join` only keeps rows where the key exists in **both** data frames.
+
+![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/inner-join.gif)
+
+***#Fill in the blank***
+
+```{r}
+# This only includes members who are in BOTH tables (John and Paul)
+inner_join(band_members, band_instruments, by = "name")
+```
+
+\newpage
+
+#### **`full_join`**
+
+A `full_join` keeps **all rows** from **both** data frames, filling in missing values with `NA`.
+
+![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/full-join.gif)
+
+***#Fill in the blank***
+
+```{r}
+# This keeps every person from both tables
+full_join(band_members, band_instruments, by = "name")
+```
+
+\newpage
+
+#### **`semi_join`**
+
+A `semi_join` is a **filtering join**. It keeps all rows from the left data frame that have a match in the right, but **does not add any columns**.
+
+![](https://github.com/gadenbuie/tidyexplain/raw/main/images/semi-join.gif)
+
+***#Fill in the blank***
+
+```{r}
+# This returns only the members from band_members who also have an instrument listed
+semi_join(band_members, band_instruments, by = "name")
+```
+
+\newpage
+
+------------------------------------------------------------------------
+
+#### **Pivots: Reshaping Data Layout**
+
+Pivoting changes the shape of your data between "wide" and "long" formats.
+
+![](https://github.com/gadenbuie/tidyexplain/raw/main/images/static/png/original-dfs-tidy.png)
+
+#### **`pivot_longer`**
+
+`pivot_longer` makes "wide" data longer. It's useful when column names are actually values of a variable.
+
+## \[\[TODOs: Put GIF\]\]
+
+**Setup:** We'll use `table4a`, where years are column names.
+
+```{r}
+table4a
+```
+
+***#Fill in the blank***
+
+```{r}
+# pivot_longer() makes the data "long" by gathering the year columns
+table4a %>%
+  pivot_longer(
+    cols = c(`1999`, `2000`),
+    names_to = "year",
+    values_to = "cases"
+  )
+```
+
+\newpage
+
+#### **`pivot_wider`**
+
+`pivot_wider` is the inverse of `pivot_longer`. It makes "long" data wider.
+
+![](https://github.com/gadenbuie/tidyexplain/raw/main/images/tidyr-pivoting.gif)
+
+**Setup:** We'll use `table2`, where observations are split across rows.
+
+```{r}
+table2
+```
+
+***#Fill in the blank***
+
+```{r}
+# pivot_wider() makes the data "wide"
+# It takes the names for the new columns from the 'type' column
+# and the values for those new columns from the 'count' column.
+table2 %>%
+  pivot_wider(
+    names_from = type,
+    values_from = count
+  )
+```
+
+\newpage
+
+#### **`separate()` & `unite()`**
+
+These functions handle cases where multiple values are stored in one column, or one value is split across multiple columns.
+
+#### **`separate()`**
+
+`separate()` splits one column into multiple columns.
+
+**Setup:** We'll use `table3`, where `rate` contains two values.
+
+```{r}
+table3
+```
+
+***#Fill in the blank***
+
+```{r}
+# Separate the 'rate' column into 'cases' and 'population'
+table3 %>%
+  separate(rate, into = c("cases", "population"), sep = "/")
+```
+
+\newpage
+
+#### **`unite()`**
+
+`unite()` combines multiple columns into a single column.
+
+**Setup:** We'll use `table5`, where the year is split into two columns.
+
+```{r}
+table5
+```
+
+***#Fill in the blank***
+
+```{r}
+# Unite the 'century' and 'year' columns into a new 'year' column
+table5 %>%
+  unite(new_year, century, year, sep = "")
+```
+
+## \[END\] Video 4
+
+\newpage
+
+\newpage

@@ -1,0 +1,160 @@
+---
+title: "widgets"
+format: docx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE,    # don't run code by default
+  echo = TRUE,     # still show code unless you hide with echo=FALSE
+  warning = FALSE, # suppress warnings
+  message = FALSE, # suppress messages
+  error = FALSE    # suppress errors
+)
+```
+
+# Mini-Lesson 2: Shiny Widgets
+
+## 0) what are widgets? (30s)
+
+> “In Shiny, **widgets** are the controls your user interacts with: sliders, dropdowns, text boxes, checkboxes, file uploads, date pickers, etc. Every widget has two parts:
+>
+> 1.  A **UI function** like `sliderInput()` that goes in the UI.
+> 2.  A **value** you can use in the server via `input$…`.”
+
+------------------------------------------------------------------------
+
+
+\newpage
+
+## 1) simple demo app (90s)
+
+Create `widgets_app.R`:
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Widget Sampler"),
+
+  # Sidebar for inputs
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("num", "Number of points", 10, 500, 100),
+      selectInput("dist", "Distribution",
+                  choices = c("Normal" = "norm", "Uniform" = "unif",
+                              "Exponential" = "exp")),
+      checkboxInput("show_summary", "Show summary", TRUE),
+      textInput("title", "Plot title", "My Plot"),
+      dateInput("date", "Pick a date:", value = Sys.Date())
+    ),
+
+    # Main panel for outputs
+    mainPanel(
+      h4("Output"),
+      plotOutput("hist"),
+      verbatimTextOutput("summary"),
+      textOutput("date_chosen")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  data <- reactive({
+    switch(input$dist,
+           norm = rnorm(input$num),
+           unif = runif(input$num),
+           exp  = rexp(input$num))
+  })
+
+
+  
+  output$hist <- renderPlot({
+  ggplot(data.frame(x = data()), aes(x = x)) +
+    geom_histogram(bins = input$bins, fill = "skyblue", color = "white") +
+    labs(
+      title = input$title,
+      x = "Value",
+      y = "Count"
+    ) +
+    theme_minimal(base_size = 14)
+})
+
+  output$summary <- renderPrint({
+    req(input$show_summary)   # only show if box is checked
+    summary(data())
+  })
+
+  output$date_chosen <- renderText({
+    paste("You picked:", as.character(input$date))
+  })
+}
+
+shinyApp(ui, server)
+```
+
+Run it:
+
+```{r}
+shiny::runApp("widgets_app.R")
+```
+
+------------------------------------------------------------------------
+\newpage
+## 2) widget categories (60s)
+
+> “Shiny’s widgets fall into families:”
+
+-   **Numeric**: `sliderInput`, `numericInput`.
+-   **Text**: `textInput`, `passwordInput`, `textAreaInput`.
+-   **Logical**: `checkboxInput`, `checkboxGroupInput`, `radioButtons`.
+-   **Lists**: `selectInput`, `selectizeInput`.
+-   **Dates**: `dateInput`, `dateRangeInput`.
+-   **File / action**: `fileInput`, `actionButton`.
+-   **Others**: `colourInput` (from `shinyWidgets` package), `downloadButton`, etc.
+
+------------------------------------------------------------------------
+\newpage
+## 3) teaching tip (60s)
+
+> “Every widget sets a value in the `input` list. For example:
+
+-   `input$num` is the slider number,
+-   `input$dist` is the dropdown choice,
+-   `input$title` is whatever you typed in the text box.”
+
+You can show students the full input object with:
+
+```{r}
+output$debug <- renderPrint(str(reactiveValuesToList(input)))
+```
+
+------------------------------------------------------------------------
+\newpage
+## 4) extension (60s)
+
+> “Shiny has many extra widget libraries:”
+
+-   **`shinyWidgets`**: pretty sliders, toggle switches, multi-select pickers.
+-   **`bslib`**: bootstrap-themed inputs with modern styles.
+-   **`shiny.semantic`**: widgets styled with Semantic UI.
+
+Example (requires `shinyWidgets`):
+
+```{r}
+library(shinyWidgets)
+pickerInput("var", "Choose variables", choices = names(mtcars),
+            multiple = TRUE, selected = "mpg")
+```
+
+------------------------------------------------------------------------
+
+\newpage
+
+## 5) summary (30s)
+
+> “Widgets are the *verbs* of your app—they let users tell your server what to do. Learn the common ones, know they map to `input$values`, and remember you can always add libraries to get more polished controls.”
+
+------------------------------------------------------------------------
+
+want me to design the **next lesson** as a “widget playground” (one app showing *all common widgets* side-by-side), so you or your students can interactively test each one?

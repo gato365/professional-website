@@ -1,0 +1,98 @@
+---
+title: "video_10"
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+## **Video** 10) Control Structures: Conditional Logic
+
+Control structures allow you to execute different blocks of code based on specified conditions.
+
+### **`if`, `else if`, `else`**:
+
+Executes code based on a series of logical checks.
+
+```{r}
+# Check the fuel efficiency of the 'Mazda RX4'
+mpg <- mtcars["Mazda RX4", "mpg"]
+
+if (mpg > 25) {
+print("High fuel efficiency")
+} else if (mpg >= 18) {
+print("Average fuel efficiency")
+} else {
+print("Low fuel efficiency")
+}
+```
+
+#### Question 1
+
+Write a script that first creates a variable named `score` and assigns it the value `85`. Then, using an `if`, `else if`, and `else` structure, print the corresponding letter grade: "Grade: A" for scores 90 and above, "Grade: B" for scores 80 and above, and "Grade: C or below" for all other scores.
+
+```{r}
+##----------
+## EMPTY
+##----------
+# Create a variable for a student's score
+score <- ____
+
+if (____ >= ____) {
+print("Grade: A")
+} else if (____ >= ____) {
+print("Grade: B")
+} else {
+print("Grade: C or below")
+}
+
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+### **`switch()`**:
+
+Selects a block of code to execute based on an exact match of a value. It's a cleaner alternative to a long `if/else if` chain.
+
+```{r}
+# Describe a car based on its number of cylinders
+cylinders <- mtcars["Valiant", "cyl"]
+
+switch(as.character(cylinders),
+"4" = "A small, efficient engine.",
+"6" = "A balanced, mid-size engine.",
+"8" = "A large, powerful engine.",
+"Unknown engine size."
+)
+```
+
+#### Question 2
+
+Write a script that first creates a variable named `day` and assigns it the value "Wednesday". Then, use the `switch()` function to print a specific message if the day is "Monday" or "Friday", and a default message for any other day of the week.
+
+```{r}
+##----------
+## EMPTY
+##----------
+# Create a variable for a day of the week
+day <- ____
+
+switch(____,
+"Monday" = ____,
+"Friday" = ____,
+____ # Default case
+)
+
+```
+
+## \[END\] Video 10
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+::: {style="height: 300px; background-color: white;"}
+:::
+

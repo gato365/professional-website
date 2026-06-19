@@ -1,0 +1,138 @@
+---
+title: "video_3"
+format: html
+---
+
+## **Video 3) `ggplot2` - 1: The Grammar of Graphics**
+
+#### **Video Notes - `+`**
+
+This section uses the `ggplot2` package to visualize the `mtcars` data. `ggplot2` builds plots in layers. We start with the data, then map variables to aesthetics, and finally add geometric layers to draw the plot. The **plus sign (`+`)** is crucial; it's used to add new layers to the plot.
+
+***#Fill in the blank***
+
+```{r}
+# # Load the ggplot2 package
+# library(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **Plot 1: Scatter Plot**
+
+Let's build a scatter plot showing the relationship between car weight and fuel efficiency. Used to view relationship between two quantitative variables.
+
+-   **Variables Used**: `wt` (Weight) on the x-axis, `mpg` (Miles Per Gallon) on the y-axis.
+
+**Step 1: Initialize the Plot** The `ggplot()` function creates the coordinate system. The `aes()` (aesthetic) function specifies how variables from our data are mapped to visual properties of the plot, like the x and y axes. This step doesn't draw anything yet.
+
+***#Fill in the blank***
+
+```{r}
+# # Initialize plot and map weight to x-axis and mpg to y-axis
+# p1 <- ggplot(data = ____, mapping = aes(x = ____, y = ____))
+# p1
+```
+
+**Step 2: Add a Geometric Layer** Now we add a layer with a `geom_` function to actually draw something. `geom_point()` creates a scatter plot.
+
+***#Fill in the blank***
+
+```{r}
+# # Add the point layer to our initialized plot
+# p1 + geom_point()
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **Plot 2: Histogram**
+
+A histogram shows the distribution of a single quantitative variable by dividing it into bins and counting the number of observations in each bin.
+
+-   **Variable Used**: `mpg` (Miles Per Gallon) on the x-axis.
+
+The `geom_histogram()` function requires only an `x` aesthetic. The `binwidth` argument controls how wide each bar is.
+
+***#Fill in the blank***
+
+```{r}
+# # Create a histogram of the mpg variable
+# ggplot(data = ____, mapping = aes(x = ____)) +
+#   geom_histogram(binwidth = ____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **Plot 3: Boxplot**
+
+A boxplot is excellent for comparing the distribution of a continuous variable across different groups of a categorical variable.
+
+-   **Variables Used**: `cyl` (Number of Cylinders) as a categorical variable on the x-axis, `mpg` (Miles Per Gallon) on the y-axis as quantitative.
+
+We use `factor(cyl)` to tell `ggplot` to treat the number of cylinders as distinct groups, not a continuous number. `geom_boxplot()` creates the boxes.
+
+***#Fill in the blank***
+
+```{r}
+# # Create boxplots of mpg for each cylinder group
+# ggplot(data = ____, mapping = aes(x = factor(____), y = ____)) +
+#   geom_boxplot()
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **Plot 4: Enhancing a Plot Layer by Layer**
+
+Let's take our original scatter plot and improve it.
+
+-   **Variables Used**: `wt` on the x-axis, `mpg` on the y-axis.
+
+**Step 1: Base Scatter Plot**
+
+***#Fill in the blank***
+
+```{r}
+# # This is our base plot from before
+# base_plot <- ggplot(data = ____, mapping = aes(x = ____, y = ____)) +
+#   geom_point()
+```
+
+**Step 2: Add Labels** The `labs()` function lets you change the title, subtitle, caption, and axis labels.
+
+***#Fill in the blank***
+
+```{r}
+# labeled_plot <- base_plot +
+#   labs(
+#     title = ____,
+#     x = ____,
+#     y = ____
+#   )
+# labeled_plot
+```
+
+**Step 3: Add a Theme** `theme_` functions control the non-data elements of the plot, like the background color and grid lines.
+
+***#Fill in the blank***
+
+```{r}
+# themed_plot <- labeled_plot +
+#   theme_minimal()
+# themed_plot
+```
+
+**Step 4: Add a Trendline** `geom_smooth()` can add a smoothed conditional mean. The argument `method = "lm"` specifies a linear model trendline.
+
+***#Fill in the blank***
+
+```{r}
+# final_plot <- themed_plot +
+#   geom_smooth(method = ____, se = ____)
+# final_plot
+```
+
+------------------------------------------------------------------------

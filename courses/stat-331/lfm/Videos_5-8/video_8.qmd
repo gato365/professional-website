@@ -1,0 +1,128 @@
+---
+title: "Video 8"
+format: html
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+### **Video 8) `lubridate`: Working with Dates and Times**
+
+#### **Video Notes**
+
+Working with dates and times can be tricky. The `lubridate` package makes it much simpler by providing functions to parse, manipulate, and extract information from date-time objects. We will create a sample data frame to demonstrate its most useful functions.
+
+***#Fill in the blank***
+
+```{r}
+## Load the lubridate package
+# library(____)
+# library(dplyr)
+# 
+## Create a data frame with dates and times stored as character strings
+# event_log <- data.frame(
+#   event_name = c("Project Start", "Midterm Review", "Final Deadline"),
+#   start_date = c("2025-01-20", "2025-03-10", "2025-05-02"),
+#   start_time = c("01/20/2025 09:00:00", "03/10/2025 14:30:00", "05/02/2025 17:00:00")
+# )
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **1. `ymd()`: Parsing Dates**
+
+Lubridate's parsing functions like `ymd()`, `mdy()`, `dmy()`, etc., automatically figure out and convert character strings into proper date objects. The function name corresponds to the order of the year, month, and day in your string.
+
+***#Fill in the blank***
+
+```{r}
+## Parse the 'start_date' column, which is in Year-Month-Day format
+# event_log %>%
+#   mutate(date_parsed = ymd(____))
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **2. `mdy_hms()`: Parsing Datetimes**
+
+Similarly, functions like `mdy_hms()` parse strings that contain both date and time components.
+
+***#Fill in the blank***
+
+```{r}
+## Parse the 'start_time' column, which is in Month-Day-Year Hour:Minute:Second format
+# event_log %>%
+#   mutate(datetime_parsed = mdy_hms(____))
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **3 & 4. `wday()` & `month()`: Extracting Components**
+
+Once you have a date-time object, you can easily pull out individual components like the day of the week, month, year, or hour.
+
+***#Fill in the blank***
+
+```{r}
+## Create a parsed date column first
+# parsed_log <- event_log %>% mutate(date_parsed = ymd(start_date))
+# 
+## Extract the day of the week and the month
+# parsed_log %>%
+#   mutate(
+#     day_of_week = wday(____, label = TRUE),
+#     event_month = month(____, label = TRUE)
+#   )
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **5. `duration()`: Measuring Time Spans**
+
+Duration objects represent an exact number of seconds. You can create them with functions like `ddays()`, `dweeks()`, or by subtracting two date-time objects.
+
+***#Fill in the blank***
+
+```{r}
+## Create two date objects
+# date1 <- ymd("2025-07-10")
+# date2 <- ymd("2025-08-25")
+# 
+## Find the duration between the two dates
+# time_span <- duration(____ - ____)
+# 
+## Create a duration of 3 days
+# three_days <- ddays(____)
+```
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+#### **6. `now()`: Getting the Current Time**
+
+The `now()` function returns the current system date and time.
+
+***#Fill in the blank***
+
+```{r}
+## Get the current date and time
+# current_moment <- now()
+# print(current_moment)
+```
+
+------------------------------------------------------------------------
+
+## \[END\] Video 8
+
+::: {style="height: 300px; background-color: white;"}
+:::
+
+::: {style="height: 300px; background-color: white;"}
+:::

@@ -1,0 +1,535 @@
+---
+title: "Videos 9 - 12 (EMPTY)"
+format: docx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+## **Video** 9) Iterations – 1: Looping Structures
+
+Looping structures are used to repeat a block of code multiple times.
+
+### **`for` loop**:
+
+Repeats code for each item in a sequence. This is useful when you have a known number of iterations.
+
+```{r}
+# Get the mean of a few columns in mtcars
+cols_to_summarize <- c("mpg", "hp", "wt")
+
+for (col in cols_to_summarize) {
+  # Calculate the mean of the current column
+  current_mean <- mean(mtcars[[col]])
+  # Print the result
+  print(paste("Mean of", col, ":", round(current_mean, 2)))
+}
+```
+
+#### Question 1
+
+Write a `for` loop that iterates through the sequence of numbers from 1 to 5, printing a descriptive message for each iteration.
+
+```{r}
+##----------
+## FILLED
+##----------
+# This loop will run for each number in the sequence from 1 to 5
+for (i in 1:5) {
+  # The 'i' variable will hold the current number in the sequence (1, then 2, etc.)
+  print(paste("This is iteration number:", i))
+}
+```
+
+\newpage
+
+
+### **`while` loop**:
+
+Repeats code as long as a specified condition is **TRUE**. This is useful when the number of iterations is not known beforehand.
+
+```{r}
+# Print car names until horsepower (hp) exceeds 120
+i <- 1
+# The loop continues as long as the hp of the car at row 'i' is less than 120
+while (mtcars$hp[i] < 120) {
+  print(rownames(mtcars)[i])
+  i <- i + 1
+}
+```
+
+#### Question 2
+
+Using a `while` loop, write a script that counts from 1 to 5, printing a message like 'The current count is: \[number\]' at each step.
+
+```{r}
+##----------
+## FILLED
+##----------
+# 1. Initialize a counter variable before the loop starts
+counter <- 1
+
+# 2. Set the condition. The loop will run as long as 'counter' is less than or equal to 5.
+while (counter <= 5) {
+  
+  # 3. This is the code that gets executed in each iteration
+  print(paste("The current count is:", counter))
+  
+  # 4. IMPORTANT: Increment the counter. Without this, the loop would run forever.
+  counter <- counter + 1
+}
+```
+
+\newpage
+
+
+### **`repeat` loop**:
+
+Repeats code indefinitely until a `break` statement is executed.
+
+```{r}
+# Find the first car with 8 cylinders
+i <- 1
+repeat {
+  # Check if the current car has 8 cylinders
+  if (mtcars$cyl[i] == 8) {
+    print(paste("First 8-cylinder car found:", rownames(mtcars)[i]))
+    break # Exit the loop
+  }
+  i <- i + 1
+}
+```
+
+#### Question 3
+
+Write a `repeat` loop that iterates through the `mtcars` data frame row by row to find the first car with exactly 8 cylinders (`cyl`). When it finds the car, it should print a message like "The first 8-cylinder car is: \[Car Name\]" and then stop immediately.
+
+```{r}
+##----------
+## FILLED
+##----------
+# 1. Initialize a counter to start at the first row
+i <- 1
+
+# 2. Start the repeat loop, which will run indefinitely without a 'break'
+repeat {
+  
+  # 3. Check if the condition is met for the current row
+  if (mtcars$cyl[i] == 8) {
+    
+    # 4. If the condition is TRUE, print the message
+    print(paste("The first 8-cylinder car is:", rownames(mtcars)[i]))
+    
+    # 5. IMPORTANT: Use 'break' to exit the loop immediately
+    break
+  }
+  
+  # 6. If the condition is FALSE, increment the counter to check the next row
+  i <- i + 1
+}
+```
+
+## \[END\] Video 9
+
+\newpage
+
+
+\newpage
+
+
+## **Video** 10) Control Structures: Conditional Logic
+
+Control structures allow you to execute different blocks of code based on specified conditions.
+
+### **`if`, `else if`, `else`**:
+
+Executes code based on a series of logical checks.
+
+```{r}
+# Check the fuel efficiency of the 'Mazda RX4'
+mpg <- mtcars["Mazda RX4", "mpg"]
+
+if (mpg > 25) {
+  print("High fuel efficiency")
+} else if (mpg >= 18) {
+  print("Average fuel efficiency")
+} else {
+  print("Low fuel efficiency")
+}
+```
+
+#### Question 1
+
+Write a script that first creates a variable named `score` and assigns it the value `85`. Then, using an `if`, `else if`, and `else` structure, print the corresponding letter grade: "Grade: A" for scores 90 and above, "Grade: B" for scores 80 and above, and "Grade: C or below" for all other scores.
+
+```{r}
+##----------
+## FILLED
+##----------
+# Create a variable for a student's score
+score <- 85
+
+if (score >= 90) {
+  print("Grade: A")
+} else if (score >= 80) {
+  print("Grade: B")
+} else {
+  print("Grade: C or below")
+}
+
+```
+
+\newpage
+
+
+### **`switch()`**:
+
+Selects a block of code to execute based on an exact match of a value. It's a cleaner alternative to a long `if/else if` chain.
+
+```{r}
+# Describe a car based on its number of cylinders
+cylinders <- mtcars["Valiant", "cyl"]
+
+switch(as.character(cylinders),
+       "4" = "A small, efficient engine.",
+       "6" = "A balanced, mid-size engine.",
+       "8" = "A large, powerful engine.",
+       "Unknown engine size."
+)
+```
+
+#### Question 2
+
+Write a script that first creates a variable named `day` and assigns it the value "Wednesday". Then, use the `switch()` function to print a specific message if the day is "Monday" or "Friday", and a default message for any other day of the week.
+
+```{r}
+##----------
+## FILLED
+##----------
+# Create a variable for a day of the week
+day <- "Wednesday"
+
+switch(day,
+       "Monday" = "It's the start of the week.",
+       "Friday" = "It's the end of the week!",
+       "It's a day in the middle of the week." # Default case
+)
+
+```
+
+## \[END\] Video 10
+
+\newpage
+
+
+\newpage
+
+
+## **Video** 11) Functions: Defining and Using
+
+Functions are reusable blocks of code that perform a specific task.
+
+### **Basic function structure**:
+
+Defines a simple function that takes inputs (arguments) and provides an output (`return` value).
+
+```{r}
+# Create a function to convert weight from (lbs/1000) to kilograms
+convert_wt_to_kg <- function(weight_in_tons) {
+  kg <- weight_in_tons * 1000 * 0.453592
+  return(kg)
+}
+
+# Use the function on the 'Datsun 710'
+datsun_kg <- convert_wt_to_kg(mtcars["Datsun 710", "wt"])
+print(datsun_kg)
+```
+
+#### Question 1
+
+Write a custom R function named `add_numbers` that accepts two arguments, `x` and `y`. Inside the function, calculate their sum and use the `return()` statement to output the result. After defining the function, test it by calling it with the numbers `5` and `10`, and then print the final result to the console.
+
+```{r}
+##----------
+## FILLED
+##----------
+# Create a function that adds two numbers
+add_numbers <- function(x, y) {
+  result <- x + y
+  return(result)
+}
+
+# Use the function
+sum_result <- add_numbers(5, 10)
+print(sum_result)
+
+```
+
+\newpage
+
+
+### **Function with default arguments**:
+
+Assigns a default value to an argument, which is used if no value is provided by the user.
+
+```{r}
+# Function to get the top 'n' cars based on a column
+get_top_cars <- function(n = 3, column = "hp") {
+  # Order the data frame by the specified column in descending order
+  sorted_cars <- mtcars[order(mtcars[[column]], decreasing = TRUE), ]
+  # Return the top 'n' rows
+  return(head(sorted_cars, n))
+}
+
+# Call with default arguments (top 3 by horsepower)
+get_top_cars()
+```
+
+#### Question 2
+
+Write a custom R function named `greet` that takes a single argument, `name`. Set a default value for `name` to be "Guest". The function should combine the string "Hello, " with the provided name and an exclamation mark. After defining the function, test it twice: first by calling it with no arguments to see the default behavior, and a second time by providing the name "Ana".
+
+```{r}
+##----------
+## FILLED
+##----------
+
+# A function to create a greeting message
+greet <- function(name = "Guest") {
+  paste("Hello,", name, "!")
+}
+
+# Call with the default argument
+greet()
+# Call with a provided argument
+greet("Ana")
+
+```
+
+\newpage
+
+
+### **Multiple outputs (as a list)**:
+
+A function can return multiple values by packaging them into a list.
+
+```{r}
+# Function to get key stats for a column
+get_stats <- function(column_vector) {
+  list(
+    average = mean(column_vector),
+    median_val = median(column_vector),
+    std_dev = sd(column_vector)
+  )
+}
+
+# Get stats for the mpg column
+mpg_stats <- get_stats(mtcars$mpg)
+print(mpg_stats$average)
+```
+
+#### Question 3
+
+Write a custom R function named `get_vector_stats` that accepts a single argument, a numeric vector. Inside the function, calculate both the `mean` and the `sum` of the vector and store them as a named `list`. The function should then `return` this list. After defining the function, test it by calling it with the vector `c(10, 20, 30)` and printing only the `average` from the resulting list.
+
+```{r}
+##----------
+## FILLED
+##----------
+
+# Function to get key stats for a numeric vector
+get_vector_stats <- function(num_vector) {
+  stat_list <- list(
+    average = mean(num_vector),
+    total_sum = sum(num_vector)
+  )
+  return(stat_list)
+}
+
+# Get stats for a simple vector
+stats <- get_vector_stats(c(10, 20, 30))
+print(stats$average)
+
+```
+
+## \[END\] Video 11
+
+\newpage
+
+
+\newpage
+
+
+## **Video** 12) Iterations – 2: Functional Programming with `{purrr}`
+
+In this video, we'll focus on functional programming, a powerful alternative to writing loops. We will use the **`{purrr}`** package, which provides a consistent set of tools for iterating over lists and vectors. The main idea is to apply a function to each element of an object. This often results in code that is more concise and easier to read than a `for` loop.
+
+***#Fill in the blank***
+
+```{r}
+##----------
+## FILLED
+##----------
+# Load the purrr package
+library(purrr)
+```
+
+\newpage
+
+
+### **`map()`: Apply a function to each element**
+
+The `map()` function is the foundation of `{purrr}`. It takes a vector or list as input, applies a function to each of its elements, and **always returns a list**.
+
+***#Fill in the blank***
+
+```{r}
+##----------
+## FILLED
+##----------
+# Let's create a simple function to square a number
+square_a_number <- function(x) {
+  return(x^2)
+}
+
+# Now, use map() to apply this function to each number in our vector
+numbers_to_square <- c(1, 2, 3, 4)
+
+# map() will return a list of the results
+squared_list <- map(numbers_to_square, square_a_number)
+
+print(squared_list)
+```
+
+### **Type-Specific Maps: `map_dbl()` and `map_chr()`**
+
+Often, you don't want a list back; you want a simple vector. `purrr` provides variants like `map_dbl()` (returns a numeric/double vector) and `map_chr()` (returns a character vector) for this purpose.
+
+***#Fill in the blank***
+
+```{r}
+##----------
+## FILLED
+##----------
+
+# Using map_dbl() returns a clean numeric vector instead of a list
+squared_vector <- map_dbl(numbers_to_square, square_a_number)
+
+print(squared_vector)
+```
+
+\newpage
+
+
+```{r}
+##----------
+## FILLED
+##----------
+# Let's create a function that returns text
+create_greeting <- function(name) {
+  paste("Hello,", name)
+}
+
+student_names <- c("Ana", "Ben", "Charlie")
+
+# Use map_chr() to get a character vector of greetings
+greetings <- map_chr(student_names, create_greeting)
+
+print(greetings)
+```
+
+\newpage
+
+
+### **`map2()`: Iterate over two vectors at once**
+
+The `map2()` function lets you iterate over two vectors in parallel. The function you provide must accept two arguments.
+
+***#Fill in the new blank***
+
+```{r}
+##----------
+## FILLED
+##----------
+
+
+# Let's create a simple function to add two numbers
+add_two_numbers <- function(x, y) {
+  return(x + y)
+}
+
+# Create two vectors of the same length
+first_numbers <- c(10, 20, 30)
+second_numbers <- c(1, 2, 3)
+
+# Use map2_dbl() to apply the function to corresponding elements
+# The first element of 'first_numbers' is added to the first of 'second_numbers', and so on.
+sums <- map2_dbl(first_numbers, second_numbers, add_two_numbers)
+
+print(sums)
+```
+
+\newpage
+
+
+### **`walk()`: For functions with side effects**
+
+Sometimes you want to call a function not for what it *returns*, but for what it *does*—like printing a message or saving a file. This is called a "side effect." `walk()` works just like `map()`, but it doesn't return anything. It's used exclusively for triggering side effects.
+
+***#Fill in the blank***
+
+#### Method 1
+
+```{r}
+##----------
+## FILLED
+##----------
+
+
+# Let's create a function that just prints a message
+print_a_summary <- function(student, grade) {
+  print(paste(student, "received a grade of", grade))
+}
+
+# Create our data
+student_data <- data.frame(
+  name = c("Ana", "Ben", "Charlie"),
+  final_grade = c(92, 85, 88)
+)
+
+# Use walk2() to iterate over two columns and print a summary for each student
+# Note that nothing is saved to an object. The output is printed directly to the console.
+walk2(student_data$name, student_data$final_grade, print_a_summary)
+```
+
+#### Method 2
+
+```{r}
+##----------
+## FILLED
+##----------
+
+
+# Function and data from before
+print_a_summary <- function(student, grade) {
+  print(paste(student, "received a grade of", grade))
+}
+
+student_data <- data.frame(
+  name = c("Ana", "Ben", "Charlie"),
+  final_grade = c(92, 85, 88)
+)
+
+# Pipe the data frame into pwalk()
+student_data %>%
+  pwalk(~print_a_summary(student = .x, grade = .y))
+```
+
+## \[END\] Video 12
+
+\newpage
+
+
+\newpage
+
