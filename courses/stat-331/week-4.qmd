@@ -1,0 +1,129 @@
+---
+title: ""
+pagetitle: "Week 4 — STAT 331"
+toc: false
+---
+
+::: {.week-hero}
+::: {.week-eyebrow}
+STAT 331 · Week 4
+:::
+# APIs & Live Data
+
+::: {.week-desc}
+Connect to a live REST API, parse JSON responses, and visualize real-time weather data. Learn how authentication, endpoints, and rate limits work in practice.
+:::
+:::
+
+::: {.week-columns}
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+LFM
+:::
+## Videos 13–16
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge}
+  13–16
+  :::
+  ::: {}
+  [**Videos 13–16** — APIs: Request → JSON → Data Frame](lfm/Videos_13-16/Videos_13-16.qmd){.act-label}
+  [HTTP requests, `httr2`, `jsonlite`, and parsing nested JSON into tidy data.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  ETV
+  :::
+  ::: {}
+  [**Statistical Analysis of API Data** — Guided notes](lfm/Videos_13-16/ETV - Statistical Analysis - Empty.qmd){.act-label}
+  [Summarizing and modeling data pulled from a live API endpoint.]{.act-desc}
+  :::
+:::
+
+:::
+:::
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+ETV Cycle 4
+:::
+## Weather API
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge .etv-e}
+  E₄
+  :::
+  ::: {}
+  **Extract** — Query the weather API{.act-label}
+  [Build an API URL, send a GET request, and parse the JSON response into a data frame.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-t}
+  T₄
+  :::
+  ::: {}
+  **Transform** — Reshape weather records{.act-label}
+  [Unnest JSON columns, convert timestamps, and compute daily min/max temperatures.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-v}
+  V₄
+  :::
+  ::: {}
+  **Visualize** — Temperature time series{.act-label}
+  [Line chart of temperature over time with a smoothed trend overlay.]{.act-desc}
+  :::
+:::
+
+[API workflow diagram →](etv/ETV-Cycle-4/api-json-workflow.svg)
+
+[Student worksheet →](etv/ETV-Cycle-4/ETV-Cycle-4-Weather-EMPTY.qmd)
+
+[Solutions →](etv/ETV-Cycle-4/ETV-Cycle-4-Weather-SOLUTIONS.qmd)
+
+:::
+:::
+
+:::
+
+::: {.section-head}
+::: {.section-num}
+THIS WEEK
+:::
+## What to expect
+::: {.rule}
+:::
+:::
+
+::: {.week-callouts}
+
+::: {.callout-box .callout-expected}
+::: {.cb-label}
+What's expected
+:::
+- Watch Videos 13–16 before lab
+- Complete the Weather API ETV worksheet
+- Submit your `.qmd` to Canvas
+:::
+
+::: {.callout-box .callout-important}
+::: {.cb-label}
+Important
+:::
+- Install `httr2` and `jsonlite` packages before Video 14
+- Store your API key in `.Renviron`, never hardcode it in your `.qmd`
+- Free API tier has rate limits — run extractions once, then save the result
+:::
+
+:::
+
+---
+
+[← Back to STAT 331](index.qmd)

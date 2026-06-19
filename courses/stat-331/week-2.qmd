@@ -1,0 +1,145 @@
+---
+title: ""
+pagetitle: "Week 2 — STAT 331"
+toc: false
+---
+
+::: {.week-hero}
+::: {.week-eyebrow}
+STAT 331 · Week 2
+:::
+# Excel & Sports Data
+
+::: {.week-desc}
+Move beyond CSVs into Excel files and multi-sheet workbooks. Apply the full ETV cycle to NBA statistics using `readxl` and `ggplot2`.
+:::
+:::
+
+::: {.week-columns}
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+LFM
+:::
+## Videos 5–8
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge}
+  V5
+  :::
+  ::: {}
+  [**Video 5** — Reading Excel Files](lfm/Videos_5-8/video_5.qmd){.act-label}
+  [`readxl::read_excel()` and sheet selection.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V6
+  :::
+  ::: {}
+  [**Video 6** — Reshaping Data](lfm/Videos_5-8/video_6.qmd){.act-label}
+  [`pivot_longer()` and `pivot_wider()` for tidy data.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V7
+  :::
+  ::: {}
+  [**Video 7** — Joining Tables](lfm/Videos_5-8/video_7.qmd){.act-label}
+  [`left_join()` and `inner_join()` to combine datasets.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V8
+  :::
+  ::: {}
+  [**Video 8** — Customizing ggplot2](lfm/Videos_5-8/video_8.qmd){.act-label}
+  [Themes, labels, and color scales.]{.act-desc}
+  :::
+:::
+
+[Full module notes →](lfm/Videos_5-8/Videos_5-8_filled.qmd)
+
+:::
+:::
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+ETV Cycle 2
+:::
+## NBA Excel Data
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge .etv-e}
+  E₂
+  :::
+  ::: {}
+  **Extract** — Read the workbook{.act-label}
+  [Load `nba_goats.xlsx` with `readxl`, inspect sheets and column types.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-t}
+  T₂
+  :::
+  ::: {}
+  **Transform** — Compute career stats{.act-label}
+  [Aggregate points, assists, and rebounds per player using `group_by()` + `summarise()`.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-v}
+  V₂
+  :::
+  ::: {}
+  **Visualize** — Compare GOATs{.act-label}
+  [Side-by-side bar chart comparing Jordan, Kobe, and LeBron.]{.act-desc}
+  :::
+:::
+
+[Student worksheet →](etv/ETV-Cycle-2/ETV-Cycle-2-Excel-NBA-EMPTY.qmd)
+
+[Solutions →](etv/ETV-Cycle-2/ETV-Cycle-2-Excel-NBA-SOLUTIONS.qmd)
+
+:::
+:::
+
+:::
+
+::: {.section-head}
+::: {.section-num}
+THIS WEEK
+:::
+## What to expect
+::: {.rule}
+:::
+:::
+
+::: {.week-callouts}
+
+::: {.callout-box .callout-expected}
+::: {.cb-label}
+What's expected
+:::
+- Watch Videos 5–8 before lab
+- Complete the NBA ETV worksheet
+- Submit your `.qmd` to Canvas
+:::
+
+::: {.callout-box .callout-important}
+::: {.cb-label}
+Important
+:::
+- Install the `readxl` package before Video 5
+- The `nba_goats.xlsx` file is in the `Data/` folder
+- Pay attention to how `pivot_longer()` reshapes the stats table
+:::
+
+:::
+
+---
+
+[← Back to STAT 331](index.qmd)

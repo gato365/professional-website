@@ -1,0 +1,147 @@
+---
+title: ""
+pagetitle: "Week 5 — STAT 331"
+toc: false
+---
+
+::: {.week-hero}
+::: {.week-eyebrow}
+STAT 331 · Week 5
+:::
+# Interactive Apps
+
+::: {.week-desc}
+Build your first Shiny application. Combine the ETV pipeline with reactive inputs and outputs to let users explore NBA GOAT data interactively — no page reload required.
+:::
+:::
+
+::: {.week-columns}
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+LFM
+:::
+## Videos 17–19
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge}
+  V17
+  :::
+  ::: {}
+  [**Video 17** — What is Shiny?](lfm/videos_17-19/video_17_what_is_shiny.qmd){.act-label}
+  [Reactive programming model: UI, server, and the session lifecycle.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V18
+  :::
+  ::: {}
+  [**Video 18** — Widgets & Inputs](lfm/videos_17-19/video_18_widgets.qmd){.act-label}
+  [`selectInput()`, `sliderInput()`, `checkboxInput()` and how they feed `input$`.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V19
+  :::
+  ::: {}
+  [**Video 19** — Outputs & Rendering](lfm/videos_17-19/video_19_outputs.qmd){.act-label}
+  [`renderPlot()`, `renderTable()`, and wiring `output$` to the UI.]{.act-desc}
+  :::
+:::
+
+:::
+:::
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+ETV Cycle 5
+:::
+## NBA GOATs + Shiny
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge .etv-e}
+  E₅
+  :::
+  ::: {}
+  **Extract** — Load NBA GOAT data{.act-label}
+  [Re-use the `nba_goats.xlsx` file from Week 2 and load it inside a Shiny app.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-t}
+  T₅
+  :::
+  ::: {}
+  **Transform** — Reactive filtering{.act-label}
+  [Use `reactive()` to filter by player and stat category based on user input.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-v}
+  V₅a
+  :::
+  ::: {}
+  **Visualize A** — NBA GOATs Shiny app{.act-label}
+  [Interactive bar chart: select a player and a stat, see the chart update instantly.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-v}
+  V₅b
+  :::
+  ::: {}
+  **Visualize B** — Wikipedia Automation{.act-label}
+  [Alternate activity: automate scraping multiple Wikipedia pages and display results reactively.]{.act-desc}
+  :::
+:::
+
+[ETV Cycle 5 worksheet →](etv/ETV-Cycle-5/ETV-Cycle-5-NBA-GOATs-ETV-EMPTY.qmd)
+
+[Solutions →](etv/ETV-Cycle-5/ETV-Cycle-5-NBA-GOATs-ETV-SOLUTIONS.qmd)
+
+[Shiny version →](etv/ETV-Cycle-5/ETV-Cycle-5-NBA-GOATs-Shiny.qmd)
+
+[Alternate (Wikipedia) →](etv/ETV-Cycle-5-alternate/ETV-Cycle-5-Wikipedia-Automation-EMPTY.qmd)
+
+:::
+:::
+
+:::
+
+::: {.section-head}
+::: {.section-num}
+THIS WEEK
+:::
+## What to expect
+::: {.rule}
+:::
+:::
+
+::: {.week-callouts}
+
+::: {.callout-box .callout-expected}
+::: {.cb-label}
+What's expected
+:::
+- Watch Videos 17–19 before lab
+- Complete ETV Cycle 5 (NBA GOATs version)
+- Deploy your Shiny app and submit the link to Canvas
+:::
+
+::: {.callout-box .callout-important}
+::: {.cb-label}
+Important
+:::
+- Install the `shiny` package before Video 17
+- You can choose V₅a (NBA GOATs) or V₅b (Wikipedia Automation) for the visualize step
+- Deployment to shinyapps.io requires a free account — set it up before lab
+:::
+
+:::
+
+---
+
+[← Back to STAT 331](index.qmd)

@@ -1,0 +1,126 @@
+---
+title: ""
+pagetitle: "STAT 331 — Data Science · Immanuel Williams"
+toc: false
+---
+
+::: {.week-hero}
+::: {.week-eyebrow}
+Cal Poly SLO · Statistics 331
+:::
+# Data Science: ETV & LFM
+
+::: {.week-desc}
+A hands-on course combining **Learn From Me (LFM)** video modules with **Extraction–Transformation–Visualization (ETV)** cycles. Each week pairs curated instructional videos with a real-data ETV activity.
+:::
+:::
+
+::: {.section-head}
+::: {.section-num}
+THE FLOW
+:::
+## Weekly modules
+::: {.rule}
+:::
+:::
+
+Each week follows the same structure: watch the **LFM** videos first, then complete the **ETV** activity with real data.
+
+::: {.week-overview-grid}
+
+::: {.week-card}
+::: {.week-num}
+Week 1
+:::
+### [Introduction to Data](week-1.qmd)
+::: {.week-meta}
+LFM: Videos 1–4  ·  ETV: CSV Coffee
+:::
+:::
+
+::: {.week-card}
+::: {.week-num}
+Week 2
+:::
+### [Excel & Sports Data](week-2.qmd)
+::: {.week-meta}
+LFM: Videos 5–8  ·  ETV: NBA Excel
+:::
+:::
+
+::: {.week-card}
+::: {.week-num}
+Week 3
+:::
+### [Web Scraping](week-3.qmd)
+::: {.week-meta}
+LFM: Videos 9–12  ·  ETV: Wikipedia Counties
+:::
+:::
+
+::: {.week-card}
+::: {.week-num}
+Week 4
+:::
+### [APIs & Live Data](week-4.qmd)
+::: {.week-meta}
+LFM: Videos 13–16  ·  ETV: Weather API
+:::
+:::
+
+::: {.week-card}
+::: {.week-num}
+Week 5
+:::
+### [Interactive Apps](week-5.qmd)
+::: {.week-meta}
+LFM: Videos 17–19  ·  ETV: NBA GOATs + Shiny
+:::
+:::
+
+:::
+
+::: {.section-head}
+::: {.section-num}
+FRAMEWORKS
+:::
+## How the course works
+::: {.rule}
+:::
+:::
+
+::: {.grid-cards}
+
+::: {.card-x}
+::: {.tag}
+LFM
+:::
+### Learn From Me
+Short video modules grouped by week. Watch, pause, and try the code examples before moving to the ETV activity.
+:::
+
+::: {.card-x}
+::: {.tag}
+ETV — Extract
+:::
+### E: Extraction
+Pull real data from a source (CSV, Excel, API, or web). Understand where data lives and how to bring it into R.
+:::
+
+::: {.card-x}
+::: {.tag}
+ETV — Transform
+:::
+### T: Transformation
+Clean, reshape, and summarize the data using `dplyr`. Every dataset needs work before it tells a story.
+:::
+
+::: {.card-x}
+::: {.tag}
+ETV — Visualize
+:::
+### V: Visualization
+Build a plot with `ggplot2` that answers a real question. Visual output is the payoff of the entire cycle.
+:::
+
+:::

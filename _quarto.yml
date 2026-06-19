@@ -23,6 +23,10 @@ website:
         text: Students
       - href: presentations.qmd
         text: Presentations
+      - text: "Courses"
+        menu:
+          - text: "STAT 331 — Data Science"
+            href: courses/stat-331/index.qmd
     right:
       - icon: github
         href: https://github.com/gato365

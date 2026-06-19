@@ -1,0 +1,145 @@
+---
+title: ""
+pagetitle: "Week 1 — STAT 331"
+toc: false
+---
+
+::: {.week-hero}
+::: {.week-eyebrow}
+STAT 331 · Week 1
+:::
+# Introduction to Data
+
+::: {.week-desc}
+Get up and running with R and the tidyverse. Read a CSV, explore the data frame, and build your first `ggplot2` visualization using coffee purchase data.
+:::
+:::
+
+::: {.week-columns}
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+LFM
+:::
+## Videos 1–4
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge}
+  V1
+  :::
+  ::: {}
+  [**Video 1** — Introduction & Course Overview](lfm/Videos_1-4/video_1.qmd){.act-label}
+  [Setting up R, RStudio, and the tidyverse package.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V2
+  :::
+  ::: {}
+  [**Video 2** — Reading Data into R](lfm/Videos_1-4/video_2.qmd){.act-label}
+  [`read_csv()` and the data frame structure.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V3
+  :::
+  ::: {}
+  [**Video 3** — Exploring with dplyr](lfm/Videos_1-4/video_3.qmd){.act-label}
+  [`filter()`, `select()`, and `glimpse()`.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V4
+  :::
+  ::: {}
+  [**Video 4** — First ggplot2 Chart](lfm/Videos_1-4/video_4.qmd){.act-label}
+  [Mapping aesthetics and geometric layers.]{.act-desc}
+  :::
+:::
+
+[Full module notes →](lfm/Videos_1-4/Videos_1-4_filled.qmd)
+
+:::
+:::
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+ETV Cycle 1
+:::
+## CSV Coffee Data
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge .etv-e}
+  E₁
+  :::
+  ::: {}
+  **Extract** — Read the CSV{.act-label}
+  [Load `coffee_purchases.csv` with `read_csv()` and inspect its shape.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-t}
+  T₁
+  :::
+  ::: {}
+  **Transform** — Summarize purchases{.act-label}
+  [Count purchases per day and calculate average spend using `group_by()` + `summarise()`.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-v}
+  V₁
+  :::
+  ::: {}
+  **Visualize** — Spending patterns{.act-label}
+  [Build a bar chart showing daily coffee spend.]{.act-desc}
+  :::
+:::
+
+[Student worksheet →](etv/ETV-Cycle-1/ETV-Cycle-1-CSV-Coffee-EMPTY.qmd)
+
+[Solutions →](etv/ETV-Cycle-1/ETV-Cycle-1-CSV-Coffee-SOLUTIONS.qmd)
+
+:::
+:::
+
+:::
+
+::: {.section-head}
+::: {.section-num}
+THIS WEEK
+:::
+## What to expect
+::: {.rule}
+:::
+:::
+
+::: {.week-callouts}
+
+::: {.callout-box .callout-expected}
+::: {.cb-label}
+What's expected
+:::
+- Watch all 4 LFM videos before lab
+- Complete the ETV worksheet (student version)
+- Submit your `.qmd` file to Canvas
+:::
+
+::: {.callout-box .callout-important}
+::: {.cb-label}
+Important
+:::
+- Install R 4.4+ and RStudio before Video 1
+- The `coffee_purchases.csv` data file is in the `Data/` folder
+- Compare your ETV output to the solutions after submission
+:::
+
+:::
+
+---
+
+[← Back to STAT 331](index.qmd)

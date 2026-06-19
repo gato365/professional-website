@@ -1,0 +1,145 @@
+---
+title: ""
+pagetitle: "Week 3 — STAT 331"
+toc: false
+---
+
+::: {.week-hero}
+::: {.week-eyebrow}
+STAT 331 · Week 3
+:::
+# Web Scraping
+
+::: {.week-desc}
+Extract data directly from the web using `rvest`. Scrape Wikipedia population tables, clean the result, and map county-level data with `ggplot2`.
+:::
+:::
+
+::: {.week-columns}
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+LFM
+:::
+## Videos 9–12
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge}
+  V9
+  :::
+  ::: {}
+  [**Video 9** — How Websites Work](lfm/Videos_9-12/video_9.qmd){.act-label}
+  [HTML structure, tables, and inspecting page source.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V10
+  :::
+  ::: {}
+  [**Video 10** — Scraping with rvest](lfm/Videos_9-12/video_10.qmd){.act-label}
+  [`read_html()`, `html_nodes()`, and `html_table()`.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V11
+  :::
+  ::: {}
+  [**Video 11** — Cleaning Scraped Data](lfm/Videos_9-12/video_11.qmd){.act-label}
+  [String cleaning with `stringr` and type coercion.]{.act-desc}
+  :::
+
+- ::: {.act-badge}
+  V12
+  :::
+  ::: {}
+  [**Video 12** — Map Visualizations](lfm/Videos_9-12/video_12.qmd){.act-label}
+  [Choropleth maps with `ggplot2` and `maps`.]{.act-desc}
+  :::
+:::
+
+[Full module notes →](lfm/Videos_9-12/Videos_9-12_filled.qmd)
+
+:::
+:::
+
+::: {.module-panel}
+::: {.module-panel-head}
+::: {.mptype}
+ETV Cycle 3
+:::
+## Wikipedia Counties
+:::
+::: {.module-panel-body}
+
+::: {.activity-list}
+- ::: {.act-badge .etv-e}
+  E₃
+  :::
+  ::: {}
+  **Extract** — Scrape Wikipedia{.act-label}
+  [Use `rvest` to pull a county population table from a Wikipedia article URL.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-t}
+  T₃
+  :::
+  ::: {}
+  **Transform** — Clean the table{.act-label}
+  [Remove footnotes, parse numeric columns, and filter to target counties.]{.act-desc}
+  :::
+
+- ::: {.act-badge .etv-v}
+  V₃
+  :::
+  ::: {}
+  **Visualize** — County map{.act-label}
+  [Color-code counties by population density using a choropleth layer.]{.act-desc}
+  :::
+:::
+
+[Student worksheet →](etv/ETV-Cycle-3/ETV-Cycle-3-Wikipedia-Counties-EMPTY.qmd)
+
+[Solutions →](etv/ETV-Cycle-3/ETV-Cycle-3-Wikipedia-Counties-SOLUTIONS.qmd)
+
+:::
+:::
+
+:::
+
+::: {.section-head}
+::: {.section-num}
+THIS WEEK
+:::
+## What to expect
+::: {.rule}
+:::
+:::
+
+::: {.week-callouts}
+
+::: {.callout-box .callout-expected}
+::: {.cb-label}
+What's expected
+:::
+- Watch Videos 9–12 before lab
+- Complete the Wikipedia Counties ETV worksheet
+- Submit your `.qmd` to Canvas
+:::
+
+::: {.callout-box .callout-important}
+::: {.cb-label}
+Important
+:::
+- Install `rvest` and `maps` packages before Video 10
+- Live scraping requires an internet connection during rendering
+- Wikipedia tables change — use the exact URL provided in the worksheet
+:::
+
+:::
+
+---
+
+[← Back to STAT 331](index.qmd)
